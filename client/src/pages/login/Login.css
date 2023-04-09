@@ -49,6 +49,7 @@
   font-size: 20px;
   color: white;
   text-indent: 10px;
+  transition: border 0.5s;
 }
 
 .credentials > .join-btn {
@@ -111,4 +112,10 @@
 .forgot-password:hover {
   cursor: pointer;
   color: rgb(129, 32, 32);
+}
+
+.status-msg {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
 }

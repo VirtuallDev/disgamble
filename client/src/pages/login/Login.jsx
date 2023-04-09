@@ -6,7 +6,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    const login = await fetch('login', { method: 'GET' });
+    const login = await fetch('login', { method: 'POST' });
     // Redirect?
   };
 
