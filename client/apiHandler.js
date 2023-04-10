@@ -1,8 +1,11 @@
 import React from 'react';
 import jwt_decode from 'jwt-decode';
-import { API_URL } from './config';
+import io from 'socket.io-client';
 
-const io = require('socket.io-client');
+const API_URL = 'http://localhost:3000'
+
+let accessToken = null;
+
 export const socket = io(API_URL, {
   extraHeaders: {
     Authorization: `Bearer ${accessToken}`,
@@ -12,7 +15,6 @@ export const socket = io(API_URL, {
 
 export const SocketContext = React.createContext();
 
-let accessToken = null;
 
 function isTokenExpired(accessToken) {
   try {
@@ -27,7 +29,7 @@ function isTokenExpired(accessToken) {
 
 async function getNewAccessToken() {
   try {
-    const response = await fetch(`${API_URL}/refreshtoken`, {
+    const response = await fetch(`${API_URL}/auth/refreshtoken`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',

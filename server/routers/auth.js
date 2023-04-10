@@ -5,8 +5,10 @@ const router = Router();
 const jwt = require('jsonwebtoken');
 
 const CLIENT_URL = process.env.CLIENT_URL;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post('/login', async (req, res) => {
+  try {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -30,12 +32,16 @@ router.post('/login', async (req, res) => {
     }
   );
   return res
-    .status(200)
-    .cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    })
-    .redirect(`${CLIENT_URL}/`);
+  .status(200)
+  .cookie('refreshToken', refreshToken, {
+  httpOnly: true,
+  maxAge: 24 * 60 * 60 * 1000,
+  })
+  .redirect(307, `https://google.com`);
+  }catch(e) {    
+    console.log(e);
+    // Change status code
+    return res.status(500).send({ error: 'Error' });}
 });
 
 router.post('/register', async (req, res) => {
@@ -72,6 +78,7 @@ router.post('/register', async (req, res) => {
     });
     return res.status(200).send({ success: 'Successfully Registered!' });
   } catch (e) {
+    console.log(e);
     // Change status code
     return res.status(200).send({ error: 'Error' });
   }
@@ -100,6 +107,7 @@ router.post('/logout', async (req, res) => {
       })
       .redirect(`${CLIENT_URL}/`);
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: 'Something went wrong!' });
   }
 });
@@ -125,6 +133,7 @@ router.post('/refreshtoken', async (req, res) => {
     const accessToken = jwt.sign(userObject, JWT_SECRET, { expiresIn: '30m' });
     return res.status(200).json({ accessToken: accessToken });
   } catch (e) {
+    console.log(e);
     res.status(500).json({ error: 'Something went wrong!' });
   }
 });
@@ -134,24 +143,47 @@ router.get('/usernameAvailable', async (req, res) => {
     const { username } = req.query;
     const user = await User.findOne({ username }, { username: 1 });
     if (user) return res.status(200).send({ error: 'Not Available' });
-
     return res.status(200).send({ success: 'Username Available' });
   } catch (e) {
     return res.status(200).send({ error: 'Error' });
   }
 });
 
-const identifyUser = async (req, res, next) => {
+router.get("/nitay", async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  console.log(refreshToken)
+  const user =  await getUserInfoByAuthHeader(req)
+  console.log(user);
+});
+
+async function identifyUser (req, res, next) {
   try {
+    console.log('here')
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
     const user = await User.findOne({ userId: userId }, { userId: 1 });
+    console.log(token, decoded, userId, user)
     req.userId = user.userId;
     next();
   } catch (error) {
+    console.log(error);
     res.status(401).send({ error: 'You are not logged in!' });
   }
 };
+
+const getUserInfoByAuthHeader = async (req) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.userId;
+    const user = await User.findOne({ userId: userId }, { userId: 1});
+    const userID = user.userId;
+    return { userID };
+  } catch (e) {
+    return { userID: null};
+  }
+};
+ 
 
 exports.authRouter = router;
