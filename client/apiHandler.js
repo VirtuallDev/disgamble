@@ -4,6 +4,9 @@ import { API_URL } from './config';
 
 const io = require('socket.io-client');
 export const socket = io(API_URL, {
+  extraHeaders: {
+    Authorization: `Bearer ${accessToken}`,
+  },
   withCredentials: true,
 });
 
@@ -17,7 +20,7 @@ function isTokenExpired(accessToken) {
     const decodedToken = jwt_decode(accessToken);
     const currentTime = Date.now() / 1000;
     return decodedToken.exp < currentTime;
-  } catch (error) {
+  } catch (e) {
     return true;
   }
 }
@@ -32,15 +35,15 @@ async function getNewAccessToken() {
     const jsonResponse = await response.json();
     const newAccessToken = jsonResponse.accessToken;
     accessToken = newAccessToken;
+    socket.io.opts.extraHeaders.Authorization = `Bearer ${accessToken}`;
   } catch (e) {
     accessToken = null;
+    socket.io.opts.extraHeaders.Authorization = `Bearer ${accessToken}`;
   }
 }
 
 async function getAuthorizationHeader() {
-  if (isTokenExpired()) {
-    await getNewAccessToken();
-  }
+  if (isTokenExpired()) await getNewAccessToken();
   return { authorization: `Bearer ${accessToken}` };
 }
 
@@ -56,15 +59,15 @@ export async function apiRequest(endpoint, method = 'GET', body = null) {
     const jsonResponse = await response.json();
     return jsonResponse;
   } catch (e) {
-    console.error(e);
+    console.log(e);
   }
 }
 
-// Not finished // header tba
-export function socketRequest(endpoint, ...args) {
+export async function socketRequest(endpoint, ...args) {
   try {
+    if (isTokenExpired()) await getNewAccessToken();
     socket.emit(endpoint, ...args);
   } catch (e) {
-    console.error(e);
+    console.log(e);
   }
 }
