@@ -2,7 +2,7 @@ import React from 'react';
 import jwt_decode from 'jwt-decode';
 import io from 'socket.io-client';
 
-const API_URL = 'http://localhost:3000'
+const API_URL = 'http://localhost:3000';
 
 let accessToken = null;
 
@@ -14,7 +14,6 @@ export const socket = io(API_URL, {
 });
 
 export const SocketContext = React.createContext();
-
 
 function isTokenExpired(accessToken) {
   try {

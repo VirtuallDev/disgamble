@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { apiRequest } from '../../../apiHandler';
 import './Login.css';
 
 const Login = () => {
@@ -7,17 +6,16 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    const login = await fetch("http://localhost:3000/auth/login", {
+    await fetch('http://localhost:3000/auth/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         email,
-        password
-      })
-    })
-    // Redirect?
+        password,
+      }),
+    });
   };
 
   const registerRedirect = async () => {};

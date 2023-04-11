@@ -1,7 +1,6 @@
 import React from 'react';
-import { SocketContext, socket } from './contexts/SocketContext';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import Main from './pages/main/Main';
+import { SocketContext, socket } from '../apiHandler';
 import Login from './pages/login/Login';
 import Register from './pages/login/Register';
 
@@ -12,12 +11,6 @@ function App() {
         <SocketContext.Provider value={{ socket }}>
           <Routes>
             <Route>
-              <Route
-                exact
-                path="/"
-                element={<Main />}
-              />
-
               <Route
                 exact
                 path="/login"

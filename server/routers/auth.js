@@ -1,7 +1,7 @@
-const { Router } = require('express');
+const express = require('express');
+const router = express.Router();
 const crypto = require('crypto');
 const { User } = require('../database');
-const router = Router();
 const jwt = require('jsonwebtoken');
 
 const CLIENT_URL = process.env.CLIENT_URL;
@@ -9,39 +9,32 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post('/login', async (req, res) => {
   try {
-  const email = req.body.email;
-  const password = req.body.password;
-
-  if (!password || !email) return res.send({ error: 'Invalid credentials' });
-  if (email && !email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return res.send({ error: 'Invalid email!' });
-
-  const verify = await User.findOne({ email: email }, { email: 1, password: 1, salt: 1, userId: 1 });
-  if (!verify) return res.send({ error: "User doesn't exist" });
-
-  const passwordHash = crypto.createHmac('sha256', verify.salt).update(password).digest('hex');
-  const verifyPassword = passwordHash === verify.password;
-
-  if (!verifyPassword) return res.send({ error: 'Wrong password' });
-  const refreshToken = crypto.randomBytes(32).toString('hex');
-  await User.findOneAndUpdate(
-    { email: email },
-    {
-      $set: {
-        refreshToken: { refreshToken, issued: Date.now() },
-      },
-    }
-  );
-  return res
-  .status(200)
-  .cookie('refreshToken', refreshToken, {
-  httpOnly: true,
-  maxAge: 24 * 60 * 60 * 1000,
-  })
-  .redirect(307, `https://google.com`);
-  }catch(e) {    
+    const email = req.body.email;
+    const password = req.body.password;
+    if (!password || !email) return res.status(200).json({ error: 'Invalid credentials' });
+    if (email && !email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return res.status(200).json({ error: 'Invalid email!' });
+    const verify = await User.findOne({ email: email }, { email: 1, password: 1, salt: 1, userId: 1 });
+    if (!verify) return res.status(200).json({ error: "User doesn't exist" });
+    const passwordHash = crypto.createHmac('sha256', verify.salt).update(password).digest('hex');
+    const verifyPassword = passwordHash === verify.password;
+    if (!verifyPassword) return res.status(200).json({ error: 'Wrong password' });
+    const refreshToken = crypto.randomBytes(32).toString('hex');
+    await User.findOneAndUpdate(
+      { email: email },
+      {
+        $set: {
+          refreshToken: { refreshToken, issued: Date.now() },
+        },
+      }
+    );
+    console.log(refreshToken);
+    res.cookie('refreshToken', refreshToken);
+    return res.redirect(`${CLIENT_URL}/`);
+  } catch (e) {
     console.log(e);
     // Change status code
-    return res.status(500).send({ error: 'Error' });}
+    return res.status(500).json({ error: 'Error' });
+  }
 });
 
 router.post('/register', async (req, res) => {
@@ -51,10 +44,10 @@ router.post('/register', async (req, res) => {
     const password = req.body.password;
     const dateOfBirth = Date.now();
 
-    if (username.length > 15) return res.status(200).send({ error: 'Username can not be longer than 15 characters!' });
-    if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return res.status(200).send({ error: 'Email does not match the required pattern!' });
+    if (username.length > 15) return res.status(200).json({ error: 'Username can not be longer than 15 characters!' });
+    if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return res.status(200).json({ error: 'Email does not match the required pattern!' });
     if (!password.match(/^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/))
-      return res.status(200).send({ error: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter!' });
+      return res.status(200).json({ error: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter!' });
 
     const salt = crypto.randomBytes(16).toString('hex');
     const passwordHash = crypto.createHmac('sha256', salt).update(password).digest('hex');
@@ -76,11 +69,11 @@ router.post('/register', async (req, res) => {
       refreshToken: { refreshToken: null, issued: Date.now() },
       dateOfBirth: dateOfBirth,
     });
-    return res.status(200).send({ success: 'Successfully Registered!' });
+    return res.status(200).json({ success: 'Successfully Registered!' });
   } catch (e) {
     console.log(e);
     // Change status code
-    return res.status(200).send({ error: 'Error' });
+    return res.status(200).json({ error: 'Error' });
   }
 });
 
@@ -121,9 +114,7 @@ router.post('/refreshtoken', async (req, res) => {
       },
       { username: 1, userId: 1, refreshToken: 1 }
     );
-    if (!user) {
-      return res.status(401).json({ error: 'You are not logged in.' });
-    }
+    if (!user) return res.status(401).json({ error: 'You are not logged in.' });
 
     const currentTime = new Date();
     const timePassed = (currentTime - user.refreshToken.issued) / 3600000;
@@ -142,48 +133,55 @@ router.get('/usernameAvailable', async (req, res) => {
   try {
     const { username } = req.query;
     const user = await User.findOne({ username }, { username: 1 });
-    if (user) return res.status(200).send({ error: 'Not Available' });
-    return res.status(200).send({ success: 'Username Available' });
+    if (user) return res.status(200).json({ error: 'Not Available' });
+    return res.status(200).json({ success: 'Username Available' });
   } catch (e) {
-    return res.status(200).send({ error: 'Error' });
+    return res.status(200).json({ error: 'Error' });
   }
 });
 
-router.get("/nitay", async (req, res) => {
+router.get('/nitay', async (req, res) => {
+  console.log('blabla');
   const refreshToken = req.cookies.refreshToken;
-  console.log(refreshToken)
-  const user =  await getUserInfoByAuthHeader(req)
+  console.log(refreshToken);
+  const user = await getUserInfoByAuthHeader(req);
   console.log(user);
+  return res
+    .status(200)
+    .cookie('refreshToken', 'dsasdasda', {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+    .redirect(`${CLIENT_URL}/`);
 });
 
-async function identifyUser (req, res, next) {
+async function identifyUser(req, res, next) {
   try {
-    console.log('here')
+    console.log('here');
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
     const user = await User.findOne({ userId: userId }, { userId: 1 });
-    console.log(token, decoded, userId, user)
+    console.log(token, decoded, userId, user);
     req.userId = user.userId;
     next();
   } catch (error) {
     console.log(error);
-    res.status(401).send({ error: 'You are not logged in!' });
+    res.status(401).json({ error: 'You are not logged in!' });
   }
-};
+}
 
 const getUserInfoByAuthHeader = async (req) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
-    const user = await User.findOne({ userId: userId }, { userId: 1});
+    const user = await User.findOne({ userId: userId }, { userId: 1 });
     const userID = user.userId;
-    return { userID };
+    return { userID: userID };
   } catch (e) {
-    return { userID: null};
+    return { userID: null };
   }
 };
- 
 
 exports.authRouter = router;
