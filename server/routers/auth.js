@@ -9,15 +9,16 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post('/login', async (req, res) => {
   try {
-    const email = req.body.email;
-    const password = req.body.password;
-    if (!password || !email) return res.status(200).json({ error: 'Invalid credentials' });
-    if (email && !email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return res.status(200).json({ error: 'Invalid email!' });
-    const verify = await User.findOne({ email: email }, { email: 1, password: 1, salt: 1, userId: 1 });
-    if (!verify) return res.status(200).json({ error: "User doesn't exist" });
-    const passwordHash = crypto.createHmac('sha256', verify.salt).update(password).digest('hex');
-    const verifyPassword = passwordHash === verify.password;
-    if (!verifyPassword) return res.status(200).json({ error: 'Wrong password' });
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(406).json({ error: 'Invalid credentials' });
+    const user = await User.findOne({ email: email }, { email: 1, password: 1, salt: 1, userId: 1 });
+    if (!user)
+      return res.status(406).json({
+        error: 'Invalid credentials',
+      });
+    const passwordHash = crypto.createHmac('sha256', user.salt).update(password).digest('hex');
+    const verifyPassword = passwordHash === user.password;
+    if (!verifyPassword) return res.status(406).json({ error: 'Incorrect password.' });
     const refreshToken = crypto.randomBytes(32).toString('hex');
     await User.findOneAndUpdate(
       { email: email },
@@ -27,13 +28,18 @@ router.post('/login', async (req, res) => {
         },
       }
     );
-    console.log(refreshToken);
-    res.cookie('refreshToken', refreshToken);
-    return res.redirect(`${CLIENT_URL}/`);
+    res
+      .status(200)
+      .cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      })
+      .json({ success: 'Cookie successfully set' });
   } catch (e) {
     console.log(e);
-    // Change status code
-    return res.status(500).json({ error: 'Error' });
+    return res.status(406).json({
+      error: 'Invalid credentials',
+    });
   }
 });
 
@@ -140,37 +146,6 @@ router.get('/usernameAvailable', async (req, res) => {
   }
 });
 
-router.get('/nitay', async (req, res) => {
-  console.log('blabla');
-  const refreshToken = req.cookies.refreshToken;
-  console.log(refreshToken);
-  const user = await getUserInfoByAuthHeader(req);
-  console.log(user);
-  return res
-    .status(200)
-    .cookie('refreshToken', 'dsasdasda', {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    })
-    .redirect(`${CLIENT_URL}/`);
-});
-
-async function identifyUser(req, res, next) {
-  try {
-    console.log('here');
-    const token = req.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
-    const user = await User.findOne({ userId: userId }, { userId: 1 });
-    console.log(token, decoded, userId, user);
-    req.userId = user.userId;
-    next();
-  } catch (error) {
-    console.log(error);
-    res.status(401).json({ error: 'You are not logged in!' });
-  }
-}
-
 const getUserInfoByAuthHeader = async (req) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
@@ -184,4 +159,4 @@ const getUserInfoByAuthHeader = async (req) => {
   }
 };
 
-exports.authRouter = router;
+module.exports = router;
