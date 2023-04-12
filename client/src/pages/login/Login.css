@@ -11,9 +11,7 @@
   flex-direction: column;
   align-items: center;
   padding-bottom: 50px;
-  box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1),
-  0 0 0 2px rgba(255, 255, 255, 0.463),
-  0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(255, 255, 255, 0.463), 0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
 }
 
 .header {
@@ -22,34 +20,6 @@
   width: 50%;
   text-align: center;
   color: rgb(200, 200, 200);
-}
-
-.credentials {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  width: 80%;
-}
-
-.credentials > label {
-  all: unset;
-  color: rgba(200, 200, 200, 0.575);
-  margin-block: 5px;
-  font-size: 12px;
-  text-indent: 2px;
-  font-weight: bold;
-}
-
-.credentials > input {
-  all: unset;
-  background-color: rgb(70, 70, 70);
-  width: 100%;
-  padding-block: 8px;
-  border-radius: 5px;
-  font-size: 20px;
-  color: white;
-  text-indent: 10px;
-  transition: border 0.5s;
 }
 
 .credentials > .join-btn {
@@ -108,7 +78,6 @@
   font-weight: bold;
 }
 
-
 .forgot-password:hover {
   cursor: pointer;
   color: rgb(129, 32, 32);
@@ -118,4 +87,79 @@
   text-align: center;
   font-size: 16px;
   font-weight: 500;
+}
+
+.credentials {
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+}
+
+.credentials {
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+}
+
+.input-container {
+  position: relative;
+  margin-top: 1.5em;
+}
+
+.input-container input {
+  all: unset;
+  font-size: 16px;
+  transition: all 0.2s ease-out;
+  border: 1px solid #ccc;
+  background-color: rgb(70, 70, 70);
+  width: 100%;
+  padding-block: 8px;
+  border-radius: 5px;
+  font-size: 20px;
+  color: white;
+  text-indent: 10px;
+}
+
+.input-container label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translate(0, -50%);
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+  font-size: 16px;
+  color: grey;
+}
+
+.input-container input:focus {
+  border-color: #007bff;
+}
+
+.input-container input:not(:placeholder-shown) {
+  border-color: white;
+}
+
+.input-container:not(:focus-within) input:not(:placeholder-shown) + label {
+  color: white;
+}
+
+.input-container:focus-within label,
+.input-container input:not(:placeholder-shown) + label {
+  top: -13px;
+  font-size: 13px;
+  color: #007bff;
+}
+
+.input-container input::placeholder {
+  color: transparent;
+}
+
+.input-container input:focus:not(:placeholder-shown) {
+  border-color: #007bff;
 }

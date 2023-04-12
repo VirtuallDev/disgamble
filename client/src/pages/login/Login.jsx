@@ -23,14 +23,26 @@ const Login = () => {
     <div className="container">
       <div className="header">Welcome!</div>
       <div className="credentials">
-        <label>Email</label>
-        <input
-          type="email"
-          onChange={(e) => setEmail(e.target.value)}></input>
-        <label>Password</label>
-        <input
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}></input>
+        <div className="input-container">
+          <input
+            name="email"
+            type="email"
+            required
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}></input>
+          <label htmlFor="email">Email Address</label>
+        </div>
+
+        <div className="input-container">
+          <input
+            name="password"
+            type="password"
+            required
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}></input>
+          <label htmlFor="password">Password</label>
+        </div>
+
         <p
           className="forgot-password"
           onClick={() => window.location.replace('/resetpassword')}>

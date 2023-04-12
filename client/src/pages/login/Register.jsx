@@ -3,46 +3,43 @@ import './Login.css';
 
 const Register = () => {
   const [data, setData] = useState({ username: '', email: '', password: '' });
-  const [borders, setBorders] = useState({ username: 'none', email: 'none', password: 'none' });
+  const [colors, setColors] = useState({ username: 'white', email: 'white', password: 'white' });
   const [msg, setMsg] = useState({ msg: '', type: 'error' });
 
   const handleUsernameChange = (e) => {
     setData({ ...data, username: e.target.value });
-    setUsername(e.target.value);
-    if (e.target.value > 15) {
+    if (e.target.value.length > 15) {
       setMsg({ msg: 'Username can not be longer than 15 characters!', type: 'error' });
-      setBorders({ ...borders, ['username']: '1px solid red' });
+      setColors({ ...colors, ['username']: 'red' });
       return;
-    } else setBorders({ ...borders, ['username']: 'none' });
+    } else setColors({ ...colors, ['username']: 'white' });
     setMsg({ msg: '', type: 'error' });
   };
 
   const handleEmailChange = (e) => {
     setData({ ...data, email: e.target.value });
-    setUsername(e.target.value);
     if (!e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) {
       setMsg({ msg: 'Email does not match the required pattern!', type: 'error' });
-      setBorders({ ...borders, ['email']: '1px solid red' });
+      setColors({ ...colors, ['email']: 'red' });
       return;
-    } else setBorders({ ...borders, ['email']: 'none' });
+    } else setColors({ ...colors, ['email']: 'white' });
     setMsg({ msg: '', type: 'error' });
   };
 
   const handlePasswordChange = (e) => {
     setData({ ...data, password: e.target.value });
-    setUsername(e.target.value);
     if (!e.target.value.match(/^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/)) {
       setMsg({ msg: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter!', type: 'error' });
-      setBorders({ ...borders, ['password']: '1px solid red' });
+      setColors({ ...colors, ['password']: 'red' });
       return;
-    } else setBorders({ ...borders, ['password']: 'none' });
+    } else setColors({ ...colors, ['password']: 'white' });
     setMsg({ msg: '', type: 'error' });
   };
 
   const handleRegister = async () => {
-    if (usernameBorder !== 'none' || emailBorder !== 'none' || passwordBorder !== 'none') return;
+    if (colors.username !== 'white' || colors.email !== 'white' || colors.password !== 'white') return;
 
-    const usernameValid = await fetch(`http://localhost:3000/auth/usernameAvailable?username=${username}`, {
+    const usernameValid = await fetch(`http://localhost:3000/auth/usernameAvailable?username=${data.username}`, {
       method: 'GET',
     });
     const usernameValidResponse = await usernameValid.json();
@@ -53,11 +50,7 @@ const Register = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
+      body: JSON.stringify(data),
     });
     const jsonResponse = await register.json();
     if (jsonResponse.error) return setMsg({ msg: jsonResponse.error, type: 'error' });
@@ -69,21 +62,37 @@ const Register = () => {
     <div className="container">
       <div className="header">Welcome</div>
       <div className="credentials">
-        <label>Username</label>
-        <input
-          type="text"
-          onChange={(e) => handleUsernameChange(e)}
-          style={{ border: borders.username }}></input>
-        <label>Email</label>
-        <input
-          type="email"
-          onChange={(e) => handleEmailChange(e)}
-          style={{ border: borders.email }}></input>
-        <label>Password</label>
-        <input
-          type="password"
-          onChange={(e) => handlePasswordChange(e)}
-          style={{ border: borders.password }}></input>
+        <div className="input-container">
+          <input
+            name="username"
+            type="text"
+            required
+            placeholder="Username"
+            onChange={(e) => handleUsernameChange(e)}
+            style={{ color: colors.username }}></input>
+          <label htmlFor="username">Username</label>
+        </div>
+
+        <div className="input-container">
+          <input
+            name="email"
+            type="text"
+            required
+            placeholder="Email"
+            onChange={(e) => handleEmailChange(e)}
+            style={{ color: colors.email }}></input>
+          <label htmlFor="email">Email</label>
+        </div>
+        <div className="input-container">
+          <input
+            name="password"
+            type="password"
+            required
+            placeholder="Password"
+            onChange={(e) => handlePasswordChange(e)}
+            style={{ color: colors.password }}></input>
+          <label htmlFor="password">Password</label>
+        </div>
         <button
           className="join-btn"
           onClick={(e) => handleRegister()}>
