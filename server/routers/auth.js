@@ -37,9 +37,7 @@ router.post('/login', async (req, res) => {
       .json({ success: 'Cookie successfully set' });
   } catch (e) {
     console.log(e);
-    return res.status(406).json({
-      error: 'Invalid credentials',
-    });
+    return res.status(500).json({ error: 'Something went wrong!' });
   }
 });
 
@@ -50,10 +48,10 @@ router.post('/register', async (req, res) => {
     const password = req.body.password;
     const dateOfBirth = Date.now();
 
-    if (username.length > 15) return res.status(200).json({ error: 'Username can not be longer than 15 characters!' });
-    if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return res.status(200).json({ error: 'Email does not match the required pattern!' });
+    if (username.length > 15) return res.status(406).json({ error: 'Username can not be longer than 15 characters!' });
+    if (!email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return res.status(406).json({ error: 'Email does not match the required pattern!' });
     if (!password.match(/^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/))
-      return res.status(200).json({ error: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter!' });
+      return res.status(406).json({ error: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter!' });
 
     const salt = crypto.randomBytes(16).toString('hex');
     const passwordHash = crypto.createHmac('sha256', salt).update(password).digest('hex');
@@ -78,8 +76,7 @@ router.post('/register', async (req, res) => {
     return res.status(200).json({ success: 'Successfully Registered!' });
   } catch (e) {
     console.log(e);
-    // Change status code
-    return res.status(200).json({ error: 'Error' });
+    return res.status(500).json({ error: 'Something went wrong!' });
   }
 });
 
@@ -107,7 +104,7 @@ router.post('/logout', async (req, res) => {
       .redirect(`${CLIENT_URL}/`);
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: 'Something went wrong!' });
+    return res.status(500).json({ error: 'Something went wrong!' });
   }
 });
 
@@ -131,7 +128,7 @@ router.post('/refreshtoken', async (req, res) => {
     return res.status(200).json({ accessToken: accessToken });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: 'Something went wrong!' });
+    return res.status(500).json({ error: 'Something went wrong!' });
   }
 });
 
@@ -139,24 +136,25 @@ router.get('/usernameAvailable', async (req, res) => {
   try {
     const { username } = req.query;
     const user = await User.findOne({ username }, { username: 1 });
-    if (user) return res.status(200).json({ error: 'Not Available' });
-    return res.status(200).json({ success: 'Username Available' });
+    if (!user) res.status(406).json({ error: 'Username is already in use.' });
+    return res.status(200).json({ success: 'Username available.' });
   } catch (e) {
-    return res.status(200).json({ error: 'Error' });
+    return res.status(500).json({ error: 'Something went wrong!' });
   }
 });
 
-const getUserInfoByAuthHeader = async (req) => {
+async function getUserInfoByAuthHeader(req, res, next) {
   try {
     const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
     const user = await User.findOne({ userId: userId }, { userId: 1 });
     const userID = user.userId;
-    return { userID: userID };
+    req.userID = userID;
+    next();
   } catch (e) {
-    return { userID: null };
+    return res.status(401).json({ error: 'You are not logged in.' });
   }
-};
+}
 
 module.exports = router;
