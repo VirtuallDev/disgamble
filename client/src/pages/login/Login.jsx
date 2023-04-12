@@ -4,6 +4,7 @@ import './Login.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [msg, setMsg] = useState({ msg: '', type: 'error' });
 
   const handleLogin = async () => {
     await fetch('http://localhost:3000/auth/login', {
@@ -61,6 +62,9 @@ const Login = () => {
             Register
           </p>
         </div>
+        <p
+          className="status-msg"
+          style={{ color: msg?.type === 'error' ? 'darkred' : 'green' }}></p>
       </div>
     </div>
   );

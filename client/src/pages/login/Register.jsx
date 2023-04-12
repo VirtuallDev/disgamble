@@ -98,6 +98,14 @@ const Register = () => {
           onClick={(e) => handleRegister()}>
           Register
         </button>
+        <div className="need-container">
+          <p className="dont-have-an-account">Already have an account?</p>
+          <p
+            className="register-redirect"
+            onClick={() => window.location.replace('/login')}>
+            Login
+          </p>
+        </div>
         <p
           className="status-msg"
           style={{ color: msg?.type === 'error' ? 'darkred' : 'green' }}>
