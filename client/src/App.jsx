@@ -3,6 +3,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { SocketContext, socket } from '../apiHandler';
 import Login from './pages/login/Login';
 import Register from './pages/login/Register';
+import Main from './pages/Main';
 
 function App() {
   return (
@@ -11,6 +12,11 @@ function App() {
         <SocketContext.Provider value={{ socket }}>
           <Routes>
             <Route>
+              <Route
+                exact
+                path="/"
+                element={<Main />}
+              />
               <Route
                 exact
                 path="/login"

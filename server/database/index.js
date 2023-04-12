@@ -20,4 +20,13 @@ const UserSchema = new mongoose.Schema({
   dateOfBirth: Date,
 });
 
+const MessageSchema = new mongoose.Schema({
+  username: String,
+  userId: String,
+  userImage: String,
+  message: String,
+  timestamp: Date,
+});
+
 exports.User = mongoose.model('User', UserSchema, 'users');
+exports.Message = mongoose.model('Message', MessageSchema, 'messages');
