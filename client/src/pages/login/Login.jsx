@@ -19,10 +19,6 @@ const Login = () => {
     });
   };
 
-  const registerRedirect = async () => {};
-
-  const forgotPasswordRedirect = async () => {};
-
   return (
     <div className="container">
       <div className="header">Welcome!</div>
@@ -37,19 +33,19 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}></input>
         <p
           className="forgot-password"
-          onClick={forgotPasswordRedirect}>
+          onClick={() => window.location.replace('/resetpassword')}>
           Forgot your password?
         </p>
         <button
           className="join-btn"
-          onClick={(e) => handleLogin()}>
+          onClick={() => handleLogin()}>
           Login
         </button>
         <div className="need-container">
           <p className="dont-have-an-account">Don't have an account?</p>
           <p
             className="register-redirect"
-            onClick={registerRedirect}>
+            onClick={() => window.location.replace('/register')}>
             Register
           </p>
         </div>
