@@ -2,37 +2,41 @@ import React, { useState } from 'react';
 import './Login.css';
 
 const Register = () => {
-  const [data, setData] = useState({ username: '', email: '', password: '' });
-  const [msg, setMsg] = useState({ username: '', email: '', password: '' });
+  const [data, setData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
+  const [msg, setMsg] = useState({ username: '', email: '', password: '', confirmPassword: '' });
 
   const handleUsernameChange = (e) => {
-    setData({ ...data, username: e.target.value });
-    if (e.target.value.length > 15) return setMsg({ ...msg, username: 'Username can not be longer than 15 characters!' });
-    setMsg({ ...msg, username: '' });
+    setData((prevData) => ({ ...prevData, username: e.target.value }));
+    if (e.target.value.length > 15) return setMsg((prevMsg) => ({ ...prevMsg, username: 'Username can not be longer than 15 characters!' }));
+    setMsg((prevMsg) => ({ ...prevMsg, username: '' }));
   };
 
   const handleEmailChange = (e) => {
-    setData({ ...data, email: e.target.value });
-    if (!e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return setMsg({ ...msg, email: 'Email does not match the required pattern!' });
-    setMsg({ ...msg, email: '' });
+    setData((prevData) => ({ ...prevData, email: e.target.value }));
+    if (!e.target.value.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)) return setMsg((prevMsg) => ({ ...prevMsg, email: 'Email does not match the required pattern!' }));
+    setMsg((prevMsg) => ({ ...prevMsg, email: '' }));
   };
 
   const handlePasswordChange = (e) => {
-    setData({ ...data, password: e.target.value });
+    setData((prevData) => ({ ...prevData, password: e.target.value }));
+    if (e.target.value !== data.confirmPassword) {
+      setMsg((prevMsg) => ({ ...prevMsg, confirmPassword: 'Passwords do not match.' }));
+    } else {
+      setMsg((prevMsg) => ({ ...prevMsg, confirmPassword: '' }));
+    }
     if (!e.target.value.match(/^(?=.*[A-Za-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/))
-      return setMsg({ ...msg, password: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter!' });
-    setMsg({ ...msg, password: '' });
+      return setMsg((prevMsg) => ({ ...prevMsg, password: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter!' }));
+    setMsg((prevMsg) => ({ ...prevMsg, password: '' }));
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setData((prevData) => ({ ...prevData, confirmPassword: e.target.value }));
+    if (e.target.value !== data.password) return setMsg((prevMsg) => ({ ...prevMsg, confirmPassword: 'Passwords do not match.' }));
+    setMsg((prevMsg) => ({ ...prevMsg, confirmPassword: '' }));
   };
 
   const handleRegister = async () => {
-    if (msg.username !== '' || comsglors.email !== '' || msg.password !== '') return;
-
-    const usernameValid = await fetch(`http://localhost:3000/auth/usernameAvailable?username=${data.username}`, {
-      method: 'GET',
-    });
-    const usernameValidResponse = await usernameValid.json();
-    if (usernameValidResponse.error) return setMsg({ msg: 'Username is taken!', type: 'error' });
-
+    if ((msg.username !== '' || msg.email !== '' || msg.password !== '', msg.confirmPassword !== '')) return;
     const register = await fetch('http://localhost:3000/auth/register', {
       method: 'POST',
       headers: {
@@ -41,9 +45,8 @@ const Register = () => {
       body: JSON.stringify(data),
     });
     const jsonResponse = await register.json();
-    if (jsonResponse.error) return setMsg({ msg: jsonResponse.error, type: 'error' });
-    if (jsonResponse.success) setMsg({ msg: jsonResponse.success, type: 'success' });
-    return window.location.replace('/login');
+    if (jsonResponse.type) return setMsg((prevMsg) => ({ ...prevMsg, [jsonResponse.type]: jsonResponse.error }));
+    if (jsonResponse.success) return window.location.replace('/login');
   };
 
   return (
@@ -93,15 +96,29 @@ const Register = () => {
           style={{ color: 'darkred', display: msg.password !== '' ? 'initial' : 'none' }}>
           {msg.password}
         </p>
+        <div className="input-container">
+          <input
+            name="confirm-password"
+            type="password"
+            required
+            placeholder="Confirm Password"
+            onChange={(e) => handleConfirmPasswordChange(e)}></input>
+          <label htmlFor="confirm-password">Confirm Password</label>
+        </div>
+        <p
+          className="status-msg"
+          style={{ color: 'darkred', display: msg.confirmPassword !== '' ? 'initial' : 'none' }}>
+          {msg.confirmPassword}
+        </p>
         <button
           className="join-btn"
           onClick={(e) => handleRegister()}>
           Register
         </button>
         <div className="need-container">
-          <p className="dont-have-an-account">Already have an account?</p>
+          <p style={{ fontWeight: 'bold', textIndent: '2px', marginRight: '0.3em' }}>Already have an account?</p>
           <p
-            className="register-redirect"
+            className="auth-link"
             onClick={() => window.location.replace('/login')}>
             Login
           </p>

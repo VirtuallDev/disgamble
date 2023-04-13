@@ -4,10 +4,10 @@ import './Login.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [msg, setMsg] = useState({ msg: '', type: 'error' });
+  const [msg, setMsg] = useState('');
 
   const handleLogin = async () => {
-    await fetch('http://localhost:3000/auth/login', {
+    const login = await fetch('http://localhost:3000/auth/login', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -18,6 +18,8 @@ const Login = () => {
         password: password,
       }),
     });
+    const jsonResponse = await login.json();
+    if (jsonResponse.error) return setMsg(jsonResponse.error);
   };
 
   return (
@@ -45,8 +47,15 @@ const Login = () => {
         </div>
 
         <p
-          className="forgot-password"
-          onClick={() => window.location.replace('/resetpassword')}>
+          className="status-msg"
+          style={{ color: 'darkred', display: msg !== '' ? 'initial' : 'none' }}>
+          {msg}
+        </p>
+
+        <p
+          className="auth-link"
+          onClick={() => window.location.replace('/resetpassword')}
+          style={{ marginTop: '0.5em' }}>
           Forgot your password?
         </p>
         <button
@@ -55,16 +64,13 @@ const Login = () => {
           Login
         </button>
         <div className="need-container">
-          <p className="dont-have-an-account">Don't have an account?</p>
+          <p style={{ fontWeight: 'bold', textIndent: '2px', marginRight: '0.3em' }}>Don't have an account?</p>
           <p
-            className="register-redirect"
+            className="auth-link"
             onClick={() => window.location.replace('/register')}>
             Register
           </p>
         </div>
-        <p
-          className="status-msg"
-          style={{ color: msg?.type === 'error' ? 'darkred' : 'green' }}></p>
       </div>
     </div>
   );

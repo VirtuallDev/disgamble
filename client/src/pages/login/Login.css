@@ -52,35 +52,15 @@
   flex-direction: row;
 }
 
-.dont-have-an-account {
-  text-indent: 2px;
-  color: aliceblue;
-  font-weight: 500;
-}
-
-.register-redirect {
-  text-indent: 5px;
-  color: rgb(130, 0, 0);
-  transition: all 0.1s;
+.auth-link {
+  color: rgb(0, 60, 130);
+  transition: all 0.2s;
   font-weight: bold;
 }
 
-.register-redirect:hover {
+.auth-link:hover {
   cursor: pointer;
-  color: rgb(129, 32, 32);
-}
-
-.forgot-password {
-  text-indent: 2px;
-  color: rgb(130, 0, 0);
-  transition: all 0.1s;
-  font-weight: bold;
-  margin-top: 1em;
-}
-
-.forgot-password:hover {
-  cursor: pointer;
-  color: rgb(129, 32, 32);
+  color: rgba(0, 61, 130, 0.514);
 }
 
 .status-msg {
