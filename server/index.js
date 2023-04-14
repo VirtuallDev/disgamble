@@ -32,19 +32,7 @@ const io = require('socket.io')(server, {
 });
 
 // Connection middleware
-io.use(async (socket, next) => {
-  try {
-    const token = socket.handshake.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
-    const user = await User.findOne({ userId: userId }, { userId: 1 });
-    socket.userId = user.userId;
-    next();
-  } catch (e) {
-    socket.userId = null;
-    next();
-  }
-});
+io.use(isUserSocket);
 
 io.on('connection', (socket) => {
   if (socket.userId) socket.join(socket.userId);
