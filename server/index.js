@@ -2,13 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
-const { User } = require('./database');
 const authRouter = require('./routers/auth');
 const { SocketAuthMiddleware } = require('./middlewares/socket');
 
 const CLIENT_URL = process.env.CLIENT_URL;
-const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express();
 app.use(cookieParser());

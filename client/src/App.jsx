@@ -3,7 +3,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { SocketContext, socket } from '../apiHandler';
 import Login from './pages/login/Login';
 import Register from './pages/login/Register';
-import Main from './pages/Main';
+import Home from './pages/home/Home';
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
               <Route
                 exact
                 path="/"
-                element={<Main />}
+                element={<Home />}
               />
               <Route
                 exact
