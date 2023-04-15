@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User } = require("../database");
 
-export async function SocketAuthMiddleware(socket, next) {
+async function SocketAuthMiddleware(socket, next) {
     try {
       const token = socket.handshake.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, JWT_SECRET);
@@ -13,5 +13,7 @@ export async function SocketAuthMiddleware(socket, next) {
       socket.userId = null;
       next();
     }
-  }
-  
+}
+
+
+exports.SocketAuthMiddleware = SocketAuthMiddleware;
