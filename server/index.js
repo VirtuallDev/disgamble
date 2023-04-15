@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { User } = require('./database');
 const authRouter = require('./routers/auth');
+const { SocketAuthMiddleware } = require('./middlewares/socket');
 
 const CLIENT_URL = process.env.CLIENT_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -32,7 +33,7 @@ const io = require('socket.io')(server, {
 });
 
 // Connection middleware
-io.use(isUserSocket);
+io.use(SocketAuthMiddleware);
 
 io.on('connection', (socket) => {
   if (socket.userId) socket.join(socket.userId);
@@ -74,17 +75,3 @@ io.on('connection', (socket) => {
     }
   });
 });
-
-async function isUserSocket(socket, next) {
-  try {
-    const token = socket.handshake.headers.authorization.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
-    const user = await User.findOne({ userId: userId }, { userId: 1 });
-    socket.userId = user.userId;
-    next();
-  } catch (e) {
-    socket.userId = null;
-    next();
-  }
-}
