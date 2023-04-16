@@ -9,7 +9,7 @@
 .friend-list {
   width: 15%;
   height: 100%;
-  background-color: var(--dark);
+  background-color: var(--dark2);
   padding: 15px;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .last-servers {
-  background-color: var(--dark2);
+  background-color: var(--dark);
   padding: 20px;
 }
 .nav {

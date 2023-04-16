@@ -8,15 +8,14 @@
   margin-bottom: -1px;
   color: rgb(160, 160, 160);
   font-size: 1em;
-  transition: all 0.1s;
-  -moz-transition: all 0.1s;
+  transition: all 0.2s;
+  -moz-transition: all 0.2s;
 }
 
 .friends-container:hover {
   cursor: pointer;
   color: white;
   border-color: white;
-  font-size: 1.05em;
 }
 
 .image-container {

@@ -9,14 +9,13 @@
   color: rgb(160, 160, 160);
   font-size: 1em;
   transition: all 0.1s;
-  -moz-transition: all 0.1s;
+  -moz-transition: all 0.2s;
 }
 
 .server-container:hover {
   cursor: pointer;
   color: white;
   border-color: white;
-  font-size: 1.05em;
 }
 
 .server-image {
