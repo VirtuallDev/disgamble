@@ -1,9 +1,22 @@
 .server-container {
+  border-color:rgb(160, 160, 160) ;
+  padding: 0.65em;
+  border-radius: 10px;
+}
+
+.server-container:hover {
+  border-color: white;
+  background-color: var(--bg-primary-2);
+}
+
+.server {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0.45em;
-  border-bottom: 2px dashed rgb(160, 160, 160);
+  border-radius: 10px;
+  /* border-bottom: 2px dashed rgb(160, 160, 160); */
+  /* border: 1px solid none; */
+  border-color: rgb(160, 160, 160);
   margin-bottom: -1px;
   color: rgb(160, 160, 160);
   font-size: 1em;
@@ -11,10 +24,14 @@
   -moz-transition: all 0.2s;
 }
 
-.server-container:hover {
+.breakline {
+  border: 2px dashed;
+  border-color: inherit;
+}
+
+.server:hover {
   cursor: pointer;
   color: white;
-  border-color: white;
 }
 
 .server-image {

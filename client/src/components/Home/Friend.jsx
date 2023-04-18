@@ -14,6 +14,7 @@ export const Friend = () => {
         <div className="status"></div>
       </div>
       <p className="friend-name">Friend Name</p>
+      
     </div>
   );
 };

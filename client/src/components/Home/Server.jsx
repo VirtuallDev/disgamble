@@ -4,14 +4,19 @@ const randomIMG = 'https://www.thisiscolossal.com/wp-content/uploads/2019/02/d1a
 
 export const Server = () => {
   return (
-    <div className="server-container">
-      <img
-        src={randomIMG}
-        className="server-image"
-        alt=""
-      />
-      <p className="server-name">Server Name</p>
-      <p className="server-clients">10/20</p>
+    <div className='server-container'>
+      
+      <div className="server">
+        <img
+          src={randomIMG}
+          className="server-image"
+          alt=""
+        />
+        <p className="server-name">Server Name</p>
+        <p className="server-clients">10/20</p>
+
+      </div>
+        <div className='breakline'></div>
     </div>
   );
 };

@@ -36,7 +36,7 @@
   height: 1em;
   border-radius: 100%;
   top: 1.8em;
-  border: 2.5px solid var(--dark);
+  border: 2.5px solid var(--bg-primary-0);
 }
 
 .friend-name {
