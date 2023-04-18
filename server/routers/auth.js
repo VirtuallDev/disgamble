@@ -71,7 +71,7 @@ router.post('/register', async (req, res) => {
       friends: [],
       friendRequests: [],
       blockedUsers: [],
-      communityList: [],
+      serverList: [],
       refreshToken: { refreshToken: null, issued: Date.now() },
       dateOfBirth: dateOfBirth,
     });

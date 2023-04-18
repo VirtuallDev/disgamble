@@ -35,8 +35,26 @@ app.get('/getuserinfo', getUserInfoByAuthHeader, async (req, res) => {
   try {
     console.log(req.userID);
     console.log('here');
-    const user = await User.findOne({ userId: req.userID }, { salt: 0, email: 0, password: 0 });
+
+    const user = await User.findOne(
+      { userId: req.userID },
+      { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1, friendRequests: 1, blockedUsers: 1, serverList: 1, _id: 0 }
+    );
     return res.status(200).json({ success: user });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Something went wrong!' });
+  }
+});
+
+app.post('/changestatus', getUserInfoByAuthHeader, async (req, res) => {
+  try {
+    console.log(req.userID);
+    const { statusString } = req.body;
+    if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
+    const user = await User.findOneAndUpdate({ userId: req.userID }, { status: statusString });
+    if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+    return res.status(200).json({ success: 'Status changed successfully.' });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: 'Something went wrong!' });

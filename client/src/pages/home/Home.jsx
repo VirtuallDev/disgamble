@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './home.css';
 import { ServerList } from '../../components/Home/Server';
 import { FriendsList } from '../../components/Home/Friend';
 import { Header } from '../../components/Home/Header';
@@ -8,13 +7,21 @@ import { FaMicrophone } from 'react-icons/fa';
 import { MdHeadsetMic } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { apiRequest } from '../../../apiHandler';
+import { setUserObject } from '../../redux/user';
+import { useSelector, useDispatch } from 'react-redux';
+import './home.css';
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const userObject = useSelector((state) => state.user.userObject);
+  const { username, userId, userImage, status, bio, friends, friendRequests, blockedUsers, serverList } = userObject;
+
+  const getUserInfo = async () => {
+    const userInfo = await apiRequest('getuserinfo');
+    if (userInfo.success) dispatch(setUserObject(userInfo.success));
+  };
+
   useEffect(() => {
-    const getUserInfo = async () => {
-      const userinfo = await apiRequest('getuserinfo');
-      console.log(userinfo);
-    };
     getUserInfo();
   }, []);
 
@@ -27,7 +34,7 @@ const Home = () => {
       </div>
       <div className="right-side">
         <FriendsList />
-        <UserShelf />
+        <User />
       </div>
     </div>
   );
@@ -35,11 +42,16 @@ const Home = () => {
 
 export default Home;
 
-const UserShelf = () => {
+const User = () => {
+  const userObject = useSelector((state) => state.user.userObject);
+  const { username, userId, userImage, status, bio, friends, friendRequests, blockedUsers, serverList } = userObject;
+
   const [statusOptions, setStatusOptions] = useState(false);
 
-  const handleStatusChange = (status) => {
-    console.log('socket or http request', status);
+  const handleStatusChange = async (statusString) => {
+    await apiRequest('changestatus', 'POST', {
+      statusString: statusString,
+    });
   };
 
   const handleMute = () => {
@@ -103,11 +115,13 @@ const UserShelf = () => {
         className="user-image-container"
         onClick={() => setStatusOptions((status) => !status)}>
         <img
-          src="https://scontent.ftlv1-1.fna.fbcdn.net/v/t1.6435-9/185533119_4148921461842219_3844749577676356191_n.png?_nc_cat=104&ccb=1-7&_nc_sid=174925&_nc_ohc=MCl_UNz1aNgAX8BH_so&_nc_ht=scontent.ftlv1-1.fna&oh=00_AfD5BwjMdZV87QbtCEehU5TRsVUnEJKEY72qQ1isFLh9uQ&oe=6465C39F"
+          src={userImage}
           className="user-image"
           alt=""
         />
-        <div className="status"></div>
+        <div
+          className="status"
+          style={{ backgroundColor: status === 'Online' ? 'green' : status === 'DND' ? 'red' : 'gray' }}></div>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema({
   friends: Array,
   friendRequests: Array,
   blockedUsers: Array,
-  communityList: Array,
+  serverList: Array,
   refreshToken: Object,
   dateOfBirth: Date,
 });
