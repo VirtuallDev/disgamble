@@ -11,24 +11,21 @@ const Home = () => {
       <div className="left-side">
         <div className="ads">ADS</div>
         <div className="server-list">
-          <div
-            className="last-dms"
-            style={{ backgroundColor: 'red' }}>
-            LAST DMS
-          </div>
-          <Divider />
-          <div className="last-servers">
-            <Header fontSize={'32px'} label={'Last Servers'} />
-            {[1, 2, 3, 4, 5].map((e) => {
-              return <Server />;
-            })}
-          </div>
+          <Header
+            fontSize={'32px'}
+            label={'Servers'}
+          />
+          {[1, 2, 3, 4, 5].map((e) => {
+            return <Server />;
+          })}
         </div>
         <div className="nav">NAV</div>
       </div>
-      <Divider />
       <div className="friend-list">
-      <Header fontSize={'32px'} label={'Friends'} />
+        <Header
+          fontSize={'32px'}
+          label={'Friends'}
+        />
         {[1, 2, 3, 4, 5].map((e) => {
           return <Friend />;
         })}
