@@ -29,11 +29,11 @@ const Home = () => {
             fontSize={'32px'}
             label={'Friends'}
           />
-          {[1, 2, 3, 4, 5].map((e, index) => {
+          {[1, 2, 3, 4, 5, 3, 4, 5, 3, 4, 5, 3, 4, 5].map((e, index) => {
             return <Friend key={index} />;
           })}
         </div>
-        <UserOptions />;
+        <UserOptions />
       </div>
     </div>
   );
