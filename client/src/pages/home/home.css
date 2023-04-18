@@ -26,14 +26,6 @@
   width: 15em;
 }
 
-.user-options {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 5em;
-  background-color: rgb(57, 66, 47);
-}
-
 .ads {
   width: 100%;
   height: 15em;
@@ -50,8 +42,121 @@
   padding: 0.5em 1.5em;
 }
 
+@keyframes test {
+  0% {
+    color: antiquewhite;
+  }
+  100% {
+    color: blue;
+  }
+}
+
 .nav {
   width: 100%;
   height: 10em;
   background-color: yellow;
+  animation: test 3s linear;
+}
+
+.user-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 4em;
+  padding: 8px;
+  background-color: var(--bg-primary-2);
+}
+
+.user-options {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.user-option {
+  margin-inline: 0.3em;
+}
+
+.user-option > svg {
+  cursor: pointer;
+}
+
+.user-option > p {
+  position: absolute;
+  font-size: 0.85em;
+  top: -1.6em;
+  background-color: rgb(35, 35, 35);
+  padding: 0.3em;
+  border-radius: 5px;
+  pointer-events: none;
+  white-space: nowrap;
+  display: none;
+}
+
+.user-option:hover p {
+  display: block;
+  animation: 3s linear 1s test;
+}
+
+.user-image-container {
+  position: relative;
+}
+
+.user-image-container:hover {
+  cursor: pointer;
+}
+
+.user-image {
+  width: 2.25em;
+  height: 2.25em;
+  background-clip: padding-box;
+  border-radius: 50%;
+}
+
+.status-options {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 3em;
+  right: 2em;
+  z-index: 1;
+  background-color: var(--bg-primary-3);
+  border-radius: 10px;
+}
+
+.status-option {
+  all: unset;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 0.85em;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  transition: all 0.15s;
+  margin: 0.3em;
+}
+
+.status-option:hover {
+  cursor: pointer;
+  background-color: var(--color-primary-1);
+  border-radius: 5px;
+}
+
+.status-icon {
+  margin-right: 0.5em;
+  background-color: green;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+}
+
+.dnd {
+  background-color: red;
+}
+
+.invisible {
+  background-color: gray;
 }

@@ -4,6 +4,8 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRouter = require('./routers/auth');
 const { SocketAuthMiddleware } = require('./middlewares/socket');
+const { User } = require('./database');
+const { getUserInfoByAuthHeader } = require('./utils');
 
 const CLIENT_URL = process.env.CLIENT_URL;
 
@@ -27,6 +29,18 @@ const io = require('socket.io')(server, {
     methods: ['GET', 'POST'],
     credentials: true,
   },
+});
+
+app.get('/getuserinfo', getUserInfoByAuthHeader, async (req, res) => {
+  try {
+    console.log(req.userID);
+    console.log('here');
+    const user = await User.findOne({ userId: req.userID }, { salt: 0, email: 0, password: 0 });
+    return res.status(200).json({ success: user });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Something went wrong!' });
+  }
 });
 
 // Connection middleware
