@@ -88,6 +88,17 @@ app.get('/servers', async (req, res) => {
   }
 });
 
+app.get('/server/:id', async (req, res) => {
+  try {
+    const server = await Server.findOne({ serverId: req.params.id });
+    if (!server) return res.status(500).json({ error: 'Something went wrong!' });
+    return res.status(200).json({ success: server });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Something went wrong!' });
+  }
+});
+
 // Connection middleware
 io.use(SocketAuthMiddleware);
 
