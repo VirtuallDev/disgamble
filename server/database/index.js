@@ -28,5 +28,14 @@ const MessageSchema = new mongoose.Schema({
   timestamp: Date,
 });
 
+const ServerSchema = new mongoose.Schema({
+  servername: String,
+  serverId: String,
+  serverImage: String,
+  description: String,
+  dateCreated: Date,
+});
+
 exports.User = mongoose.model('User', UserSchema, 'users');
 exports.Message = mongoose.model('Message', MessageSchema, 'messages');
+exports.Server = mongoose.model('Server', ServerSchema, 'servers');

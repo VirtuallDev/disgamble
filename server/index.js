@@ -4,7 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRouter = require('./routers/auth');
 const { SocketAuthMiddleware } = require('./middlewares/socket');
-const { User } = require('./database');
+const { User, Server } = require('./database');
 const { getUserInfoByAuthHeader } = require('./utils');
 
 const CLIENT_URL = process.env.CLIENT_URL;
@@ -33,13 +33,14 @@ const io = require('socket.io')(server, {
 
 app.get('/getuserinfo', getUserInfoByAuthHeader, async (req, res) => {
   try {
-    console.log(req.userID);
-    console.log('here');
-
     const user = await User.findOne(
       { userId: req.userID },
       { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1, friendRequests: 1, blockedUsers: 1, serverList: 1, _id: 0 }
     );
+    const friends = await User.find({ userId: { $in: user.friends } }, { username: 1, userId: 1, userImage: 1, status: 1 });
+    if (friends) user.friends = friends;
+    const servers = await Server.find({ serverId: { $in: user.serverList } }, { serverId: 1, serverImage: 1, servername: 1 });
+    if (servers) user.serverList = servers;
     return res.status(200).json({ success: user });
   } catch (e) {
     console.log(e);
@@ -49,7 +50,6 @@ app.get('/getuserinfo', getUserInfoByAuthHeader, async (req, res) => {
 
 app.post('/changestatus', getUserInfoByAuthHeader, async (req, res) => {
   try {
-    console.log(req.userID);
     const { statusString } = req.body;
     if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
     const user = await User.findOneAndUpdate({ userId: req.userID }, { status: statusString });
