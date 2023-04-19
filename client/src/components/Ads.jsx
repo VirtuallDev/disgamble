@@ -28,20 +28,22 @@ export const Ads = () => {
   }, [currentAd]);
 
   return (
-    <div className="ad-container">
-      <img
-        src={ads[currentAd]}
-        alt="ad"
-        className="ad-image"></img>
-      <div className="ad-buttons">
-        {ads.map((ad, index) => {
-          return (
-            <button
-              key={index}
-              style={{ backgroundColor: currentAd === index + 1 && 'var(--color-primary-1)' }}
-              onClick={() => setCurrentAd(index + 1)}></button>
-          );
-        })}
+    <div className="ads">
+      <div className="ad-container">
+        <img
+          src={ads[currentAd]}
+          alt="ad"
+          className="ad-image"></img>
+        <div className="ad-buttons">
+          {ads.map((ad, index) => {
+            return (
+              <button
+                key={index}
+                style={{ backgroundColor: currentAd === index + 1 && 'var(--color-primary-1)' }}
+                onClick={() => setCurrentAd(index + 1)}></button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

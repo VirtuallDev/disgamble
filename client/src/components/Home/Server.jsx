@@ -1,5 +1,4 @@
 import React from 'react';
-import { Header } from './Header';
 import { useSelector } from 'react-redux';
 import './Server.css';
 
@@ -12,10 +11,6 @@ export const ServerList = () => {
   };
   return (
     <div className="server-list">
-      <Header
-        fontSize={'32px'}
-        label={'Servers'}
-      />
       {serverList.map((server, index) => {
         return (
           <div

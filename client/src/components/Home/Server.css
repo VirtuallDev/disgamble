@@ -1,3 +1,11 @@
+.server-list {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em 1.5em;
+}
+
 .server-container {
   border-color: rgb(160, 160, 160);
   padding: 0.65em;

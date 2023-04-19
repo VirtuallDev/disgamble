@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { ServerList } from '../../components/Home/Server';
 import { FriendsList } from '../../components/Home/Friend';
 import { Header } from '../../components/Home/Header';
-import { Divider } from '../../components/Home/Divider';
 import { FaMicrophone } from 'react-icons/fa';
 import { MdHeadsetMic } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { apiRequest } from '../../../apiHandler';
 import { setUserObject } from '../../redux/user';
 import { useSelector, useDispatch } from 'react-redux';
-import './home.css';
 import { Ads } from '../../components/Ads';
+import { Nav } from '../../components/Nav';
+
+import './home.css';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -29,11 +30,13 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="left-side">
-        <div className="ads">
-          <Ads />
-        </div>
+        <Ads />
+        <Header
+          fontSize={'32px'}
+          label={'Servers'}
+        />
+        <Nav />
         <ServerList />
-        <div className="nav">NAV</div>
       </div>
       <div className="right-side">
         <FriendsList />
