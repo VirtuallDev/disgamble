@@ -28,13 +28,13 @@ export const Ads = () => {
   }, [currentAd]);
 
   return (
-    <div className="ads">
-      <div className="ad-container">
+    <div className="dds">
+      <div className="dd-container">
         <img
           src={ads[currentAd]}
-          alt="ad"
-          className="ad-image"></img>
-        <div className="ad-buttons">
+          alt=""
+          className="dd-image"></img>
+        <div className="dd-buttons">
           {ads.map((ad, index) => {
             return (
               <button
