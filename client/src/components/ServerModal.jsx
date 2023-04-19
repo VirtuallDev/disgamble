@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
+import { RiFileCopy2Line } from 'react-icons/ri';
 import './ServerModal.css';
 const API_URL = 'http://localhost:3000';
 
@@ -16,6 +17,10 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
     }
   };
 
+  const copyAddress = (serverAddress) => {
+    console.log('copied', serverAddress);
+  };
+
   useEffect(() => {
     fetchServer(serverId);
   }, [showServerModal]);
@@ -26,17 +31,34 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
         showModal={showServerModal}
         setShowModal={setShowServerModal}>
         <div className="server-modal-container">
+          <button
+            className="modal-close"
+            onClick={() => setShowServerModal(false)}>
+            &#215;
+          </button>
           <img
             className="server-modal-image"
             src={server?.serverImage}></img>
-          <p className="server-modal-name">{server?.servername}</p>
-          <div className="server-modal-address-container">
-            <p>Copy Address</p>
-            <button className="server-modal-address">{server?.serverAddress}</button>
+          <div className="server-modal-container2">
+            <p className="server-modal-name">{server?.servername}</p>
+            <p className="modal-label">Address</p>
+            <div className="server-modal-address-container">
+              <p className="server-modal-address">{server?.serverAddress}</p>
+              <div
+                className="icon-container"
+                onClick={() => copyAddress(server.serverAddress || '')}>
+                <RiFileCopy2Line size={'1.3em'}></RiFileCopy2Line>
+                <p className="server-label">Copy Address</p>
+              </div>
+            </div>
+            <p className="modal-label">Users Online</p>
+            <p className="modal-para">{server?.usersOnline?.length}</p>
+            <p className="modal-label">Description</p>
+            <p className="modal-para">{server?.description}</p>
+            <p className="modal-label">Creation Date</p>
+            <p className="modal-para">{server?.dateCreated && new Date(server.dateCreated).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: undefined })}</p>
           </div>
-          <p className="server-modal-description">{server?.description}</p>
-          <p>{server?.dateCreated}</p>
-          <p>{server?.usersOnline?.length}</p>
+          <span style={{ height: '1em' }}></span>
         </div>
       </Modal>
     </>

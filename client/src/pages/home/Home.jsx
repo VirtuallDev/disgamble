@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { ServerList } from '../../components/Home/Server';
 import { FriendsList } from '../../components/Home/Friend';
 import { Header } from '../../components/Home/Header';
-import { FaMicrophone } from 'react-icons/fa';
-import { MdHeadsetMic } from 'react-icons/md';
+import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
+import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { apiRequest } from '../../../apiHandler';
 import { setUserObject } from '../../redux/user';
@@ -12,6 +12,7 @@ import { Ads } from '../../components/Ads';
 import { Nav } from '../../components/Nav';
 
 import './home.css';
+import { toggleDeafen, toggleMute } from '../../redux/sounds';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -49,8 +50,12 @@ const Home = () => {
 export default Home;
 
 const User = () => {
+  const dispatch = useDispatch();
   const userObject = useSelector((state) => state.user.userObject);
   const { username, userId, userImage, status, bio, friends, friendRequests, blockedUsers, serverList } = userObject;
+
+  const userSounds = useSelector((state) => state.sounds.soundObject);
+  const { isMuted, isDeafened } = userSounds;
 
   const [statusOptions, setStatusOptions] = useState(false);
 
@@ -60,12 +65,6 @@ const User = () => {
     });
   };
 
-  const handleMute = () => {
-    console.log('redux?');
-  };
-  const handleDeafen = () => {
-    console.log('redux?');
-  };
   const handleUserSettings = () => {
     console.log('?');
   };
@@ -75,26 +74,38 @@ const User = () => {
       <div className="user-options">
         <div
           className="user-option"
-          onClick={() => handleMute}>
-          <p>Mute</p>
-          <FaMicrophone
-            size={'1.8em'}
-            color={'#0cae7d'}></FaMicrophone>
+          onClick={() => dispatch(toggleMute())}>
+          <p>{isMuted ? 'Unmute' : 'Mute'}</p>
+          {isMuted ? (
+            <FaMicrophoneSlash
+              size={'1.8em'}
+              color={'red'}></FaMicrophoneSlash>
+          ) : (
+            <FaMicrophone
+              size={'1.8em'}
+              color={'white'}></FaMicrophone>
+          )}
         </div>
         <div
           className="user-option"
-          onClick={() => handleDeafen}>
-          <p>Deafen</p>
-          <MdHeadsetMic
-            color={'#0cae7d'}
-            size={'1.8em'}></MdHeadsetMic>
+          onClick={() => dispatch(toggleDeafen())}>
+          <p>{isDeafened ? 'Undeafen' : 'Deafen'}</p>
+          {isDeafened ? (
+            <MdHeadsetOff
+              color={'red'}
+              size={'1.8em'}></MdHeadsetOff>
+          ) : (
+            <MdHeadsetMic
+              color={'white'}
+              size={'1.8em'}></MdHeadsetMic>
+          )}
         </div>
         <div
           className="user-option"
           onClick={() => handleUserSettings}>
           <p>User Settings</p>
           <IoMdSettings
-            color={'#0cae7d'}
+            color={'white'}
             size={'1.8em'}></IoMdSettings>
         </div>
       </div>

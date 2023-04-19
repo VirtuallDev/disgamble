@@ -13,6 +13,16 @@
   border-radius: 10px;
 }
 
+.server-modal-container2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+  width: 320px;
+  background-color: var(--bg-primary-1);
+  border-radius: 10px;
+}
+
 .server-modal-image {
   width: 6em;
   height: 6em;
@@ -22,29 +32,9 @@
 }
 
 .server-modal-name {
-  color: black;
+  color: rgb(255, 0, 0);
   font-size: 1.5em;
   font-weight: bold;
-}
-
-.server-modal-description {
-  width: 300px;
-  background-color: var(--dark);
-  border-radius: 5px;
-  color: white;
-  padding: 5px 10px;
-}
-
-.server-modal-address {
-  all: unset;
-  width: 300px;
-  height: 1.5em;
-  background-color: var(--dark2);
-  border-radius: 5px;
-  color: white;
-  margin-bottom: 0.5em;
-  text-indent: 0.2em;
-  font-size: 1.2em;
 }
 
 .server-modal-address:hover {
@@ -53,9 +43,41 @@
 
 .server-modal-address-container {
   position: relative;
+  display: flex;
+  align-items: center;
+  width: 300px;
+  height: 1.8em;
+  border: 1px solid var(--dark2);
+  border-radius: 5px;
+  color: white;
 }
 
-.server-modal-address-container > p {
+.server-modal-address {
+  text-indent: 0.2em;
+  font-size: 1.2em;
+  color: var(--dark3);
+}
+
+.icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 0.3em;
+  height: 1.5em;
+  width: fit-content;
+}
+
+.icon-container:hover {
+  cursor: pointer;
+  color: var(--color-primary-1);
+}
+
+.icon-container:hover .server-label {
+  display: block;
+}
+
+.server-label {
   position: absolute;
   font-size: 0.7em;
   top: -2em;
@@ -65,9 +87,37 @@
   border-radius: 5px;
   pointer-events: none;
   white-space: nowrap;
+  color: white;
   display: none;
 }
 
-.server-modal-address-container:hover p {
-  display: block;
+.modal-label {
+  color: white;
+  font-size: 0.8em;
+  margin-right: auto;
+  margin-left: 1em;
+  margin-block: 0.2em;
+}
+
+.modal-para {
+  margin-right: auto;
+  margin-left: 1em;
+  font-size: 0.8em;
+  color: var(--dark3);
+  margin-bottom: 0.4em;
+}
+
+.modal-close {
+  all: unset;
+  position: absolute;
+  right: 0.2em;
+  top: 0.2em;
+  font-size: 2.5em;
+  color: var(--dark3);
+  line-height: 0.5;
+}
+
+.modal-close:hover {
+  cursor: pointer;
+  color: var(--color-primary-1);
 }

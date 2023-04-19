@@ -28,15 +28,6 @@
   width: 15em;
 }
 
-@keyframes test {
-  0% {
-    color: antiquewhite;
-  }
-  100% {
-    color: blue;
-  }
-}
-
 .user-container {
   display: flex;
   align-items: center;
@@ -74,6 +65,7 @@
   pointer-events: none;
   white-space: nowrap;
   display: none;
+  color: white;
 }
 
 .user-option:hover {
@@ -85,7 +77,6 @@
 
 .user-option:hover p {
   display: block;
-  animation: 3s linear 1s test;
 }
 
 .user-image-container {

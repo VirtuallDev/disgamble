@@ -1,31 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import './Dds.css';
+
 const API_URL = 'http://localhost:3000';
 
 export const Ads = () => {
   const [ads, setAds] = useState([]);
-  const [currentAd, setCurrentAd] = useState(1);
+  const [currentAd, setCurrentAd] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
-    const fetchedAds = async () => {
+    const fetchAds = async () => {
       const response = await fetch(`${API_URL}/ads`);
-      const jsonResponse = await response.json();
-      if (jsonResponse.success) setAds(jsonResponse.success);
+      const { success } = await response.json();
+      if (success) setAds(success);
     };
-    fetchedAds();
+    fetchAds();
   }, []);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentAd((current) => {
-        if (current + 1 > ads.length) return 1;
-        return current + 1;
-      });
-    }, 5000);
+    const startInterval = () => {
+      const newIntervalId = setInterval(() => {
+        setCurrentAd((current) => {
+          if (current + 1 >= ads.length) return 0;
+          return current + 1;
+        });
+      }, 5000);
+      setIntervalId(newIntervalId);
+    };
+    if (ads.length) {
+      startInterval();
+    }
     return () => {
       clearInterval(intervalId);
     };
-  }, [currentAd]);
+  }, [ads]);
+
+  const handleButtonClick = (index) => {
+    setCurrentAd(index);
+    clearInterval(intervalId);
+    const newIntervalId = setInterval(() => {
+      setCurrentAd((current) => {
+        if (current + 1 >= ads.length) return 0;
+        return current + 1;
+      });
+    }, 5000);
+    setIntervalId(newIntervalId);
+  };
 
   return (
     <div className="dds">
@@ -33,16 +53,16 @@ export const Ads = () => {
         <img
           src={ads[currentAd]}
           alt=""
-          className="dd-image"></img>
+          className="dd-image"
+        />
         <div className="dd-buttons">
-          {ads.map((ad, index) => {
-            return (
-              <button
-                key={index}
-                style={{ backgroundColor: currentAd === index + 1 && 'var(--color-primary-1)' }}
-                onClick={() => setCurrentAd(index + 1)}></button>
-            );
-          })}
+          {ads.map((ad, index) => (
+            <button
+              key={index}
+              style={{ backgroundColor: currentAd === index && 'var(--color-primary-1)' }}
+              onClick={() => handleButtonClick(index)}
+            />
+          ))}
         </div>
       </div>
     </div>

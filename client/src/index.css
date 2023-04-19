@@ -2,7 +2,6 @@
 
 * {
   font-family: 'Rubik', sans-serif;
-  color: #fff;
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -16,6 +15,7 @@ body {
   --darkbg: rgb(75, 72, 155);
   --dark: rgb(50, 50, 60);
   --dark2: rgb(43, 43, 49);
+  --dark3: rgb(200, 200, 200);
   --color-primary-0: #2c3678;
   --color-primary-1: #6a73ab;
   --color-primary-2: #434e8f;
