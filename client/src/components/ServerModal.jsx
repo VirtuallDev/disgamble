@@ -24,7 +24,7 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
   useEffect(() => {
     fetchServer(serverId);
   }, [showServerModal]);
-  // dsaasd
+
   return (
     <>
       <Modal
