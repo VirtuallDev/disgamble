@@ -5,8 +5,69 @@
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
+  align-items: center;
   z-index: 3;
-  width: 25em;
-  height: 25em;
-  background-color: rgb(0, 136, 255);
+  width: 360px;
+  height: auto;
+  background-color: var(--bg-primary-2);
+  border-radius: 10px;
+}
+
+.server-modal-image {
+  width: 6em;
+  height: 6em;
+  border-radius: 100%;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.server-modal-name {
+  color: black;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.server-modal-description {
+  width: 300px;
+  background-color: var(--dark);
+  border-radius: 5px;
+  color: white;
+  padding: 5px 10px;
+}
+
+.server-modal-address {
+  all: unset;
+  width: 300px;
+  height: 1.5em;
+  background-color: var(--dark2);
+  border-radius: 5px;
+  color: white;
+  margin-bottom: 0.5em;
+  text-indent: 0.2em;
+  font-size: 1.2em;
+}
+
+.server-modal-address:hover {
+  cursor: pointer;
+}
+
+.server-modal-address-container {
+  position: relative;
+}
+
+.server-modal-address-container > p {
+  position: absolute;
+  font-size: 0.7em;
+  top: -2em;
+  right: 0.3em;
+  background-color: rgb(35, 35, 35);
+  padding: 0.3em;
+  border-radius: 5px;
+  pointer-events: none;
+  white-space: nowrap;
+  display: none;
+}
+
+.server-modal-address-container:hover p {
+  display: block;
 }

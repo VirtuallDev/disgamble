@@ -26,13 +26,17 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
         showModal={showServerModal}
         setShowModal={setShowServerModal}>
         <div className="server-modal-container">
-          <p>{server?.servername}</p>
-          <p>{server?.serverId}</p>
-          <p>{server?.serverImage}</p>
-          <p>{server?.serverAddress}</p>
-          <p>{server?.description}</p>
-          <p>{server?.usersOnline}</p>
+          <img
+            className="server-modal-image"
+            src={server?.serverImage}></img>
+          <p className="server-modal-name">{server?.servername}</p>
+          <div className="server-modal-address-container">
+            <p>Copy Address</p>
+            <button className="server-modal-address">{server?.serverAddress}</button>
+          </div>
+          <p className="server-modal-description">{server?.description}</p>
           <p>{server?.dateCreated}</p>
+          <p>{server?.usersOnline?.length}</p>
         </div>
       </Modal>
     </>
