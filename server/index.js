@@ -77,6 +77,17 @@ app.get('/ads', (req, res) => {
   }
 });
 
+app.get('/servers', async (req, res) => {
+  try {
+    const servers = await Server.find();
+    if (!servers) return res.status(500).json({ error: 'Something went wrong!' });
+    return res.status(200).json({ success: servers });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Something went wrong!' });
+  }
+});
+
 // Connection middleware
 io.use(SocketAuthMiddleware);
 

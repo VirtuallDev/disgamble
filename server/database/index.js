@@ -32,6 +32,8 @@ const ServerSchema = new mongoose.Schema({
   servername: String,
   serverId: String,
   serverImage: String,
+  serverAddress: String,
+  usersOnline: Array,
   description: String,
   dateCreated: Date,
 });
