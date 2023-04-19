@@ -1,8 +1,8 @@
 import React from "react";
 import './Divider.css';
 
-export const Divider = () => {
+export const Divider = ({m, p}) => {
     return (
-        <hr className="hr-div" />
+        <div className="hr-div" style={{marginBlock: m, padding: p}} />
     )
 }

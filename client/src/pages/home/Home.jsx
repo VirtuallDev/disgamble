@@ -36,8 +36,11 @@ const Home = () => {
           fontSize={'32px'}
           label={'Servers'}
         />
-        <Nav />
-        <ServerList />
+        <div className='serverlist-container'>
+
+          <Nav />
+          <ServerList />
+        </div>
       </div>
       <div className="right-side">
         <FriendsList />

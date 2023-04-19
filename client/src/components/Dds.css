@@ -1,12 +1,12 @@
 .dds {
   width: 100%;
-  height: 15em;
+  height: 14em;
 }
 
 .dd-container {
   position: relative;
   width: 100%;
-  height: 15em;
+  height: 12em;
   background-color: var(--dark2);
   overflow: hidden;
 }
