@@ -4,6 +4,7 @@
   background-color: rgba(76, 129, 175, 0.384);
   display: flex;
   flex-direction: row;
+  overflow: hidden;
 }
 
 .friend-list {
@@ -78,6 +79,7 @@
 
 .user-option {
   margin-inline: 0.3em;
+  padding: 0.3em;
 }
 
 .user-option > svg {
@@ -87,13 +89,20 @@
 .user-option > p {
   position: absolute;
   font-size: 0.85em;
-  top: -1.6em;
+  top: -2em;
   background-color: rgb(35, 35, 35);
   padding: 0.3em;
   border-radius: 5px;
   pointer-events: none;
   white-space: nowrap;
   display: none;
+}
+
+.user-option:hover {
+  background-color: var(--color-primary-1);
+  border-radius: 5px;
+  padding: 0.3em;
+  cursor: pointer;
 }
 
 .user-option:hover p {

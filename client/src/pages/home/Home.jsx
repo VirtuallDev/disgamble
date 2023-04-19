@@ -10,6 +10,7 @@ import { apiRequest } from '../../../apiHandler';
 import { setUserObject } from '../../redux/user';
 import { useSelector, useDispatch } from 'react-redux';
 import './home.css';
+import { Ads } from '../../components/Ads';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -28,7 +29,9 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="left-side">
-        <div className="ads">ADS</div>
+        <div className="ads">
+          <Ads />
+        </div>
         <ServerList />
         <div className="nav">NAV</div>
       </div>
@@ -72,7 +75,7 @@ const User = () => {
           onClick={() => handleMute}>
           <p>Mute</p>
           <FaMicrophone
-            size={'1.5em'}
+            size={'1.8em'}
             color={'#0cae7d'}></FaMicrophone>
         </div>
         <div
