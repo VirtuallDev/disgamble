@@ -13,6 +13,7 @@ export const userSlice = createSlice({
       friendRequests: [],
       blockedUsers: [],
       serverList: [],
+      ads: [],
     },
   },
   reducers: {

@@ -2,26 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import './Server.css';
 import { ServerModal } from '../Modal/ServerModal';
-const API_URL = 'http://localhost:3000';
 
 export const ServerList = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { serverList } = userObject;
 
-  const [servers, setServers] = useState([]);
   const [currentServer, setCurrentServer] = useState('');
   const [showServerModal, setShowServerModal] = useState(false);
   const [searchValue, setSearchValue] = useState('');
-
-  const fetchServers = async () => {
-    const response = await fetch(`${API_URL}/servers`);
-    const jsonResponse = await response.json();
-    if (jsonResponse.success) setServers(jsonResponse.success);
-  };
-
-  useEffect(() => {
-    fetchServers();
-  }, []);
 
   const handleServerClick = (id) => {
     setCurrentServer(id);
@@ -52,7 +40,7 @@ export const ServerList = () => {
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}></input>
         </div>
-        {servers
+        {serverList
           .filter((item) => item?.servername?.toLowerCase().includes(searchValue.toLowerCase()))
           .map((server, index) => {
             return (
@@ -67,7 +55,7 @@ export const ServerList = () => {
                     alt=""
                   />
                   <p className="server-name">{server?.servername}</p>
-                  <p className="server-clients">{server?.usersOnline.length}</p>
+                  <p className="server-clients">{server?.usersOnline?.length}</p>
                 </div>
                 <div className="breakline"></div>
               </div>

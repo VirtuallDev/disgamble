@@ -10,6 +10,7 @@ function useUpdateUser() {
   async function fetchUser() {
     try {
       const jsonResponse = await apiRequest('getuserinfo');
+      console.log(jsonResponse.success);
       if (jsonResponse.success) dispatch(setUserObject(jsonResponse.success));
       setLoading(false);
     } catch (e) {

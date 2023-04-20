@@ -2,19 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { RiFileCopy2Line } from 'react-icons/ri';
 import './ServerModal.css';
-const API_URL = 'http://localhost:3000';
+import { apiRequest } from '../../../apiHandler';
 
 export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) => {
   const [server, setServer] = useState({});
 
   const fetchServer = async (id) => {
-    try {
-      const response = await fetch(`${API_URL}/server/${id}`);
-      const jsonResponse = await response.json();
-      if (jsonResponse.success) setServer(jsonResponse.success);
-    } catch (error) {
-      console.log(error);
-    }
+    const jsonResponse = await apiRequest(`server/${id}`);
+    if (jsonResponse.success) setServer(jsonResponse.success);
   };
 
   const copyAddress = (serverAddress) => {
@@ -23,7 +18,7 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
 
   useEffect(() => {
     fetchServer(serverId);
-  }, [showServerModal]);
+  }, [serverId]);
 
   return (
     <>

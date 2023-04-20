@@ -15,6 +15,13 @@ function App() {
 
   useEffect(() => {
     fetchUser();
+    // Global Listeneres
+    socket.on('updateUser', () => {
+      fetchUser();
+    });
+    return () => {
+      socket.off('updateUser');
+    };
   }, []);
 
   return (

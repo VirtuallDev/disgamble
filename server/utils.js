@@ -17,6 +17,4 @@ async function getUserInfoByAuthHeader(req, res, next) {
   }
 }
 
-module.exports = {
-  getUserInfoByAuthHeader: getUserInfoByAuthHeader,
-};
+exports.getUserInfoByAuthHeader = getUserInfoByAuthHeader;

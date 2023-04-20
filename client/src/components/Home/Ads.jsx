@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import './Dds.css';
+import { useSelector } from 'react-redux';
 
 const API_URL = 'http://localhost:3000';
 
 export const Ads = () => {
-  const [ads, setAds] = useState([]);
+  const userObject = useSelector((state) => state.user.userObject);
+  const { ads } = userObject;
   const [currentAd, setCurrentAd] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
-
-  useEffect(() => {
-    const fetchAds = async () => {
-      const response = await fetch(`${API_URL}/ads`);
-      const { success } = await response.json();
-      if (success) setAds(success);
-    };
-    fetchAds();
-  }, []);
 
   useEffect(() => {
     const startInterval = () => {
