@@ -38,6 +38,12 @@ export const ServerList = () => {
         />
       )}
       <div className="server-list">
+        <div className="server-button-container">
+          <button className="server-button">Create Server</button>
+          <button className="server-button">Add</button>
+          <button className="server-button">Remove</button>
+          <button className="server-button"> Connect</button>
+        </div>
         <div className="server-search-container">
           <input
             className="server-search"

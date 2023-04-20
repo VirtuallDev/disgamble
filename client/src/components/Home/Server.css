@@ -95,3 +95,41 @@
 .server-search::placeholder {
   color: rgb(139, 139, 139);
 }
+
+.server-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  margin-bottom: 1em;
+  flex-wrap: wrap;
+}
+
+.server-button {
+  all: unset;
+  flex-grow: 1;
+  height: 2em;
+  font-size: 1.2em;
+  display: flex;
+  background-color: rgb(79, 74, 148);
+  padding: 0.1em 0.5em;
+  border-radius: 5px;
+  width: fit-content;
+  font-size: 1em;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.server-button:hover {
+  cursor: pointer;
+  background-color: rgb(62, 58, 108);
+}
+
+.server-button:active {
+  cursor: pointer;
+  background-color: rgb(86, 82, 154);
+  transition: all 0.17s;
+}

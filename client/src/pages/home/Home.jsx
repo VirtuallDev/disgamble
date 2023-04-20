@@ -8,7 +8,6 @@ import { IoMdSettings } from 'react-icons/io';
 import { apiRequest } from '../../../apiHandler';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ads } from '../../components/Home/Ads';
-import { Nav } from '../../components/Home/Nav';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
 import './home.css';
 
@@ -26,7 +25,6 @@ const Home = () => {
           label={'Servers'}
         />
         <div className="serverlist-container">
-          <Nav />
           <ServerList />
         </div>
       </div>
