@@ -3,7 +3,6 @@ const router = express.Router();
 const crypto = require('crypto');
 const { User } = require('../database');
 const jwt = require('jsonwebtoken');
-const { getUserInfoByAuthHeader } = require('../utils');
 
 const CLIENT_URL = process.env.CLIENT_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -72,7 +71,7 @@ router.post('/register', async (req, res) => {
       friendRequests: [],
       blockedUsers: [],
       serverList: [],
-      refreshToken: { refreshToken: null, issued: Date.now() },
+      refreshToken: { refreshToken: 'none', issued: Date.now() },
       dateOfBirth: dateOfBirth,
     });
     return res.status(200).json({ success: 'Successfully Registered!' });
@@ -84,26 +83,28 @@ router.post('/register', async (req, res) => {
 
 router.post('/logout', async (req, res) => {
   try {
-    const { userID } = await getUserInfoByAuthHeader(req);
-    if (!userID)
-      return res.status(401).json({
-        error: 'You are not logged in!',
-      });
-    await User.findOneAndUpdate(
-      { userId: userID },
+    const refreshToken = req.cookies.refreshToken;
+    const user = await User.findOneAndUpdate(
+      {
+        'refreshToken.refreshToken': refreshToken,
+      },
       {
         $set: {
-          refreshToken: { refreshToken: null, issued: Date.now() },
+          refreshToken: { refreshToken: 'none', issued: Date.now() },
         },
       }
     );
+    if (!user)
+      return res.status(401).json({
+        error: 'You are not logged in!',
+      });
     return res
       .status(200)
       .cookie('refreshToken', '', {
         httpOnly: true,
         maxAge: 1,
       })
-      .redirect(`${CLIENT_URL}/`);
+      .json({ success: 'Logged out successfully.' });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: 'Something went wrong!' });

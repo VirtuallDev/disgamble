@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css';
+import './Auth.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -7,7 +7,7 @@ const Login = () => {
   const [msg, setMsg] = useState('');
 
   const handleLogin = async () => {
-    const login = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch('http://localhost:3000/auth/login', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -18,8 +18,9 @@ const Login = () => {
         password: password,
       }),
     });
-    const jsonResponse = await login.json();
+    const jsonResponse = await response.json();
     if (jsonResponse.error) return setMsg(jsonResponse.error);
+    window.location.replace('/');
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ServerList } from '../../components/Home/Server';
 import { FriendsList } from '../../components/Home/Friend';
 import { Header } from '../../components/Home/Header';
@@ -6,28 +6,13 @@ import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { apiRequest } from '../../../apiHandler';
-import { setUserObject } from '../../redux/user';
 import { useSelector, useDispatch } from 'react-redux';
-import { Ads } from '../../components/Ads';
-import { Nav } from '../../components/Nav';
-
-import './home.css';
+import { Ads } from '../../components/Home/Ads';
+import { Nav } from '../../components/Home/Nav';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
+import './home.css';
 
 const Home = () => {
-  const dispatch = useDispatch();
-  const userObject = useSelector((state) => state.user.userObject);
-  const { username, userId, userImage, status, bio, friends, friendRequests, blockedUsers, serverList } = userObject;
-
-  const getUserInfo = async () => {
-    const userInfo = await apiRequest('getuserinfo');
-    if (userInfo.success) dispatch(setUserObject(userInfo.success));
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
-
   return (
     <div className="home-container">
       <div className="right-side">

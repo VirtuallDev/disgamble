@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import './Server.css';
-import { ServerModal } from '../ServerModal';
+import { ServerModal } from '../Modal/ServerModal';
 const API_URL = 'http://localhost:3000';
 
 export const ServerList = () => {

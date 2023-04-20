@@ -1,6 +1,6 @@
 import React from 'react';
 import './Nav.css';
-import { Divider } from './Home/Divider';
+import { Divider } from './Divider';
 const API_URL = 'http://localhost:3000';
 
 export const Nav = () => {
@@ -14,7 +14,10 @@ export const Nav = () => {
           <button className="nav-button"> Connect</button>
         </div>
 
-        <Divider m={'12px'} p={'0 12px'} />
+        <Divider
+          m={'12px'}
+          p={'0 12px'}
+        />
         <div className="nav-search-container">
           <input
             className="nav-search"
