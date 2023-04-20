@@ -41,34 +41,3 @@
   background-color: rgb(86, 82, 154);
   transition: all 0.17s;
 }
-
-.nav-search-container {
-  all: unset;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: calc(100% - 2em);
-  height: 100%;
-  margin-bottom: 0.5em;
-}
-
-.nav-search {
-  all: unset;
-  background-color: var(--gray-5);
-  border-radius: 5px;
-  color: white;
-  font-size: 1.3em;
-  padding-block: 0.7em;
-  text-indent: 14px;
-  width: 100%;
-  min-width: 340px;
-  transition: all 0.15s;
-}
-
-.nav-search:focus {
-  /* background-color: var( --bg-primary-2); */
-}
-
-.nav-search::placeholder {
-  color: rgb(139, 139, 139);
-}

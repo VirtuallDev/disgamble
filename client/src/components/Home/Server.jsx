@@ -11,6 +11,7 @@ export const ServerList = () => {
   const [servers, setServers] = useState([]);
   const [currentServer, setCurrentServer] = useState('');
   const [showServerModal, setShowServerModal] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   const fetchServers = async () => {
     const response = await fetch(`${API_URL}/servers`);
@@ -37,25 +38,35 @@ export const ServerList = () => {
         />
       )}
       <div className="server-list">
-        {servers.map((server, index) => {
-          return (
-            <div
-              key={index}
-              className="server-container"
-              onClick={() => handleServerClick(server?.serverId)}>
-              <div className="server">
-                <img
-                  src={server?.serverImage}
-                  className="server-image"
-                  alt=""
-                />
-                <p className="server-name">{server?.servername}</p>
-                <p className="server-clients">{server?.usersOnline.length}</p>
+        <div className="server-search-container">
+          <input
+            className="server-search"
+            placeholder="Search for a community!"
+            type="text"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}></input>
+        </div>
+        {servers
+          .filter((item) => item?.servername?.toLowerCase().includes(searchValue.toLowerCase()))
+          .map((server, index) => {
+            return (
+              <div
+                key={index}
+                className="server-container"
+                onClick={() => handleServerClick(server?.serverId)}>
+                <div className="server">
+                  <img
+                    src={server?.serverImage}
+                    className="server-image"
+                    alt=""
+                  />
+                  <p className="server-name">{server?.servername}</p>
+                  <p className="server-clients">{server?.usersOnline.length}</p>
+                </div>
+                <div className="breakline"></div>
               </div>
-              <div className="breakline"></div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </>
   );

@@ -18,11 +18,6 @@ export const Nav = () => {
           m={'12px'}
           p={'0 12px'}
         />
-        <div className="nav-search-container">
-          <input
-            className="nav-search"
-            placeholder="Search for a community!"></input>
-        </div>
       </div>
     </>
   );
