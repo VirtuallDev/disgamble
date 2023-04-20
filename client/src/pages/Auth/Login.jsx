@@ -65,7 +65,7 @@ const Login = () => {
           Login
         </button>
         <div className="need-container">
-          <p style={{ fontWeight: 'bold', textIndent: '2px', marginRight: '0.3em' }}>Don't have an account?</p>
+          <p className="need-text">Don't have an account?</p>
           <p
             className="auth-link"
             onClick={() => window.location.replace('/register')}>

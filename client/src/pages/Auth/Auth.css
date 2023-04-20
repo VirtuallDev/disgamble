@@ -53,6 +53,13 @@
   flex-direction: row;
 }
 
+.need-text {
+  color: white;
+  font-weight: bold;
+  text-indent: 2px;
+  margin-right: 0.3em;
+}
+
 .auth-link {
   color: rgb(0, 60, 130);
   transition: all 0.2s;

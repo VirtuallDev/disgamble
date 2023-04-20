@@ -4,7 +4,6 @@ const crypto = require('crypto');
 const { User } = require('../database');
 const jwt = require('jsonwebtoken');
 
-const CLIENT_URL = process.env.CLIENT_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post('/login', async (req, res) => {

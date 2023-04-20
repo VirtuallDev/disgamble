@@ -116,7 +116,7 @@ const Register = () => {
           Register
         </button>
         <div className="need-container">
-          <p style={{ fontWeight: 'bold', textIndent: '2px', marginRight: '0.3em' }}>Already have an account?</p>
+          <p className="need-text">Already have an account?</p>
           <p
             className="auth-link"
             onClick={() => window.location.replace('/login')}>
