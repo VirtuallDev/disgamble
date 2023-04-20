@@ -30,21 +30,20 @@ const Home = () => {
 
   return (
     <div className="home-container">
+      <div className="right-side">
+        <FriendsList />
+        <User />
+      </div>
       <div className="left-side">
         <Ads />
         <Header
           fontSize={'32px'}
           label={'Servers'}
         />
-        <div className='serverlist-container'>
-
+        <div className="serverlist-container">
           <Nav />
           <ServerList />
         </div>
-      </div>
-      <div className="right-side">
-        <FriendsList />
-        <User />
       </div>
     </div>
   );

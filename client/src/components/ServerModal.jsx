@@ -53,13 +53,13 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
             </div>
             <p className="modal-label">Users Online</p>
             <div className="users-container">
-              {[server?.usersOnline].map((user) => {
+              {[server?.usersOnline].map((user, index) => {
                 return (
-                  <div>
+                  <div key={index}>
                     <img
-                      src={user.userImage}
+                      src={user?.userImage}
                       alt=""></img>
-                    <p>{user.username}</p>
+                    <p>{user?.username}</p>
                   </div>
                 );
               })}
