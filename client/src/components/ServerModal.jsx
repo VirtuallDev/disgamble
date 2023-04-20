@@ -44,15 +44,26 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
             <p className="modal-label">Address</p>
             <div className="server-modal-address-container">
               <p className="server-modal-address">{server?.serverAddress}</p>
-              <div
-                className="icon-container"
-                onClick={() => copyAddress(server.serverAddress || '')}>
-                <RiFileCopy2Line size={'1.3em'}></RiFileCopy2Line>
+              <div className="icon-container">
+                <RiFileCopy2Line
+                  size={'1.3em'}
+                  onClick={() => copyAddress(server.serverAddress || '')}></RiFileCopy2Line>
                 <p className="server-label">Copy Address</p>
               </div>
             </div>
             <p className="modal-label">Users Online</p>
-            <p className="modal-para">{server?.usersOnline?.length}</p>
+            <div className="users-container">
+              {[server?.usersOnline].map((user) => {
+                return (
+                  <div>
+                    <img
+                      src={user.userImage}
+                      alt=""></img>
+                    <p>{user.username}</p>
+                  </div>
+                );
+              })}
+            </div>
             <p className="modal-label">Description</p>
             <p className="modal-para">{server?.description}</p>
             <p className="modal-label">Creation Date</p>
