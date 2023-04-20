@@ -7,6 +7,7 @@ import Home from './pages/Home/Home';
 import ProtectedRoutes from './components/Global/ProtectedRoutes';
 import { useSelector } from 'react-redux';
 import useUpdateUser from './customhooks/useUpdateUser';
+import DM from './pages/DM/DM';
 
 function App() {
   const userObject = useSelector((state) => state.user.userObject);
@@ -59,6 +60,10 @@ function App() {
                   exact
                   path="/"
                   element={<Home />}
+                />
+                <Route
+                  path="/dm/:id"
+                  element={<DM />}
                 />
               </Route>
             )}

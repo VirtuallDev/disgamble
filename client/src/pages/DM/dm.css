@@ -1,0 +1,161 @@
+.home-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+}
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 20em;
+  min-height: 15em;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 8;
+  background-color: var(--bg-primary-6);
+}
+
+.friend-list {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary-5);
+  padding: 15px;
+  overflow: auto;
+}
+
+.serverlist-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 4em;
+  padding: 8px;
+  background-color: var(--dark2);
+}
+
+.user-options {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.user-option {
+  margin-inline: 0.3em;
+  padding: 0.3em;
+}
+
+.user-option > svg {
+  cursor: pointer;
+}
+
+.user-option > p {
+  position: absolute;
+  font-size: 0.85em;
+  top: -2em;
+  background-color: rgb(35, 35, 35);
+  padding: 0.3em;
+  border-radius: 5px;
+  pointer-events: none;
+  white-space: nowrap;
+  display: none;
+  color: white;
+}
+
+.user-option:hover {
+  background-color: var(--color-primary-1);
+  border-radius: 5px;
+  padding: 0.3em;
+  cursor: pointer;
+}
+
+.user-option:hover p {
+  display: block;
+}
+
+.user-image-container {
+  position: relative;
+}
+
+.user-image-container:hover {
+  cursor: pointer;
+}
+
+.user-image {
+  width: 2.25em;
+  height: 2.25em;
+  background-clip: padding-box;
+  border-radius: 50%;
+}
+
+.status-options {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 3em;
+  right: 2em;
+  z-index: 1;
+  background-color: var(--bg-primary-3);
+  border-radius: 10px;
+}
+
+.status-option {
+  all: unset;
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 0.85em;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  transition: all 0.15s;
+  margin: 0.3em;
+}
+
+.status-option:hover {
+  cursor: pointer;
+  background-color: var(--color-primary-1);
+  border-radius: 5px;
+}
+
+.status-icon {
+  margin-right: 0.5em;
+  background-color: green;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+}
+
+.dnd {
+  background-color: red;
+}
+
+.invisible {
+  background-color: gray;
+}
+
+.user-container-username {
+  max-width: 14ch;
+}
+
+.user-container-username > p {
+  color: whitesmoke;
+  margin-right: 0.5em;
+  font-size: 1em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
