@@ -145,3 +145,17 @@
 .invisible {
   background-color: gray;
 }
+
+.user-container-username {
+  max-width: 14ch;
+}
+
+.user-container-username > p {
+  color: whitesmoke;
+  margin-right: 0.5em;
+  font-size: 1em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

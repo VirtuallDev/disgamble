@@ -111,6 +111,9 @@ const User = () => {
             size={'1.8em'}></IoMdSettings>
         </div>
       </div>
+      <div className="user-container-username">
+        <p>{username}</p>
+      </div>
       <div
         className="status-options"
         style={{ display: statusOptions ? 'flex' : 'none' }}>
