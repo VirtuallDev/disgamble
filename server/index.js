@@ -42,6 +42,18 @@ io.on('connection', (socket) => {
   });
 });
 
+nodeEvents.on('statusChanged', async (friendsArray, userId, status) => {
+  for (const friend of friendsArray) {
+    io.to(`${friend}`).emit('statusChanged', userId, status);
+  }
+});
+
+nodeEvents.on('imageChanged', async (friendsArray, userId, image) => {
+  for (const friend of friendsArray) {
+    io.to(`${friend}`).emit('imageChanged', userId, image);
+  }
+});
+
 nodeEvents.on('updateUser', (userId) => {
   io.to(`${userId}`).emit('updateUser');
 });

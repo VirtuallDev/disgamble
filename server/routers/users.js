@@ -17,16 +17,18 @@ router.get('/getuserinfo', async (req, res) => {
   try {
     const user = await User.findOne(
       { userId: req.userID },
-      { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1, friendRequests: 1, blockedUsers: 1, serverList: 1, _id: 0 }
+      { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1, friendRequests: 1, blockedUsers: 1, serverList: 1 }
     ).lean();
-    const friends = await User.find({ userId: { $in: user.friends } }, { username: 1, userId: 1, userImage: 1, status: 1 });
-    if (friends) user.friends = friends;
-    // const servers = await Server.find({ serverId: { $in: user.serverList } }, { serverId: 1, serverImage: 1, servername: 1 });
-    // if (servers) user.serverList = servers;
-    const servers = await Server.find().lean();
-    if (servers) user.serverList = servers;
+    const friends = await User.find({ userId: { $in: user.friends } }, { username: 1, userId: 1, userImage: 1, status: 1 }).lean();
+    user.friends = friends || [];
+    const servers = await Server.find({ servername: 1, serverId: 1, serverImage: 1, serverAddress: 1, usersOnline: 1, description: 1, dateCreated: 1 }).lean();
+    for (const server of servers) {
+      const usersOnline = await User.find({ userId: { $in: server.usersOnline } }, { username: 1, userId: 1, userImage: 1 }).lean();
+      server.usersOnline = usersOnline || [];
+    }
+    user.serverList = servers || [];
     user.ads = adsArray;
-    return res.status(200).json({ success: user });
+    return res.json({ success: user });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: 'Something went wrong!' });
