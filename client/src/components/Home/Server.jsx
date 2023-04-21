@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import './Server.css';
 import { ServerModal } from '../Modal/ServerModal';
+import { FaSearch } from 'react-icons/fa';
+import SearchInput from '../Global/SearchInput';
 
 export const ServerList = () => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -32,14 +34,12 @@ export const ServerList = () => {
           <button className="server-button">Remove</button>
           <button className="server-button"> Connect</button>
         </div>
-        <div className="server-search-container">
-          <input
-            className="server-search"
-            placeholder="Search for a community!"
-            type="text"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}></input>
-        </div>
+        <SearchInput
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          width={'100%'}
+          placeholder={'Search a server!'}></SearchInput>
+        <div style={{ marginBottom: '0.5em' }}></div>
         {serverList
           .filter((item) => item?.servername?.toLowerCase().includes(searchValue.toLowerCase()))
           .map((server, index) => {
