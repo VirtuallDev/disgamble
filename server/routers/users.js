@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User, Server } = require('../database');
 const { getUserInfoByAuthHeader } = require('../utils');
-
+const nodeEvents = require('../nodeEvents');
 router.use(getUserInfoByAuthHeader);
 
 const adsArray = [
@@ -35,19 +35,6 @@ router.get('/getuserinfo', async (req, res) => {
   }
 });
 
-router.post('/changestatus', async (req, res) => {
-  try {
-    const { statusString } = req.body;
-    if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
-    const user = await User.findOneAndUpdate({ userId: req.userID }, { status: statusString });
-    if (!user) return res.status(500).json({ error: 'Something went wrong!' });
-    return res.status(200).json({ success: 'Status changed successfully.' });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ error: 'Something went wrong!' });
-  }
-});
-
 router.get('/ads', (req, res) => {
   try {
     const adsArray = [
@@ -69,6 +56,20 @@ router.get('/server/:id', async (req, res) => {
     const server = await Server.findOne({ serverId: req.params.id });
     if (!server) return res.status(500).json({ error: 'Something went wrong!' });
     return res.status(200).json({ success: server });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Something went wrong!' });
+  }
+});
+
+router.post('/changestatus', async (req, res) => {
+  try {
+    const { statusString } = req.body;
+    if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
+    const user = await User.findOneAndUpdate({ userId: req.userID }, { status: statusString });
+    if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+    nodeEvents.emit('friendChange', req.userID);
+    return res.status(200).json({ success: 'Status changed successfully.' });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: 'Something went wrong!' });
