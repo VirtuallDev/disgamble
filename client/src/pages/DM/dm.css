@@ -1,3 +1,8 @@
+.dm-container {
+  width: 100%;
+  height: 100%;
+}
+
 .dm-header {
   background-color: var(--dark);
   width: 100%;
@@ -6,19 +11,20 @@
   align-items: center;
 }
 
-.dm-name {
-  color: var(--dark3);
-  font-size: 2.5em;
+.dm-image {
+  border-radius: 100%;
+  width: 3em;
+  height: 3em;
+  margin-inline: 0.5em;
 }
 
-.dm-search {
-  all: unset;
-  background-color: var(--gray-5);
-  border-radius: 5px;
-  color: white;
-  font-size: 1.3em;
-  padding-block: 0.3em;
-  text-indent: 14px;
-  width: 100%;
-  min-width: 340px;
+.dm-name {
+  color: var(--dark3);
+  font-size: 1.8em;
+}
+
+.dm-messages {
+  height: 10em;
+  width: 300px;
+  background-color: rgb(40, 59, 77);
 }

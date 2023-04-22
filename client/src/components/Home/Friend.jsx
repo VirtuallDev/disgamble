@@ -8,7 +8,7 @@ export const FriendsList = () => {
   const { friends } = userObject;
 
   const handleFriendClick = (id) => {
-    console.log(`redirect to dm ${id}`);
+    window.location.replace(`/dm/${id}`);
   };
 
   return (
