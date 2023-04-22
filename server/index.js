@@ -6,6 +6,7 @@ const authRouter = require('./routers/auth');
 const usersRouter = require('./routers/users');
 const { SocketAuthMiddleware } = require('./middlewares/socket');
 const nodeEvents = require('./nodeEvents');
+const { User } = require('./database');
 
 const CLIENT_URL = process.env.CLIENT_URL;
 
@@ -42,15 +43,12 @@ io.on('connection', (socket) => {
   });
 });
 
-nodeEvents.on('statusChanged', async (friendsArray, userId, status) => {
-  for (const friend of friendsArray) {
-    io.to(`${friend}`).emit('statusChanged', userId, status);
-  }
-});
-
-nodeEvents.on('imageChanged', async (friendsArray, userId, image) => {
-  for (const friend of friendsArray) {
-    io.to(`${friend}`).emit('imageChanged', userId, image);
+nodeEvents.on('friendChange', async (userId) => {
+  const friend = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1 }).lean();
+  const friendObject = friend;
+  delete friendObject.friends;
+  for (const friend of friend.friends) {
+    io.to(`${friend}`).emit('friendChange', friendObject);
   }
 });
 

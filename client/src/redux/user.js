@@ -20,13 +20,13 @@ export const userSlice = createSlice({
     setUserObject: (state, action) => {
       state.userObject = action.payload;
     },
-    friendStatusChange: (state, action) => {
-      const index = state.userObject.friends.findIndex((friend) => action.payload.userId === friend);
-      if (!index === -1) state.userObject.friends[index].status = action.payload.status;
+    friendChange: (state, action) => {
+      const index = state.userObject.friends.findIndex((friend) => action.payload.userObject.userId === friend);
+      if (!index === -1) state.userObject.friends[index] = action.payload.userObject;
     },
   },
 });
 
-export const { setUserObject } = userSlice.actions;
+export const { setUserObject, friendChange } = userSlice.actions;
 
 export default userSlice.reducer;

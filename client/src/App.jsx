@@ -8,6 +8,7 @@ import ProtectedRoutes from './components/Global/ProtectedRoutes';
 import { useSelector } from 'react-redux';
 import useUpdateUser from './customhooks/useUpdateUser';
 import DM from './pages/DM/DM';
+import { friendChange } from './redux/user';
 
 function App() {
   const userObject = useSelector((state) => state.user.userObject);
@@ -16,12 +17,15 @@ function App() {
 
   useEffect(() => {
     fetchUser();
-    // Global Listeneres
     socket.on('updateUser', () => {
       fetchUser();
     });
+    socket.on('friendChange', (friendObject) => {
+      dispatch(friendChange(friendObject));
+    });
     return () => {
       socket.off('updateUser');
+      socket.off('friendChange');
     };
   }, []);
 
