@@ -7,6 +7,7 @@
 }
 
 .server-container {
+  color: rgb(160, 160, 160);
   border-color: rgb(160, 160, 160);
   padding: 0.65em;
   border-radius: 10px;
@@ -14,7 +15,9 @@
 
 .server-container:hover {
   border-color: white;
+  color: white;
   background-color: var(--bg-primary-2);
+  cursor: pointer;
 }
 
 .server {
@@ -24,23 +27,20 @@
   border-radius: 10px;
   /* border-bottom: 2px dashed rgb(160, 160, 160); */
   /* border: 1px solid none; */
-  border-color: rgb(160, 160, 160);
+  border-color: inherit;
   margin-bottom: -1px;
-  color: rgb(160, 160, 160);
+  color: inherit;
   font-size: 1em;
-  transition: all 0.1s;
+  transition: all 0.2s;
   -moz-transition: all 0.2s;
 }
 
 .breakline {
   margin-top: 0.3em;
-  border: 2px dashed;
+  border: 2px solid;
   border-color: inherit;
-}
-
-.server:hover {
-  cursor: pointer;
-  color: white;
+  transition: all 0.2s;
+  -moz-transition: all 0.2s;
 }
 
 .server-image {
@@ -58,11 +58,16 @@
   text-indent: 0.5em;
 }
 
-.server-clients {
+.server-expand {
   font-size: 1.1em;
   margin-left: auto;
   font-weight: bold;
-  color: inherit;
+  color: var(--gray-2);
+}
+
+.server-expand:hover {
+  color: var(--color-primary-1);
+  cursor: pointer;
 }
 
 .server-button-container {
@@ -90,6 +95,7 @@
   justify-content: center;
   align-items: center;
   transition: all 0.3s;
+  -moz-transition: all 0.3s;
 }
 
 .server-button:hover {
@@ -101,4 +107,5 @@
   cursor: pointer;
   background-color: rgb(86, 82, 154);
   transition: all 0.17s;
+  -moz-transition: all 0.17s;
 }

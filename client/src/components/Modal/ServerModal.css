@@ -9,7 +9,7 @@
   z-index: 3;
   width: 360px;
   height: auto;
-  background-color: var(--bg-primary-2);
+  background-color: var(--bg-primary-5);
   border-radius: 10px;
 }
 
@@ -19,7 +19,7 @@
   align-items: center;
   z-index: 3;
   width: 320px;
-  background-color: var(--bg-primary-1);
+  background-color: var(--bg-primary-2);
   border-radius: 10px;
 }
 
@@ -32,7 +32,7 @@
 }
 
 .server-modal-name {
-  color: rgb(255, 0, 0);
+  color: var(--bg-primary-3);
   font-size: 1.5em;
   font-weight: bold;
 }

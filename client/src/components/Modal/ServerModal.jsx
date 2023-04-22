@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { RiFileCopy2Line } from 'react-icons/ri';
+import { useSelector } from 'react-redux';
 import './ServerModal.css';
-import { apiRequest } from '../../../apiHandler';
 
 export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) => {
+  const userObject = useSelector((state) => state.user.userObject);
+  const { serverList } = userObject;
   const [server, setServer] = useState({});
-
-  const fetchServer = async (id) => {
-    const jsonResponse = await apiRequest(`server/${id}`);
-    if (jsonResponse.success) setServer(jsonResponse.success);
-  };
 
   const copyAddress = (serverAddress) => {
     console.log('copied', serverAddress);
   };
 
   useEffect(() => {
-    fetchServer(serverId);
+    const findServer = serverList.find((server) => server.serverId === serverId);
+    if (findServer) setServer(findServer);
   }, [serverId]);
 
   return (
@@ -48,7 +46,7 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
             </div>
             <p className="modal-label">Users Online</p>
             <div className="users-container">
-              {[server?.usersOnline].map((user, index) => {
+              {server?.usersOnline?.map((user, index) => {
                 return (
                   <div key={index}>
                     <img

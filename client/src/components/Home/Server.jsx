@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import './Server.css';
 import { ServerModal } from '../Modal/ServerModal';
-import { FaSearch } from 'react-icons/fa';
+import { IoMdExpand } from 'react-icons/io';
 import SearchInput from '../Global/SearchInput';
 
 export const ServerList = () => {
@@ -12,8 +12,13 @@ export const ServerList = () => {
   const [currentServer, setCurrentServer] = useState('');
   const [showServerModal, setShowServerModal] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [selectedServer, setSelectedServer] = useState('');
 
   const handleServerClick = (id) => {
+    setSelectedServer(id);
+  };
+
+  const handleExpandClick = (id) => {
     setCurrentServer(id);
     setShowServerModal(true);
   };
@@ -47,6 +52,7 @@ export const ServerList = () => {
               <div
                 key={index}
                 className="server-container"
+                style={{ backgroundColor: selectedServer === server?.serverId ? 'var(--bg-primary-5)' : 'initial' }}
                 onClick={() => handleServerClick(server?.serverId)}>
                 <div className="server">
                   <img
@@ -55,7 +61,10 @@ export const ServerList = () => {
                     alt=""
                   />
                   <p className="server-name">{server?.servername}</p>
-                  <p className="server-clients">{server?.usersOnline?.length}</p>
+                  <IoMdExpand
+                    onClick={() => handleExpandClick(server?.serverId)}
+                    className="server-expand"
+                    size={'1.8em'}></IoMdExpand>
                 </div>
                 <div className="breakline"></div>
               </div>
