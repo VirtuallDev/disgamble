@@ -41,6 +41,11 @@ io.on('connection', (socket) => {
   socket.on('hello', (args) => {
     console.log(args);
   });
+  socket.on('connectToServer', (serverId) => {
+    socket.leaveAll();
+    socket.join(socket.userId);
+    socket.join(serverId);
+  });
 });
 
 nodeEvents.on('friendChange', async (userId) => {
@@ -55,8 +60,6 @@ nodeEvents.on('friendChange', async (userId) => {
 nodeEvents.on('updateUser', (userId) => {
   io.to(`${userId}`).emit('updateUser');
 });
-// How to update a user
-// nodeEvents.emit('updateUser', userId);
 
 /*
   socket.on('offer', async (offer) => {

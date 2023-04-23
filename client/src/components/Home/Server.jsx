@@ -4,6 +4,7 @@ import './Server.css';
 import { ServerModal } from '../Modal/ServerModal';
 import { IoMdExpand } from 'react-icons/io';
 import SearchInput from '../Global/SearchInput';
+import { socketRequest } from '../../apiHandler';
 
 export const ServerList = () => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -23,6 +24,11 @@ export const ServerList = () => {
     setShowServerModal(true);
   };
 
+  const handleConnection = () => {
+    socketRequest('connectToServer', currentServer);
+    // ...
+  };
+
   return (
     <>
       {showServerModal && (
@@ -35,9 +41,11 @@ export const ServerList = () => {
       <div className="server-list">
         <div className="server-button-container">
           <button className="server-button">Create Server</button>
-          <button className="server-button">Add</button>
-          <button className="server-button">Remove</button>
-          <button className="server-button"> Connect</button>
+          <button
+            className="server-button"
+            onClick={() => handleConnection()}>
+            Connect
+          </button>
         </div>
         <SearchInput
           searchValue={searchValue}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUserObject } from '../redux/user';
-import { apiRequest } from '../../apiHandler';
+import { apiRequest } from '../apiHandler';
 
 function useUpdateUser() {
   const dispatch = useDispatch();

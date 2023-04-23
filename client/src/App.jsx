@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { SocketContext, socket } from '../apiHandler';
+import { SocketContext, socket } from './apiHandler';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Home from './pages/Home/Home';
