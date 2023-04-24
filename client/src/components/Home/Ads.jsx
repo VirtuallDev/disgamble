@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './Dds.css';
 import { useSelector } from 'react-redux';
 
-const API_URL = 'http://localhost:3000';
-
 export const Ads = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { ads } = userObject;

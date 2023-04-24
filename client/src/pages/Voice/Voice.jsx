@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { socket } from '../../apiHandler';
+import { useSelector } from 'react-redux';
 
 const configuration = {
   iceServers: [
@@ -9,18 +10,19 @@ const configuration = {
   ],
 };
 
-const VoiceChat = () => {
-  const localAudioRef = useRef(null);
+const Voice = () => {
+  const userObject = useSelector((state) => state.user.userObject);
+  const { userId } = userObject;
+
   const remoteAudioRef = useRef(null);
 
   const [peerConnection, setPeerConnection] = useState(null);
-  const [localStream, setLocalStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
+  const [connection, setConnection] = useState(null);
 
   useEffect(() => {
     const init = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      setLocalStream(stream);
 
       const peerConnection = new RTCPeerConnection(configuration);
       setPeerConnection(peerConnection);
@@ -37,36 +39,38 @@ const VoiceChat = () => {
         if (event.candidate) {
         }
       };
+
+      peerConnection.onopen = () => {
+        setConnection('Connection Established');
+      };
+
+      socket.on('answer', async (answer, id) => {
+        if (userId !== id && peerConnection) {
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+        }
+      });
+      socket.on('offer', async (offer, id) => {
+        if (userId !== id && peerConnection) {
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+          const answer = await peerConnection.createAnswer();
+          await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+          socket.emit('answer', answer);
+        }
+      });
+      return () => {
+        socket.off('answer');
+        socket.off('offer');
+      };
     };
 
     init();
   }, []);
 
   useEffect(() => {
-    if (localAudioRef.current && localStream) {
-      localAudioRef.current.srcObject = localStream;
-    }
-
     if (remoteAudioRef.current && remoteStream) {
       remoteAudioRef.current.srcObject = remoteStream;
     }
-  }, [localStream, remoteStream]);
-
-  useEffect(() => {
-    socket.on('answer', async (answer) => {
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-    });
-    socket.on('offer', async (offer) => {
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-      const answer = await peerConnection.createAnswer();
-      await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-      socket.emit('answer', answer);
-    });
-    return () => {
-      socket.off('answer');
-      socket.off('offer');
-    };
-  }, []);
+  }, [remoteStream]);
 
   const sendOffer = async () => {
     const offer = await peerConnection.createOffer();
@@ -75,22 +79,21 @@ const VoiceChat = () => {
   };
 
   return (
-    <div>
-      <button
-        style={{ width: '100px', height: '100px' }}
-        onClick={() => sendOffer}>
-        Send Offer
-      </button>
-      <audio
-        ref={localAudioRef}
-        autoPlay
-      />
+    <>
       <audio
         ref={remoteAudioRef}
         autoPlay
       />
-    </div>
+      <div>
+        <button
+          style={{ width: '100px', height: '100px' }}
+          onClick={sendOffer}>
+          Send Offer
+        </button>
+        <div style={{ color: 'white' }}>{connection}"Connection"</div>
+      </div>
+    </>
   );
 };
 
-export default VoiceChat;
+export default Voice;

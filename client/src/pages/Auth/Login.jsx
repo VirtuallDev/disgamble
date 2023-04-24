@@ -7,7 +7,7 @@ const Login = () => {
   const [msg, setMsg] = useState('');
 
   const handleLogin = async () => {
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch('http://213.57.174.158:3000/auth/login', {
       method: 'POST',
       credentials: 'include',
       headers: {

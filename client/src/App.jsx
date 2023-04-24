@@ -8,6 +8,7 @@ import ProtectedRoutes from './components/Global/ProtectedRoutes';
 import { useSelector } from 'react-redux';
 import useUpdateUser from './customhooks/useUpdateUser';
 import DM from './pages/DM/DM';
+import Voice from './pages/Voice/Voice';
 import { friendChange } from './redux/user';
 
 function App() {
@@ -34,6 +35,12 @@ function App() {
       <BrowserRouter>
         <SocketContext.Provider value={{ socket }}>
           <Routes>
+            <Route>
+              <Route
+                path="/voice"
+                element={<Voice />}
+              />
+            </Route>
             <Route
               element={
                 <ProtectedRoutes

@@ -37,7 +37,7 @@ const Register = () => {
 
   const handleRegister = async () => {
     if ((msg.username !== '' || msg.email !== '' || msg.password !== '', msg.confirmPassword !== '')) return;
-    const register = await fetch('http://localhost:3000/auth/register', {
+    const register = await fetch('http://213.57.174.158:3000/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
