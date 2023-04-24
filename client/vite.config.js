@@ -2,13 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import fs from 'fs';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     https: {
-      key: fs.readFileSync('../server.key'),
-      cert: fs.readFileSync('../server.cert'),
+      key: fs.readFileSync('../server/server.key'),
+      cert: fs.readFileSync('../server/server.crt'),
     },
     host: true,
     port: 3001,

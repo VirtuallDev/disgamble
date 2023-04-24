@@ -45,16 +45,22 @@ const Voice = () => {
       };
 
       socket.on('answer', async (answer, id) => {
-        if (userId !== id && peerConnection) {
+        console.log(answer);
+        if (userId !== id && peerConnection && peerConnection.connectionState === 'stable') {
           await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
         }
       });
       socket.on('offer', async (offer, id) => {
         if (userId !== id && peerConnection) {
-          await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-          const answer = await peerConnection.createAnswer();
-          await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-          socket.emit('answer', answer);
+          if (peerConnection.connectionState === 'stable') {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+            socket.emit('answer', answer);
+          } else if (peerConnection.connectionState !== 'closed') {
+            // Queue the offer and process it later
+            // ...
+          }
         }
       });
       return () => {
@@ -73,9 +79,11 @@ const Voice = () => {
   }, [remoteStream]);
 
   const sendOffer = async () => {
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
-    socket.emit('offer', offer);
+    if (peerConnection) {
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
+      socket.emit('offer', offer);
+    }
   };
 
   return (

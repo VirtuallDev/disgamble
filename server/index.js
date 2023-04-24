@@ -13,8 +13,8 @@ const CLIENT_URL = process.env.CLIENT_URL;
 const app = express();
 
 const options = {
-  key: fs.readFileSync('../server.key'),
-  cert: fs.readFileSync('../server.cert'),
+  key: fs.readFileSync('./server.key'),
+  cert: fs.readFileSync('./server.crt'),
 };
 
 const server = https.createServer(options, app).listen(3000, () => console.log(`HTTPS server running on port ${3000}`));
@@ -53,10 +53,12 @@ io.on('connection', (socket) => {
     socket.join(serverId);
   });
   socket.on('offer', async (offer) => {
-    socket.emit('offer', offer);
+    socket.emit('offer', offer, socket.userId);
+    console.log(offer, 'offer');
   });
   socket.on('answer', async (answer) => {
-    socket.emit('answer', answer);
+    socket.emit('answer', answer, socket.userId);
+    console.log(answer, 'answer');
   });
   socket.on('icecandidate', (candidate) => {
     socket.emit('icecandidate', candidate);
