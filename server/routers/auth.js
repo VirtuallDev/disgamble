@@ -31,6 +31,7 @@ router.post('/login', async (req, res) => {
       .status(200)
       .cookie('refreshToken', refreshToken, {
         httpOnly: true,
+        secure: true,
         maxAge: 24 * 60 * 60 * 1000,
       })
       .json({ success: 'Logged in successfully.' });
@@ -101,6 +102,7 @@ router.post('/logout', async (req, res) => {
       .status(200)
       .cookie('refreshToken', '', {
         httpOnly: true,
+        secure: true,
         maxAge: 1,
       })
       .json({ success: 'Logged out successfully.' });

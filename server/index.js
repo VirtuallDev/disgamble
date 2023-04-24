@@ -1,3 +1,5 @@
+const https = require('https');
+const fs = require('fs');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -7,14 +9,20 @@ const usersRouter = require('./routers/users');
 const { SocketAuthMiddleware } = require('./middlewares/socket');
 const nodeEvents = require('./nodeEvents');
 const { User } = require('./database');
-
 const CLIENT_URL = process.env.CLIENT_URL;
-
 const app = express();
+
+const options = {
+  key: fs.readFileSync('../server.key'),
+  cert: fs.readFileSync('../server.cert'),
+};
+
+const server = https.createServer(options, app).listen(3000, () => console.log(`HTTPS server running on port ${3000}`));
+
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'http://213.57.174.158:3001',
+    origin: 'https://213.57.174.158:3001',
     credentials: true,
   })
 );
@@ -22,8 +30,6 @@ app.use(
 app.use(express.json());
 app.use('/auth', authRouter);
 app.use('', usersRouter);
-
-const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
 
 const io = require('socket.io')(server, {
   cors: {

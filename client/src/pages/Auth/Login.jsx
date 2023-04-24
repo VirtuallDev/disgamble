@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_URL } from '../../apiHandler';
 import './Auth.css';
 
 const Login = () => {
@@ -7,7 +8,7 @@ const Login = () => {
   const [msg, setMsg] = useState('');
 
   const handleLogin = async () => {
-    const response = await fetch('http://213.57.174.158:3000/auth/login', {
+    const response = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       credentials: 'include',
       headers: {
