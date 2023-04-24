@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { socket } from '../../apiHandler';
 
 const configuration = {
   iceServers: [
@@ -34,13 +35,8 @@ const VoiceChat = () => {
 
       peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
-          // Send the ICE candidate to the remote client using a signaling server
         }
       };
-
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
-      // Send the offer to the remote client using the signaling server
     };
 
     init();
@@ -56,12 +52,35 @@ const VoiceChat = () => {
     }
   }, [localStream, remoteStream]);
 
-  const handleAnswer = async (answer) => {
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+  useEffect(() => {
+    socket.on('answer', async (answer) => {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    });
+    socket.on('offer', async (offer) => {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+      const answer = await peerConnection.createAnswer();
+      await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+      socket.emit('answer', answer);
+    });
+    return () => {
+      socket.off('answer');
+      socket.off('offer');
+    };
+  }, []);
+
+  const sendOffer = async () => {
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
+    socket.emit('offer', offer);
   };
 
   return (
     <div>
+      <button
+        style={{ width: '100px', height: '100px' }}
+        onClick={() => sendOffer}>
+        Send Offer
+      </button>
       <audio
         ref={localAudioRef}
         autoPlay

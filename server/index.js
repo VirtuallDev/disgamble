@@ -46,6 +46,15 @@ io.on('connection', (socket) => {
     socket.join(socket.userId);
     socket.join(serverId);
   });
+  socket.on('offer', async (offer) => {
+    socket.emit('offer', offer);
+  });
+  socket.on('answer', async (answer) => {
+    socket.emit('answer', answer);
+  });
+  socket.on('icecandidate', (candidate) => {
+    socket.emit('icecandidate', candidate);
+  });
 });
 
 nodeEvents.on('friendChange', async (userId) => {
@@ -60,39 +69,3 @@ nodeEvents.on('friendChange', async (userId) => {
 nodeEvents.on('updateUser', (userId) => {
   io.to(`${userId}`).emit('updateUser');
 });
-
-/*
-  socket.on('offer', async (offer) => {
-    // Receive the offer from the remote client
-
-    const peerConnection = new RTCPeerConnection(configuration);
-
-    offer.sdp = offer.sdp.replace(/a=sendrecv\n/g, 'a=sendonly\n');
-
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-    stream.getTracks().forEach((track) => {
-      peerConnection.addTrack(track, stream);
-    });
-
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-
-    socket.emit('answer', answer);
-    // Send the answer back to the remote client
-  });
-
-  socket.on('answer', async (answer) => {
-    // Receive the answer from the remote client
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-  });
-
-  socket.on('icecandidate', (event) => {
-    // Receive the ICE candidate from the remote client
-    if (event.candidate) {
-      socket.emit('icecandidate', event.candidate);
-    }
-  }); 
-*/
