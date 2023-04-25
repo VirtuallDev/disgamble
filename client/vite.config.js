@@ -9,12 +9,8 @@ export default defineConfig({
       key: fs.readFileSync('../server/server.key'),
       cert: fs.readFileSync('../server/server.crt'),
     },
-    host: true,
+    host: '0.0.0.0',
     port: 3001,
-    history: {
-      // enable HTML5 history API fallback
-      htmlAcceptHeaders: ['text/html', 'application/xhtml+xml'],
-    },
   },
   preview: {
     port: 8080,

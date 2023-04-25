@@ -11,6 +11,7 @@ export const socket = io(API_URL, {
     Authorization: `Bearer ${accessToken}`,
   },
   withCredentials: true,
+  cors: true,
 });
 
 export const SocketContext = React.createContext();

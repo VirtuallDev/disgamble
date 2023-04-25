@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { socket } from '../../apiHandler';
-import { useSelector } from 'react-redux';
 
 const configuration = {
   iceServers: [
@@ -11,14 +10,12 @@ const configuration = {
 };
 
 const Voice = () => {
-  const userObject = useSelector((state) => state.user.userObject);
-  const { userId } = userObject;
-
   const remoteAudioRef = useRef(null);
 
+  const [userId, setUserId] = useState('1');
   const [peerConnection, setPeerConnection] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
-  const [connection, setConnection] = useState(null);
+  const [connection, setConnection] = useState('connection');
 
   useEffect(() => {
     const init = async () => {
@@ -37,6 +34,7 @@ const Voice = () => {
 
       peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
+          socket.emit('icecandidate', event.candidate);
         }
       };
 
@@ -44,26 +42,34 @@ const Voice = () => {
         setConnection('Connection Established');
       };
 
+      socket.on('icecandidate', (candidate, id) => {
+        if (userId !== id) {
+          console.log('Received ICE candidate:', candidate);
+          peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        }
+      });
+
       socket.on('answer', async (answer, id) => {
-        console.log(answer);
-        if (userId !== id && peerConnection && peerConnection.connectionState === 'stable') {
+        if (userId !== id) {
+          console.log('Received answer:', answer);
+          console.log('peerConnection:', peerConnection);
+          console.log('peerConnection.connectionState:', peerConnection.connectionState);
           await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
         }
       });
       socket.on('offer', async (offer, id) => {
-        if (userId !== id && peerConnection) {
-          if (peerConnection.connectionState === 'stable') {
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-            socket.emit('answer', answer);
-          } else if (peerConnection.connectionState !== 'closed') {
-            // Queue the offer and process it later
-            // ...
-          }
+        if (userId !== id) {
+          console.log('Received offer:', offer);
+          console.log('peerConnection:', peerConnection);
+          console.log('peerConnection.connectionState:', peerConnection.connectionState);
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+          const answer = await peerConnection.createAnswer();
+          await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+          socket.emit('answer', answer);
         }
       });
       return () => {
+        socket.off('icecandidate');
         socket.off('answer');
         socket.off('offer');
       };
@@ -77,6 +83,12 @@ const Voice = () => {
       remoteAudioRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
+
+  useEffect(() => {
+    console.log('peerConnection:', peerConnection);
+    console.log('peerConnection.connectionState:', peerConnection?.connectionState);
+    setConnection(peerConnection?.connectionState);
+  }, [peerConnection?.connectionState]);
 
   const sendOffer = async () => {
     if (peerConnection) {
@@ -98,7 +110,12 @@ const Voice = () => {
           onClick={sendOffer}>
           Send Offer
         </button>
-        <div style={{ color: 'white' }}>{connection}"Connection"</div>
+        <button
+          style={{ width: '100px', height: '100px' }}
+          onClick={() => setUserId('2')}>
+          Change Id
+        </button>
+        <div style={{ color: 'white' }}>{connection}</div>
       </div>
     </>
   );

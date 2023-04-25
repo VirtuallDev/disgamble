@@ -52,16 +52,20 @@ io.on('connection', (socket) => {
     socket.join(socket.userId);
     socket.join(serverId);
   });
+  socket.on('icecandidate', async (icecandidate) => {
+    console.log(icecandidate, 'icecandidate');
+    io.emit('icecandidate', icecandidate, socket.userId);
+  });
   socket.on('offer', async (offer) => {
-    socket.emit('offer', offer, socket.userId);
     console.log(offer, 'offer');
+    io.emit('offer', offer, socket.userId);
   });
   socket.on('answer', async (answer) => {
-    socket.emit('answer', answer, socket.userId);
     console.log(answer, 'answer');
+    io.emit('answer', answer, socket.userId);
   });
   socket.on('icecandidate', (candidate) => {
-    socket.emit('icecandidate', candidate);
+    io.emit('icecandidate', candidate);
   });
 });
 
