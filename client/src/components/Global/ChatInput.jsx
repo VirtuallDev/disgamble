@@ -5,7 +5,7 @@ const ChatInput = (props) => {
   const [message, setMessage] = useState('');
 
   const sendMessage = async () => {
-    socketRequest('chatMessage', props.recipientId, message);
+    socketRequest('chat:message', props.recipientId, message);
   };
 
   return (

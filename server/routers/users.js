@@ -68,7 +68,7 @@ router.post('/changestatus', async (req, res) => {
     if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
     const user = await User.findOneAndUpdate({ userId: req.userID }, { status: statusString });
     if (!user) return res.status(500).json({ error: 'Something went wrong!' });
-    nodeEvents.emit('friendChange', req.userID);
+    nodeEvents.emit('user:friendUpdate', req.userID);
     return res.status(200).json({ success: 'Status changed successfully.' });
   } catch (e) {
     console.log(e);

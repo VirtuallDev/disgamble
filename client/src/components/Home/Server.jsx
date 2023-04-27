@@ -38,7 +38,7 @@ export const ServerList = () => {
           <button className="server-button">Create Server</button>
           <button
             className="server-button"
-            onClick={() => socketRequest('connectToServer', currentServer)}>
+            onClick={() => socketRequest('server:connect', currentServer)}>
             Connect
           </button>
         </div>

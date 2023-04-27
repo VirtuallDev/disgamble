@@ -9,7 +9,6 @@ const usersRouter = require('./routers/users');
 const { SocketAuthMiddleware } = require('./middlewares/socket');
 const nodeEvents = require('./nodeEvents');
 const { User, Server } = require('./database');
-const CLIENT_URL = process.env.CLIENT_URL;
 const app = express();
 const options = {
   key: fs.readFileSync('server.key'),
@@ -18,6 +17,8 @@ const options = {
 
 const server = https.createServer(options, app).listen(3000, () => console.log(`HTTPS server running on port ${3000}`));
 // const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
+
+const CLIENT_URL = process.env.CLIENT_URL;
 
 app.use(cookieParser());
 app.use(
@@ -44,42 +45,36 @@ io.use(SocketAuthMiddleware);
 
 io.on('connection', (socket) => {
   if (socket.userId) socket.join(socket.userId);
-  socket.on('hello', (args) => {
-    console.log(args);
-  });
-  socket.on('connectToServer', async (serverId) => {
+  socket.on('server:connect', async (serverId) => {
     socket.leaveAll();
     socket.join(socket.userId);
     socket.join(serverId);
     const server = await Server.findOne({ serverId: serverId });
-    socket.emit('serverConnected', server);
+    socket.emit('server:connected', server);
   });
-  socket.on('icecandidate', async (icecandidate) => {
+  socket.on('webrtc:icecandidate', async (icecandidate) => {
     console.log(icecandidate, 'icecandidate');
-    io.emit('icecandidate', icecandidate, socket.userId);
+    io.emit('webrtc:icecandidate', icecandidate, socket.userId);
   });
-  socket.on('offer', async (offer) => {
+  socket.on('webrtc:offer', async (offer) => {
     console.log(offer, 'offer');
-    io.emit('offer', offer, socket.userId);
+    io.emit('webrtc:offer', offer, socket.userId);
   });
-  socket.on('answer', async (answer) => {
+  socket.on('webrtc:answer', async (answer) => {
     console.log(answer, 'answer');
-    io.emit('answer', answer, socket.userId);
-  });
-  socket.on('icecandidate', (candidate) => {
-    io.emit('icecandidate', candidate);
+    io.emit('webrtc:answer', answer, socket.userId);
   });
 });
 
-nodeEvents.on('friendChange', async (userId) => {
+nodeEvents.on('user:friendUpdate', async (userId) => {
   const friend = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1 }).lean();
   const friendObject = friend;
   delete friendObject.friends;
   for (const friend of friend.friends) {
-    io.to(`${friend}`).emit('friendChange', friendObject);
+    io.to(`${friend}`).emit('user:friendUpdate', friendObject);
   }
 });
 
-nodeEvents.on('updateUser', (userId) => {
-  io.to(`${userId}`).emit('updateUser');
+nodeEvents.on('user:updateUser', (userId) => {
+  io.to(`${userId}`).emit('user:updateUser');
 });

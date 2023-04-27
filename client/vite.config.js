@@ -9,7 +9,7 @@ export default defineConfig({
       key: fs.readFileSync('../server/server.key'),
       cert: fs.readFileSync('../server/server.crt'),
     },
-    host: '0.0.0.0',
+    host: true,
     port: 3001,
   },
   preview: {

@@ -15,7 +15,7 @@ const Voice = () => {
   const [userId, setUserId] = useState('1');
   const [peerConnection, setPeerConnection] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
-  const [connection, setConnection] = useState('connection');
+  const [connection, setConnection] = useState('Initializing Peer Connection');
 
   useEffect(() => {
     const init = async () => {
@@ -35,7 +35,7 @@ const Voice = () => {
 
         peerConnection.onicecandidate = (event) => {
           if (event.candidate) {
-            socket.emit('icecandidate', event.candidate);
+            socket.emit('webrtc:icecandidate', event.candidate);
           }
         };
 
@@ -43,7 +43,7 @@ const Voice = () => {
           setConnection('Connection Established');
         };
 
-        socket.on('icecandidate', (candidate, id) => {
+        socket.on('webrtc:icecandidate', (candidate, id) => {
           if (userId !== id && peerConnection && peerConnection.remoteDescription) {
             console.log('Received ICE candidate:', candidate);
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
@@ -54,8 +54,9 @@ const Voice = () => {
         console.log(e);
       }
     };
+    init();
 
-    socket.on('answer', async (answer, id) => {
+    socket.on('webrtc:answer', async (answer, id) => {
       if (userId !== id) {
         console.log('Received answer:', answer);
         console.log('peerConnection:', peerConnection);
@@ -64,7 +65,7 @@ const Voice = () => {
       }
     });
 
-    socket.on('offer', async (offer, id) => {
+    socket.on('webrtc:offer', async (offer, id) => {
       if (userId !== id) {
         console.log('Received offer:', offer);
         console.log('peerConnection:', peerConnection);
@@ -72,15 +73,14 @@ const Voice = () => {
         await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-        socket.emit('answer', answer);
+        socket.emit('webrtc:answer', answer);
       }
     });
 
-    init();
     return () => {
-      socket.off('icecandidate');
-      socket.off('answer');
-      socket.off('offer');
+      socket.off('webrtc:icecandidate');
+      socket.off('webrtc:answer');
+      socket.off('webrtc:offer');
     };
   }, []);
 
@@ -94,7 +94,7 @@ const Voice = () => {
     if (peerConnection) {
       const offer = await peerConnection.createOffer();
       await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
-      socket.emit('offer', offer);
+      socket.emit('webrtc:offer', offer);
     }
   };
 

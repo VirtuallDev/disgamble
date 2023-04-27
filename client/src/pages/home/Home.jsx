@@ -15,11 +15,11 @@ const Home = () => {
   const { servername, serverId, serverImage, serverAddress, usersOnline, description, dateCreated, channels } = serverObject;
 
   useEffect(() => {
-    socket.on('serverConnected', (server) => {
+    socket.on('server:connected', (server) => {
       dispatch(setServerObject(server));
     });
     return () => {
-      socket.off('serverConnected');
+      socket.off('server:connected');
     };
   }, []);
 

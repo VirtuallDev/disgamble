@@ -18,15 +18,15 @@ function App() {
 
   useEffect(() => {
     fetchUser();
-    socket.on('updateUser', () => {
+    socket.on('user:updateUser', () => {
       fetchUser();
     });
-    socket.on('friendChange', (friendObject) => {
+    socket.on('user:friendUpdate', (friendObject) => {
       dispatch(friendChange(friendObject));
     });
     return () => {
-      socket.off('updateUser');
-      socket.off('friendChange');
+      socket.off('user:updateUser');
+      socket.off('user:friendUpdate');
     };
   }, []);
 
