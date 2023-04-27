@@ -1,6 +1,6 @@
 .dm-container {
   width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 
 .dm-header {
@@ -15,7 +15,7 @@
   border-radius: 100%;
   width: 3em;
   height: 3em;
-  margin-inline: 0.5em;
+  margin-inline: 0.7em;
 }
 
 .dm-name {
@@ -24,7 +24,49 @@
 }
 
 .dm-messages {
-  height: 10em;
-  width: 300px;
-  background-color: rgb(40, 59, 77);
+  height: calc(100% - 4em);
+  width: 100%;
+}
+
+.msg-container {
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+}
+
+.msg-container:hover {
+  background-color: rgb(83, 83, 83);
+}
+
+.msg-container-username {
+  color: white;
+}
+
+.msg-container-time {
+  margin-left: 0.7em;
+  color: var(--dark2);
+}
+
+.msg-container-img {
+  height: 100%;
+  width: 3em;
+}
+
+.msg-container-img > img {
+  border-radius: 100%;
+  width: 3em;
+  height: 3em;
+  margin-right: 0.7em;
+}
+
+.msg-container-msg {
+  color: var(--dark3);
+  margin-left: 0.7em;
+  word-break: break-word;
+}
+
+.msg-container-user-time {
+  display: flex;
+  flex-direction: row;
+  margin-left: 0.7em;
 }
