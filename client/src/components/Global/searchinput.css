@@ -3,7 +3,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 340px;
+  min-width: 100px;
+  margin-left: auto;
+  margin-right: 1em;
 }
 
 .search {
@@ -12,7 +14,7 @@
   border-radius: 5px;
   color: white;
   font-size: 1.3em;
-  padding-block: 0.7em;
+  padding-block: 0.5em;
   padding-right: 2.5em;
   text-indent: 14px;
   width: 100%;

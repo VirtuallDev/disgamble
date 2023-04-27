@@ -1,21 +1,26 @@
 .dm-container {
   width: 100%;
   height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-primary-7);
 }
 
 .dm-header {
-  background-color: var(--dark);
-  width: 100%;
-  height: 4em;
   display: flex;
   align-items: center;
+  flex-direction: row;
+  background-color: var(--bg-primary-8);
+  width: 100%;
+  height: 4em;
 }
 
 .dm-image {
   border-radius: 100%;
   width: 3em;
   height: 3em;
-  margin-inline: 0.7em;
+  background-color: aliceblue;
+  margin-inline: 0.5em;
 }
 
 .dm-name {
@@ -24,18 +29,19 @@
 }
 
 .dm-messages {
-  height: calc(100% - 4em);
+  height: calc(100% - 7.45em);
   width: 100%;
+  overflow: auto;
 }
 
 .msg-container {
-  padding: 0.5em;
   display: flex;
   flex-direction: column;
+  padding: 0.5em;
 }
 
 .msg-container:hover {
-  background-color: rgb(83, 83, 83);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .msg-container-username {
@@ -69,4 +75,44 @@
   display: flex;
   flex-direction: row;
   margin-left: 0.7em;
+}
+
+.msg-input-container {
+  display: flex;
+  min-width: 340px;
+  flex-direction: row;
+  background-color: var(--bg-primary-8);
+}
+
+.msg-input {
+  all: unset;
+  color: white;
+  font-size: 1.3em;
+  padding-block: 0.7em;
+  padding-right: 0.6em;
+  text-indent: 14px;
+  transition: all 0.15s;
+  width: calc(100% - 3em);
+}
+
+.msg-input:focus {
+  /* background-color: var( --bg-primary-2); */
+}
+
+.msg-input::placeholder {
+  color: rgb(139, 139, 139);
+}
+
+.msg-send-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(139, 139, 139);
+  width: 3.5em;
+  height: 3.5em;
+}
+
+.msg-send-button:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }

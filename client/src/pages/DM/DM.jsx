@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { FaSearch } from 'react-icons/fa';
 import { HiDotsVertical } from 'react-icons/hi';
+import { BiSend } from 'react-icons/bi';
+import SearchInput from '../../components/Global/SearchInput';
 import { apiRequest } from '../../apiHandler';
 import './dm.css';
 
 const DM = ({ userId }) => {
   const [msgValue, setMsgValue] = useState('');
-  const [dmhistory, setDmHistory] = useState([1, 1, 1, 1, 1, 2]);
+  const [searchValue, setSearchValue] = useState('');
+  const [dmhistory, setDmHistory] = useState([1, 1, 2, 2, 2, 2, , 22, 2, 2, 1, 1, 1, 2]);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -21,14 +23,21 @@ const DM = ({ userId }) => {
       <div className="dm-header">
         <img
           className="dm-image"
-          src=""
+          src={'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?cs=srgb&dl=pexels-pixabay-268533.jpg&fm=jpg'}
           alt=""></img>
         <p className="dm-name">User Name</p>
+        <SearchInput
+          msgValue={searchValue}
+          setMsgValue={setSearchValue}
+          width={'25%'}
+          placeholder={'Search'}></SearchInput>
       </div>
       <div className="dm-messages">
-        {dmhistory.map((message) => {
+        {dmhistory.map((message, index) => {
           return (
-            <div className="msg-container">
+            <div
+              className="msg-container"
+              key={index}>
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div className="msg-container-img">
                   <img
@@ -54,12 +63,12 @@ const DM = ({ userId }) => {
             </div>
           );
         })}
-        <MessageInput
-          msgValue={msgValue}
-          setMsgValue={setMsgValue}
-          width={'100%'}
-          placeholder={'Message'}></MessageInput>
       </div>
+      <MessageInput
+        msgValue={msgValue}
+        setMsgValue={setMsgValue}
+        width={'100%'}
+        placeholder={'Message'}></MessageInput>
     </div>
   );
 };
@@ -69,18 +78,19 @@ export default DM;
 const MessageInput = ({ msgValue, setMsgValue, width, placeholder }) => {
   return (
     <div
-      className="search-container"
+      className="msg-input-container"
       style={{ width: width }}>
       <input
-        className="search"
+        className="msg-input"
         placeholder={placeholder}
         type="text"
         value={msgValue}
         onChange={(e) => setMsgValue(e.target.value)}></input>
-      <FaSearch
-        style={{ position: 'absolute', right: '1em' }}
-        size={'1.8em'}
-        color={'rgb(139, 139, 139)'}></FaSearch>
+      <div className="msg-send-button">
+        <BiSend
+          size={'3em'}
+          color={'inherit'}></BiSend>
+      </div>
     </div>
   );
 };
