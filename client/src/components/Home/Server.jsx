@@ -24,11 +24,6 @@ export const ServerList = () => {
     setShowServerModal(true);
   };
 
-  const handleConnection = () => {
-    socketRequest('connectToServer', currentServer);
-    // ...
-  };
-
   return (
     <>
       {showServerModal && (
@@ -43,7 +38,7 @@ export const ServerList = () => {
           <button className="server-button">Create Server</button>
           <button
             className="server-button"
-            onClick={() => handleConnection()}>
+            onClick={() => socketRequest('connectToServer', currentServer)}>
             Connect
           </button>
         </div>

@@ -8,21 +8,21 @@ const authRouter = require('./routers/auth');
 const usersRouter = require('./routers/users');
 const { SocketAuthMiddleware } = require('./middlewares/socket');
 const nodeEvents = require('./nodeEvents');
-const { User } = require('./database');
+const { User, Server } = require('./database');
 const CLIENT_URL = process.env.CLIENT_URL;
 const app = express();
-
 const options = {
-  key: fs.readFileSync('./server.key'),
-  cert: fs.readFileSync('./server.crt'),
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.crt'),
 };
 
 const server = https.createServer(options, app).listen(3000, () => console.log(`HTTPS server running on port ${3000}`));
+// const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
 
 app.use(cookieParser());
 app.use(
   cors({
-    origin: 'https://213.57.174.158:3001',
+    origin: CLIENT_URL,
     credentials: true,
   })
 );
@@ -47,10 +47,12 @@ io.on('connection', (socket) => {
   socket.on('hello', (args) => {
     console.log(args);
   });
-  socket.on('connectToServer', (serverId) => {
+  socket.on('connectToServer', async (serverId) => {
     socket.leaveAll();
     socket.join(socket.userId);
     socket.join(serverId);
+    const server = await Server.findOne({ serverId: serverId });
+    socket.emit('serverConnected', server);
   });
   socket.on('icecandidate', async (icecandidate) => {
     console.log(icecandidate, 'icecandidate');

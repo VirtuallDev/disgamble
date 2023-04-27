@@ -19,63 +19,69 @@ const Voice = () => {
 
   useEffect(() => {
     const init = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      const peerConnection = new RTCPeerConnection(configuration);
-      setPeerConnection(peerConnection);
+        const peerConnection = new RTCPeerConnection(configuration);
+        setPeerConnection(peerConnection);
 
-      stream.getTracks().forEach((track) => {
-        peerConnection.addTrack(track, stream);
-      });
+        stream.getTracks().forEach((track) => {
+          peerConnection.addTrack(track, stream);
+        });
 
-      peerConnection.ontrack = (event) => {
-        setRemoteStream(event.streams[0]);
-      };
+        peerConnection.ontrack = (event) => {
+          setRemoteStream(event.streams[0]);
+        };
 
-      peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-          socket.emit('icecandidate', event.candidate);
-        }
-      };
+        peerConnection.onicecandidate = (event) => {
+          if (event.candidate) {
+            socket.emit('icecandidate', event.candidate);
+          }
+        };
 
-      peerConnection.onopen = () => {
-        setConnection('Connection Established');
-      };
+        peerConnection.onopen = () => {
+          setConnection('Connection Established');
+        };
 
-      socket.on('icecandidate', (candidate, id) => {
-        if (userId !== id) {
-          console.log('Received ICE candidate:', candidate);
-          peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-        }
-      });
-
-      socket.on('answer', async (answer, id) => {
-        if (userId !== id) {
-          console.log('Received answer:', answer);
-          console.log('peerConnection:', peerConnection);
-          console.log('peerConnection.connectionState:', peerConnection.connectionState);
-          await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-        }
-      });
-      socket.on('offer', async (offer, id) => {
-        if (userId !== id) {
-          console.log('Received offer:', offer);
-          console.log('peerConnection:', peerConnection);
-          console.log('peerConnection.connectionState:', peerConnection.connectionState);
-          await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-          const answer = await peerConnection.createAnswer();
-          await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-          socket.emit('answer', answer);
-        }
-      });
-      return () => {
-        socket.off('icecandidate');
-        socket.off('answer');
-        socket.off('offer');
-      };
+        socket.on('icecandidate', (candidate, id) => {
+          if (userId !== id && peerConnection && peerConnection.remoteDescription) {
+            console.log('Received ICE candidate:', candidate);
+            peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+          }
+        });
+        console.log('peerConnection:', peerConnection);
+      } catch (e) {
+        console.log(e);
+      }
     };
 
+    socket.on('answer', async (answer, id) => {
+      if (userId !== id) {
+        console.log('Received answer:', answer);
+        console.log('peerConnection:', peerConnection);
+        console.log('peerConnection.connectionState:', peerConnection.connectionState);
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+      }
+    });
+
+    socket.on('offer', async (offer, id) => {
+      if (userId !== id) {
+        console.log('Received offer:', offer);
+        console.log('peerConnection:', peerConnection);
+        console.log('peerConnection.connectionState:', peerConnection.connectionState);
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+        socket.emit('answer', answer);
+      }
+    });
+
     init();
+    return () => {
+      socket.off('icecandidate');
+      socket.off('answer');
+      socket.off('offer');
+    };
   }, []);
 
   useEffect(() => {
@@ -83,12 +89,6 @@ const Voice = () => {
       remoteAudioRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
-
-  useEffect(() => {
-    console.log('peerConnection:', peerConnection);
-    console.log('peerConnection.connectionState:', peerConnection?.connectionState);
-    setConnection(peerConnection?.connectionState);
-  }, [peerConnection?.connectionState]);
 
   const sendOffer = async () => {
     if (peerConnection) {
