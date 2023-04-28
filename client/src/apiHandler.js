@@ -1,4 +1,3 @@
-import React from 'react';
 import jwt_decode from 'jwt-decode';
 import io from 'socket.io-client';
 
@@ -7,14 +6,9 @@ export const API_URL = 'https://84.110.85.208:3000';
 let accessToken = null;
 
 export const socket = io(API_URL, {
-  extraHeaders: {
-    Authorization: `Bearer ${accessToken}`,
-  },
   withCredentials: true,
   cors: true,
 });
-
-export const SocketContext = React.createContext();
 
 function isTokenExpired(accessToken) {
   try {
@@ -37,10 +31,8 @@ async function getNewAccessToken() {
     const jsonResponse = await response.json();
     const newAccessToken = jsonResponse.accessToken;
     accessToken = newAccessToken;
-    socket.io.opts.extraHeaders.Authorization = `Bearer ${accessToken}`;
   } catch (e) {
     accessToken = null;
-    socket.io.opts.extraHeaders.Authorization = `Bearer ${accessToken}`;
   }
 }
 
@@ -68,7 +60,7 @@ export async function apiRequest(endpoint, method = 'GET', body = null) {
 export async function socketRequest(endpoint, ...args) {
   try {
     if (isTokenExpired()) await getNewAccessToken();
-    socket.emit(endpoint, ...args);
+    socket.emit(endpoint, accessToken, ...args);
   } catch (e) {
     console.log(e);
   }

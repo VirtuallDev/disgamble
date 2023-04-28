@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
-import { apiRequest } from '../../apiHandler';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
+import { apiRequest } from '../../apiHandler';
 import './user.css';
 
 const User = () => {

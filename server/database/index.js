@@ -38,6 +38,16 @@ const ServerSchema = new mongoose.Schema({
   dateCreated: Date,
 });
 
+const DmHistorySchema = new mongoose.Schema({
+  authorId: String,
+  authorName: String,
+  authorImage: String,
+  recipients: Array,
+  message: String,
+  sentAt: Date,
+});
+
 exports.User = mongoose.model('User', UserSchema, 'users');
 exports.Message = mongoose.model('Message', MessageSchema, 'messages');
 exports.Server = mongoose.model('Server', ServerSchema, 'servers');
+exports.Dm = mongoose.model('DmHistory', DmHistorySchema, 'dmhistory');

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { User, Server } = require('../database');
+const { User, Server, Dm } = require('../database');
 const { getUserInfoByAuthHeader } = require('../utils');
 const nodeEvents = require('../nodeEvents');
 router.use(getUserInfoByAuthHeader);
@@ -70,6 +70,24 @@ router.post('/changestatus', async (req, res) => {
     if (!user) return res.status(500).json({ error: 'Something went wrong!' });
     nodeEvents.emit('user:friendUpdate', req.userID);
     return res.status(200).json({ success: 'Status changed successfully.' });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Something went wrong!' });
+  }
+});
+
+router.get('/dmhistory/:id', async (req, res) => {
+  try {
+    let DmObject = {};
+    const dmhistory = await Dm.find({ recipients: { $all: [req.userID, req.params.id] } }).lean();
+    if (dmhistory.length === 0) return res.status(500).json({ error: 'Something went wrong!' });
+    const receipent = await User.findOne({ userId: req.params.id }).lean();
+    if (!receipent) return res.status(500).json({ error: 'Something went wrong!' });
+    DmObject.receipentName = receipent.username;
+    DmObject.receipentImage = receipent.userImage;
+    DmObject.messages = dmhistory;
+    console.log(DmObject);
+    return res.status(200).json({ success: DmObject });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: 'Something went wrong!' });

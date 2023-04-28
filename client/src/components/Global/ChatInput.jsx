@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { socketRequest } from '../../../apiHandler';
+import { socketRequest } from '../../apiHandler';
 
 const ChatInput = (props) => {
   const [message, setMessage] = useState('');
