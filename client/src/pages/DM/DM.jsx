@@ -29,44 +29,49 @@ const DM = () => {
           alt=""></img>
         <p className="dm-name">{dmhistory?.receipentName}</p>
         <SearchInput
-          msgValue={searchValue}
-          setMsgValue={setSearchValue}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
           width={'25%'}
           placeholder={'Search'}></SearchInput>
       </div>
       <div className="dm-messages">
-        {dmhistory?.messages?.map((message, index) => {
-          return (
-            <div
-              className="msg-container"
-              key={index}>
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div className="msg-container-img">
-                  <img
-                    src={message.authorImage}
-                    alt=""></img>
-                </div>
-                <div>
-                  <div className="msg-container-user-time">
-                    <p className="msg-container-username">{message.authorName}</p>
-                    <p className="msg-container-time">{message.sentAt.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
-                    <HiDotsVertical
-                      style={{ position: 'absolute', right: '0' }}
-                      size={'1.5em'}
-                      color={'rgb(0, 0, 0)'}></HiDotsVertical>
+        {dmhistory?.messages
+          ?.filter((message) => message?.message?.toLowerCase().includes(searchValue.toLowerCase()))
+          .map((message, index) => {
+            return (
+              <div
+                className="msg-container"
+                key={index}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <div className="msg-container-img">
+                    <img
+                      src={message?.authorImage}
+                      alt=""></img>
                   </div>
-                  <p className="msg-container-msg">{message.message}</p>
+                  <div style={{ width: '100%' }}>
+                    <div className="msg-container-user-time">
+                      <p className="msg-container-username">{message?.authorName}</p>
+                      <p className="msg-container-time">
+                        {new Date(message?.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
+                      </p>
+                      <div className="msg-options">
+                        <HiDotsVertical
+                          size={'1.5em'}
+                          color={'var(--gray-2)'}></HiDotsVertical>
+                      </div>
+                    </div>
+                    <p className="msg-container-msg">{message?.message}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <MessageInput
         msgValue={msgValue}
         setMsgValue={setMsgValue}
         width={'100%'}
-        placeholder={'Message'}
+        placeholder={`Message @${dmhistory?.receipentName}`}
         userId={userId}></MessageInput>
     </div>
   );

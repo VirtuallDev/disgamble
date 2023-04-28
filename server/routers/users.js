@@ -86,7 +86,6 @@ router.get('/dmhistory/:id', async (req, res) => {
     DmObject.receipentName = receipent.username;
     DmObject.receipentImage = receipent.userImage;
     DmObject.messages = dmhistory;
-    console.log(DmObject);
     return res.status(200).json({ success: DmObject });
   } catch (e) {
     console.log(e);
