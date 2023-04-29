@@ -90,8 +90,12 @@ const Voice = () => {
     }
   }, [remoteStream]);
 
+  useEffect(() => {
+    console.log(peerConnection);
+  }, [peerConnection]);
+
   const sendOffer = async () => {
-    if (peerConnection) {
+    if (peerConnection && !peerConnection.localDescription) {
       const offer = await peerConnection.createOffer();
       await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
       socket.emit('webrtc:offer', offer);

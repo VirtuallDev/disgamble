@@ -14,6 +14,7 @@ const options = {
   cert: fs.readFileSync('server.crt'),
 };
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const server = https.createServer(options, app).listen(3000, () => console.log(`HTTPS server running on port ${3000}`));
 // const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
@@ -96,6 +97,7 @@ io.on('connection', (socket) => {
         authorImage: userImage,
         recipients: [userId, sendTo],
         message: content,
+        messageId: crypto.randomBytes(16).toString('hex'),
         sentAt: Date.now(),
       });
       const user = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1 }).lean();
@@ -104,14 +106,29 @@ io.on('connection', (socket) => {
       console.log(e);
     }
   });
+  socket.on('dm:edit', async (accessToken, messageId, newMessage) => {
+    try {
+      const { userId, username, userImage } = await getUserByAccessToken(accessToken);
+      if (!userId) return;
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  socket.on('dm:delete', async (accessToken, messageId) => {
+    try {
+      const { userId, username, userImage } = await getUserByAccessToken(accessToken);
+      if (!userId) return;
+    } catch (e) {
+      console.log(e);
+    }
+  });
 });
 
 nodeEvents.on('user:friendUpdate', async (userId) => {
-  const friend = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1 }).lean();
-  const friendObject = friend;
-  delete friendObject.friends;
-  for (const friend of friend.friends) {
-    io.to(`${friend}`).emit('user:friendUpdate', friendObject);
+  const user = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1 }).lean();
+  if (!user) return;
+  for (const friend of user?.friends) {
+    io.to(`${friend}`).emit('user:friendUpdate', user);
   }
 });
 

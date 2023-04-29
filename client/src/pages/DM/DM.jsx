@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 import { BiSend } from 'react-icons/bi';
 import SearchInput from '../../components/Global/SearchInput';
@@ -52,11 +52,7 @@ const DM = ({ userId }) => {
                       <p className="msg-container-time">
                         {new Date(message?.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
                       </p>
-                      <div className="msg-options">
-                        <HiDotsVertical
-                          size={'1.5em'}
-                          color={'var(--gray-2)'}></HiDotsVertical>
-                      </div>
+                      <MsgOptions message={message}></MsgOptions>
                     </div>
                     <p className="msg-container-msg">{message?.message}</p>
                   </div>
@@ -95,6 +91,61 @@ const MessageInput = ({ width, placeholder, userId }) => {
           size={'3em'}
           color={'inherit'}></BiSend>
       </div>
+    </div>
+  );
+};
+
+const MsgOptions = ({ message }) => {
+  const [msgOptions, setMsgOptions] = useState('');
+  const msgOptionsRef = useRef(null);
+
+  const copyMessage = (messageId) => {
+    console.log(messageId);
+    setMsgOptions('');
+  };
+
+  const editMessage = (messageId) => {
+    socketRequest('dm:edit', messageId);
+    setMsgOptions('');
+  };
+
+  const deleteMessage = (messageId) => {
+    socketRequest('dm:delete', messageId);
+    setMsgOptions('');
+  };
+
+  useEffect(() => {
+    window.addEventListener('mousedown', (e) => {
+      if (msgOptionsRef.current && !msgOptionsRef.current.contains(e.target)) {
+        setMsgOptions('');
+      }
+    });
+    return () => {
+      window.removeEventListener('mousedown', (e) => {
+        if (msgOptionsRef.current && !msgOptionsRef.current.contains(e.target)) {
+          setMsgOptions('');
+        }
+      });
+    };
+  }, []);
+  return (
+    <div className="msg-options">
+      <div
+        ref={msgOptionsRef}
+        className="msg-options-container"
+        style={{ display: msgOptions === message?.messageId ? 'initial' : 'none' }}>
+        <button onClick={() => copyMessage(message?.messageId)}>COPY</button>
+        <button onClick={() => editMessage(message?.messageId)}>EDIT</button>
+        <button
+          onClick={() => deleteMessage(message?.messageId)}
+          style={{ color: 'indianRed' }}>
+          DELETE
+        </button>
+      </div>
+      <HiDotsVertical
+        onClick={() => setMsgOptions(message?.messageId)}
+        size={'1.5em'}
+        color={'var(--gray-2)'}></HiDotsVertical>
     </div>
   );
 };

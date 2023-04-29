@@ -44,6 +44,7 @@ const DmHistorySchema = new mongoose.Schema({
   authorImage: String,
   recipients: Array,
   message: String,
+  messageId: String,
   sentAt: Date,
 });
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
@@ -14,14 +14,7 @@ const User = () => {
 
   const userSounds = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened } = userSounds;
-
   const [statusOptions, setStatusOptions] = useState(false);
-
-  const handleStatusChange = async (statusString) => {
-    await apiRequest('changestatus', 'POST', {
-      statusString: statusString,
-    });
-  };
 
   const handleUserSettings = () => {
     console.log('?');
@@ -71,25 +64,6 @@ const User = () => {
         <p>{username}</p>
       </div>
       <div
-        className="status-options"
-        style={{ display: statusOptions ? 'flex' : 'none' }}>
-        <button
-          className="status-option"
-          onClick={() => handleStatusChange('Online')}>
-          <div className="status-icon"></div>Online
-        </button>
-        <button
-          className="status-option"
-          onClick={() => handleStatusChange('DND')}>
-          <div className="status-icon dnd"></div>Do Not Disturb
-        </button>
-        <button
-          className="status-option"
-          onClick={() => handleStatusChange('Invisible')}>
-          <div className="status-icon invisible"></div>Invisible
-        </button>
-      </div>
-      <div
         className="user-image-container"
         onClick={() => setStatusOptions((status) => !status)}>
         <img
@@ -101,8 +75,59 @@ const User = () => {
           className="status"
           style={{ backgroundColor: status === 'Online' ? 'green' : status === 'DND' ? 'red' : 'gray' }}></div>
       </div>
+      <StatusOptions
+        statusOptions={statusOptions}
+        setStatusOptions={setStatusOptions}></StatusOptions>
     </div>
   );
 };
 
 export default User;
+
+const StatusOptions = ({ statusOptions, setStatusOptions }) => {
+  const statusOptionsRef = useRef(null);
+
+  const handleStatusChange = async (statusString) => {
+    await apiRequest('changestatus', 'POST', {
+      statusString: statusString,
+    });
+    setStatusOptions(false);
+  };
+
+  useEffect(() => {
+    const handleMouseDown = (e) => {
+      if (statusOptionsRef.current && !statusOptionsRef.current.contains(e.target)) {
+        setStatusOptions(false);
+      }
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
+
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={statusOptionsRef}
+      className="status-options"
+      style={{ display: statusOptions ? 'flex' : 'none' }}>
+      <button
+        className="status-option"
+        onClick={() => handleStatusChange('Online')}>
+        <div className="status-icon"></div>Online
+      </button>
+      <button
+        className="status-option"
+        onClick={() => handleStatusChange('DND')}>
+        <div className="status-icon dnd"></div>Do Not Disturb
+      </button>
+      <button
+        className="status-option"
+        onClick={() => handleStatusChange('Invisible')}>
+        <div className="status-icon invisible"></div>Invisible
+      </button>
+    </div>
+  );
+};

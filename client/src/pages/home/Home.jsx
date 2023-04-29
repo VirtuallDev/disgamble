@@ -15,7 +15,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const serverObject = useSelector((state) => state.server.serverObject);
   const { servername, serverId, serverImage, serverAddress, usersOnline, description, dateCreated, channels } = serverObject;
-  const [current, setCurrent] = useState(false);
+  const [current, setCurrent] = useState(true);
   const [userId, setUserId] = useState(false);
 
   useEffect(() => {
