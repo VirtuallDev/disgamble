@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 import { BiSend } from 'react-icons/bi';
 import SearchInput from '../../components/Global/SearchInput';
+import { useParams } from 'react-router-dom';
 import { apiRequest, socketRequest } from '../../apiHandler';
 import './dm.css';
 
-const DM = ({ userId }) => {
+const DM = () => {
+  const [msgValue, setMsgValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [dmhistory, setDmHistory] = useState({});
+  const { id: userId } = useParams();
 
   useEffect(() => {
     const fetchHistory = async () => {
       const jsonResponse = await apiRequest(`/dmhistory/${userId}`);
       if (jsonResponse.success) setDmHistory(jsonResponse.success);
     };
-    if (!userId) return;
     fetchHistory();
   }, [userId]);
 
@@ -66,6 +68,8 @@ const DM = ({ userId }) => {
           })}
       </div>
       <MessageInput
+        msgValue={msgValue}
+        setMsgValue={setMsgValue}
         width={'100%'}
         placeholder={`Message @${dmhistory?.receipentName}`}
         userId={userId}></MessageInput>
@@ -75,9 +79,7 @@ const DM = ({ userId }) => {
 
 export default DM;
 
-const MessageInput = ({ width, placeholder, userId }) => {
-  const [msgValue, setMsgValue] = useState('');
-
+const MessageInput = ({ msgValue, setMsgValue, width, placeholder, userId }) => {
   return (
     <div
       className="msg-input-container"

@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
 
     if (!userId) return;
     console.log(answer, 'answer');
-    io.emit('webrtc:answer', answer, suserId);
+    io.emit('webrtc:answer', answer, userId);
   });
   socket.on('dm:message', async (accessToken, content, sendTo) => {
     try {

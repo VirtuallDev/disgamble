@@ -1,15 +1,11 @@
 import React from 'react';
-import './Friend.css';
 import { Header } from './Header';
 import { useSelector } from 'react-redux';
+import './Friend.css';
 
-export const FriendsList = () => {
+const FriendsList = ({ setUserId }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { friends } = userObject;
-
-  const handleFriendClick = (id) => {
-    window.location.replace(`/dm/${id}`);
-  };
 
   return (
     <div className="friend-list">
@@ -22,7 +18,7 @@ export const FriendsList = () => {
           <div
             key={index}
             className="friends-container"
-            onClick={() => handleFriendClick(friend.userId)}>
+            onClick={() => setUserId(friend.userId)}>
             <div className="image-container">
               <img
                 src={friend.userImage}
@@ -40,3 +36,5 @@ export const FriendsList = () => {
     </div>
   );
 };
+
+export default FriendsList;
