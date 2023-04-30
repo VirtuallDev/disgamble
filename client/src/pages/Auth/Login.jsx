@@ -62,7 +62,7 @@ const Login = () => {
         </p>
         <button
           className="join-btn"
-          onClick={() => handleLogin()}>
+          onClick={handleLogin}>
           Login
         </button>
         <div className="need-container">

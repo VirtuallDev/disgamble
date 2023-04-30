@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 async function getUserInfoByAuthHeader(req, res, next) {
   try {
     const token = req.headers.authorization.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'You are not logged in.' });
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
     const user = await User.findOne({ userId: userId }, { userId: 1 });
@@ -13,9 +14,22 @@ async function getUserInfoByAuthHeader(req, res, next) {
     req.userID = userId;
     next();
   } catch (e) {
-    console.log(e);
     return res.status(401).json({ error: 'You are not logged in.' });
   }
 }
 
+async function getUserByAccessToken(accessToken) {
+  try {
+    const decoded = jwt.verify(accessToken, JWT_SECRET);
+    const userId = decoded.userId;
+    const user = await User.findOne({ userId: userId }, { userId: 1, username: 1, userImage: 1 });
+    if (!user) return null;
+    return user;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
 exports.getUserInfoByAuthHeader = getUserInfoByAuthHeader;
+exports.getUserByAccessToken = getUserByAccessToken;

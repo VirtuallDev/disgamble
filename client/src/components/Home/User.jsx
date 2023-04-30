@@ -4,7 +4,7 @@ import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
-import { apiRequest } from '../../apiHandler';
+import { apiRequest, API_URL } from '../../apiHandler';
 import './user.css';
 
 const User = () => {
@@ -16,8 +16,12 @@ const User = () => {
   const { isMuted, isDeafened } = userSounds;
   const [statusOptions, setStatusOptions] = useState(false);
 
-  const handleUserSettings = () => {
-    console.log('?');
+  const handleUserSettings = async () => {
+    await fetch(`${API_URL}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    console.log('logged out', API_URL);
   };
 
   return (
@@ -53,7 +57,7 @@ const User = () => {
         </div>
         <div
           className="user-option"
-          onClick={() => handleUserSettings}>
+          onClick={handleUserSettings}>
           <p>User Settings</p>
           <IoMdSettings
             color={'white'}

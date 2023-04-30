@@ -73,3 +73,72 @@
   background-color: var(--color-primary-1);
   cursor: pointer;
 }
+
+.add-friend {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.add-friend > input {
+  all: unset;
+  color: var(--dark3);
+  background-color: var(--bg-primary-4);
+  padding-inline: 1em;
+  padding-block: 0.5em;
+  border-radius: 8px;
+  margin-bottom: 0.1em;
+  padding-bottom: 2em;
+}
+
+.add-friend > button {
+  all: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-primary-2);
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  border-radius: 5px;
+  transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  padding: 0.4em;
+  position: absolute;
+  bottom: 0.4em;
+  width: 16em;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.add-friend > button:hover {
+  background-color: var(--color-primary-1);
+  cursor: pointer;
+}
+
+.pending-buttons {
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.5em;
+  gap: 1em;
+}
+
+.pending-buttons > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 100%;
+  padding: 0.4em;
+  transition: all 0.1s;
+  -moz-transition: all 0.1s;
+}
+
+.accept:hover {
+  color: green;
+}
+
+.decline:hover {
+  color: red;
+}
