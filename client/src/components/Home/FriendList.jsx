@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Header } from './Header';
 import { useSelector } from 'react-redux';
 import { socketRequest } from '../../apiHandler';
 import { FaCheck, FaTimes } from 'react-icons/fa';
+import { RiArrowDropDownLine } from 'react-icons/ri';
+
 import './Friend.css';
 
-const FriendsList = ({ setFriend, setCurrent }) => {
+const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { friends, friendRequests } = userObject;
   const [friendOption, setFriendOption] = useState('All');
@@ -48,6 +50,7 @@ const FriendsList = ({ setFriend, setCurrent }) => {
               <div
                 key={index}
                 className="friends-container"
+                style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-8)' }}
                 onClick={() => friendClick(friend)}>
                 <div className="image-container">
                   <img
@@ -102,33 +105,59 @@ const FriendsList = ({ setFriend, setCurrent }) => {
 export default FriendsList;
 
 const FriendsFilter = ({ setFriendOption, friendOption }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const options = ['All', 'Online', 'Offline', 'Pending'];
+  const filterOptionsRef = useRef(null);
+
+  const handleFilterClick = (option) => {
+    setFriendOption(option);
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const handleMouseDown = (e) => {
+      if (filterOptionsRef.current && !filterOptionsRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('mousedown', handleMouseDown);
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+    };
+  }, []);
+
   return (
-    <div className="friend-options">
-      <button
-        onClick={() => setFriendOption('All')}
-        className="friend-option"
-        style={{ backgroundColor: friendOption === 'All' ? 'var(--bg-primary-3)' : '' }}>
-        All
-      </button>
-      <button
-        onClick={() => setFriendOption('Online')}
-        className="friend-option"
-        style={{ backgroundColor: friendOption === 'Online' ? 'var(--bg-primary-3)' : '' }}>
-        Online
-      </button>
-      <button
-        onClick={() => setFriendOption('Offline')}
-        className="friend-option"
-        style={{ backgroundColor: friendOption === 'Offline' ? 'var(--bg-primary-3)' : '' }}>
-        Offline
-      </button>
-      <button
-        onClick={() => setFriendOption('Pending')}
-        className="friend-option"
-        style={{ backgroundColor: friendOption === 'Pending' ? 'var(--bg-primary-3)' : '' }}>
-        Pending
-      </button>
-    </div>
+    <>
+      <div
+        className="friend-options-container"
+        ref={filterOptionsRef}>
+        <button
+          className="filter-button"
+          onClick={() => setIsOpen((prev) => !prev)}>
+          Filter
+          <RiArrowDropDownLine
+            className="filter-svg"
+            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            color={'inherit'}
+            size={'2.8em'}></RiArrowDropDownLine>
+        </button>
+        <div
+          className="friend-options"
+          style={{ display: isOpen ? 'flex' : 'none' }}>
+          {options.map((option, index) => {
+            return (
+              <button
+                key={index}
+                onClick={() => handleFilterClick(option)}
+                className="friend-option"
+                style={{ backgroundColor: friendOption === option ? 'var(--bg-primary-3)' : '' }}>
+                {option}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -136,13 +165,19 @@ const AddFriend = () => {
   const [username, setUsername] = useState('');
 
   return (
-    <div className="add-friend">
+    <div
+      className="add-friend"
+      style={{ marginBottom: '0.5em' }}>
       <input
         type="text"
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}></input>
-      <button onClick={() => socketRequest('user:addfriend', username)}>Add Friend</button>
+      <button
+        className="friend-button"
+        onClick={() => socketRequest('user:addfriend', username)}>
+        Add Friend
+      </button>
     </div>
   );
 };

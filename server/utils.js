@@ -20,13 +20,13 @@ async function getUserInfoByAuthHeader(req, res, next) {
 
 async function getUserByAccessToken(accessToken) {
   try {
+    if (!accessToken) return null;
     const decoded = jwt.verify(accessToken, JWT_SECRET);
     const userId = decoded.userId;
     const user = await User.findOne({ userId: userId }, { userId: 1, username: 1, userImage: 1 });
     if (!user) return null;
     return user;
   } catch (e) {
-    console.log(e);
     return null;
   }
 }

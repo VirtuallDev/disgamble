@@ -84,7 +84,7 @@
   height: 2em;
   font-size: 1.2em;
   display: flex;
-  background-color: rgb(79, 74, 148);
+  background-color: var(--button-color);
   padding: 0.1em 0.5em;
   border-radius: 5px;
   width: fit-content;
@@ -100,12 +100,12 @@
 
 .server-button:hover {
   cursor: pointer;
-  background-color: rgb(62, 58, 108);
+  background-color: var(--button-color-hover);
 }
 
 .server-button:active {
   cursor: pointer;
-  background-color: rgb(86, 82, 154);
+  background-color: var(--button-color-active);
   transition: all 0.17s;
   -moz-transition: all 0.17s;
 }

@@ -10,23 +10,15 @@ const DM = ({ friend }) => {
   const messagesArray = useSelector((state) => state.messages.messagesArray);
   const [searchValue, setSearchValue] = useState('');
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
-  const [editing, setEditing] = useState({
-    messageId: '',
-    message: '',
-  });
+  const [editing, setEditing] = useState('');
 
+  const editedMessageRef = useRef(null);
   const handleEdit = () => {
-    socketRequest('dm:edit', editing.messageId, editing.message);
-    setEditing({
-      messageId: '',
-      message: '',
-    });
+    socketRequest('dm:edit', editedMessageRef.current.id, editedMessageRef.current.textContent);
+    setEditing('');
   };
   const handleCancel = () => {
-    setEditing({
-      messageId: '',
-      message: '',
-    });
+    setEditing('');
   };
 
   useEffect(() => {
@@ -72,15 +64,17 @@ const DM = ({ friend }) => {
                         setEditing={setEditing}></MsgOptions>
                       {message?.edited && <p className="isedited">Edited</p>}
                     </div>
-                    {editing.messageId !== message.messageId ? (
+                    {editing !== message.messageId ? (
                       <p className="msg-container-msg">{message?.message}</p>
                     ) : (
                       <>
                         <div className="edit-container">
-                          <input
-                            type="text"
-                            value={editing.message}
-                            onChange={(e) => setEditing((prev) => ({ ...prev, message: e.target.value }))}
+                          <p
+                            ref={editedMessageRef}
+                            className="msg-container-msg"
+                            contentEditable={true}
+                            dangerouslySetInnerHTML={{ __html: message?.message }}
+                            id={message?.messageId}
                           />
                           <div className="edit-buttons">
                             <button onClick={handleEdit}>Save</button>
@@ -138,11 +132,6 @@ const MsgOptions = ({ message, setEditing }) => {
     setMsgOptions('');
   };
 
-  const editMessage = (messageId) => {
-    socketRequest('dm:edit', messageId);
-    setMsgOptions('');
-  };
-
   const deleteMessage = (messageId) => {
     socketRequest('dm:delete', messageId);
     setMsgOptions('');
@@ -163,13 +152,15 @@ const MsgOptions = ({ message, setEditing }) => {
     };
   }, []);
   return (
-    <div className="msg-options">
+    <div
+      className="msg-options"
+      onClick={() => setMsgOptions(message?.messageId)}>
       <div
         ref={msgOptionsRef}
         className="msg-options-container"
         style={{ display: msgOptions === message?.messageId ? 'initial' : 'none' }}>
         <button onClick={() => copyMessage(message?.messageId)}>COPY</button>
-        <button onClick={() => setEditing({ messageId: message?.messageId, message: message?.message })}>EDIT</button>
+        <button onClick={() => setEditing(message?.messageId)}>EDIT</button>
         <button
           onClick={() => deleteMessage(message?.messageId)}
           style={{ color: 'indianRed' }}>
@@ -177,7 +168,6 @@ const MsgOptions = ({ message, setEditing }) => {
         </button>
       </div>
       <HiDotsVertical
-        onClick={() => setMsgOptions(message?.messageId)}
         size={'1.5em'}
         color={'var(--gray-2)'}></HiDotsVertical>
     </div>

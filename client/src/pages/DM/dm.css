@@ -82,20 +82,6 @@
   position: relative;
 }
 
-.edit-container > input {
-  all: unset;
-  color: var(--dark3);
-  margin-left: 0.7em;
-  word-break: break-word;
-  background-color: var(--dark);
-  border-radius: 0.5em;
-  padding: 0.5em;
-  padding-bottom: 1.4em;
-  width: calc(100% - 4.5em);
-  height: auto;
-  resize: vertical;
-}
-
 .edit-buttons {
   display: flex;
   position: absolute;
@@ -206,4 +192,20 @@
 .msg-options-container > button:hover {
   background-color: var(--color-primary-1);
   cursor: pointer;
+}
+
+p[contentEditable='true'] {
+  outline: none;
+  border: none;
+
+  color: var(--dark3);
+  margin-left: 0.7em;
+  word-break: break-word;
+  background-color: var(--dark);
+  border-radius: 0.5em;
+  padding: 0.5em;
+  padding-bottom: 1.4em;
+  width: calc(100% - 4.5em);
+  height: auto;
+  resize: vertical;
 }

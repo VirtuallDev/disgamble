@@ -50,4 +50,8 @@ body {
   --gray-3: #707070;
   --gray-4: #393838;
   --gray-5: #2d2d2d;
+
+  --button-color: rgb(79, 74, 148);
+  --button-color-hover: rgb(62, 58, 108);
+  --button-color-active: rgb(86, 82, 154);
 }

@@ -42,6 +42,7 @@ const Home = () => {
           <FriendsList
             setFriend={setFriend}
             setCurrent={setCurrent}
+            selectedFriend={friend}
           />
           <User />
         </div>
