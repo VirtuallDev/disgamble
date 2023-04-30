@@ -3,11 +3,16 @@ import { Header } from './Header';
 import { useSelector } from 'react-redux';
 import './Friend.css';
 
-const FriendsList = ({ setFriend }) => {
+const FriendsList = ({ setFriend, setCurrent }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { friends } = userObject;
   const [friendOption, setFriendOption] = useState('All');
   const [filteredFriends, setFilteredFriends] = useState(friends);
+
+  const friendClick = (friend) => {
+    setCurrent(false);
+    setFriend(friend);
+  };
 
   useEffect(() => {
     switch (friendOption) {
@@ -62,7 +67,7 @@ const FriendsList = ({ setFriend }) => {
           <div
             key={index}
             className="friends-container"
-            onClick={() => setFriend(friend)}>
+            onClick={() => friendClick(friend)}>
             <div className="image-container">
               <img
                 src={friend.userImage}

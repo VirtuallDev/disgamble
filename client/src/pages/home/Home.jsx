@@ -39,7 +39,10 @@ const Home = () => {
               size={'5em'}
               color={'inherit'}></FaExchangeAlt>
           </div>
-          <FriendsList setFriend={setFriend} />
+          <FriendsList
+            setFriend={setFriend}
+            setCurrent={setCurrent}
+          />
           <User />
         </div>
         <div className="left-side">
