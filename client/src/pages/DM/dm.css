@@ -38,6 +38,7 @@
   display: flex;
   flex-direction: column;
   padding: 0.5em;
+  position: relative;
 }
 
 .msg-container:hover {
@@ -145,53 +146,13 @@
   cursor: pointer;
 }
 
-.msg-options {
-  position: relative;
-  background-color: rgba(0, 0, 0, 0.2);
-  margin-left: auto;
-  width: 1.5em;
-  height: 1.5em;
-  border-radius: 0.4em;
-  z-index: 1;
-}
-
 .isedited {
   position: absolute;
-  right: 0;
-  top: 4em;
+  right: 1em;
+  bottom: 0.1em;
   color: var(--bg-primary-4);
   font-weight: 600;
   font-size: 0.7em;
-}
-
-.msg-options:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  cursor: pointer;
-}
-
-.msg-options-container {
-  position: absolute;
-  right: 1.4em;
-  top: -0.4em;
-  color: white;
-  background-color: var(--bg-primary-3);
-  padding: 0.2em;
-  width: 5em;
-  border-radius: 3px;
-}
-
-.msg-options-container > button {
-  all: unset;
-  width: 100%;
-  border-radius: 3px;
-  text-align: center;
-  font-size: 0.9em;
-  transition: all 0.15s;
-}
-
-.msg-options-container > button:hover {
-  background-color: var(--color-primary-1);
-  cursor: pointer;
 }
 
 p[contentEditable='true'] {

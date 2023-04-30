@@ -34,6 +34,7 @@ const Home = () => {
         <div className="right-side">
           <div className="change-container">
             <FaExchangeAlt
+              style={{ transform: current ? 'rotate3d(1, 0, 1, 360deg)' : 'rotate3d(1, 0, 1, 0deg)' }}
               onClick={() => setCurrent((current) => !current)}
               className="change"
               size={'5em'}

@@ -62,20 +62,6 @@ router.get('/server/:id', async (req, res) => {
   }
 });
 
-router.post('/changestatus', async (req, res) => {
-  try {
-    const { statusString } = req.body;
-    if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
-    const user = await User.findOneAndUpdate({ userId: req.userID }, { status: statusString });
-    if (!user) return res.status(500).json({ error: 'Something went wrong!' });
-    nodeEvents.emit('user:friendUpdate', req.userID);
-    return res.status(200).json({ success: 'Status changed successfully.' });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({ error: 'Something went wrong!' });
-  }
-});
-
 router.get('/dmhistory', async (req, res) => {
   try {
     const dmhistory = await Dm.find({ recipients: { $in: [req.userID] } }).lean();

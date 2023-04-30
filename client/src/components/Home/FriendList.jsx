@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { socketRequest } from '../../apiHandler';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { RiArrowDropDownLine } from 'react-icons/ri';
+import { HiDotsVertical } from 'react-icons/hi';
 
 import './Friend.css';
 
@@ -63,6 +64,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
                     style={{ backgroundColor: friend.status === 'Online' ? 'green' : friend.status === 'DND' ? 'red' : 'gray' }}></div>
                 </div>
                 <p className="friend-name">{friend.username}</p>
+                <FriendOptions friend={friend}></FriendOptions>
               </div>
             );
           })
@@ -103,6 +105,45 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
 };
 
 export default FriendsList;
+
+const FriendOptions = ({ friend }) => {
+  const [friendOptions, setFriendOptions] = useState('');
+  const friendOptionsRef = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener('mousedown', (e) => {
+      if (friendOptionsRef.current && !friendOptionsRef.current.contains(e.target)) {
+        setFriendOptions('');
+      }
+    });
+    return () => {
+      window.removeEventListener('mousedown', (e) => {
+        if (friendOptionsRef.current && !friendOptionsRef.current.contains(e.target)) {
+          setFriendOptions('');
+        }
+      });
+    };
+  }, []);
+  return (
+    <div
+      className="dots-options"
+      onClick={(e) => {
+        e.stopPropagation();
+        setFriendOptions(friend?.userId);
+      }}>
+      <div
+        ref={friendOptionsRef}
+        className="dots-options-container"
+        style={{ display: friendOptions === friend?.userId ? 'initial' : 'none' }}>
+        <button>PROFILE</button>
+        <button style={{ color: 'indianRed' }}>DELETE</button>
+      </div>
+      <HiDotsVertical
+        size={'1.5em'}
+        color={'var(--gray-2)'}></HiDotsVertical>
+    </div>
+  );
+};
 
 const FriendsFilter = ({ setFriendOption, friendOption }) => {
   const [isOpen, setIsOpen] = useState(false);

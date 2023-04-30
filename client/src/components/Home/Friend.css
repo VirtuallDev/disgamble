@@ -1,5 +1,6 @@
 .friends-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   padding: 0.4em;
@@ -48,6 +49,7 @@
 .friend-options-container {
   width: 100%;
   position: relative;
+  z-index: 2;
 }
 
 .filter-button {

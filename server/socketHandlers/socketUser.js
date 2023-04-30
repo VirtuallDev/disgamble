@@ -50,6 +50,18 @@ function setupUserEvents(io) {
         console.log(e);
       }
     });
+    socket.on('user:changestatus', async (accessToken, statusString) => {
+      try {
+        const { userId } = await getUserByAccessToken(accessToken);
+        if (!userId) return;
+        if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
+        const user = await User.findOneAndUpdate({ userId: userId }, { status: statusString });
+        if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+        nodeEvents.emit('user:friendUpdate', user.userId);
+      } catch (e) {
+        console.log(e);
+      }
+    });
   });
 }
 

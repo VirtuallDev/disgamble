@@ -62,7 +62,6 @@ const DM = ({ friend }) => {
                       <MsgOptions
                         message={message}
                         setEditing={setEditing}></MsgOptions>
-                      {message?.edited && <p className="isedited">Edited</p>}
                     </div>
                     {editing !== message.messageId ? (
                       <p className="msg-container-msg">{message?.message}</p>
@@ -85,6 +84,7 @@ const DM = ({ friend }) => {
                     )}
                   </div>
                 </div>
+                {message?.edited && <p className="isedited">Edited</p>}
               </div>
             );
           })}
@@ -153,11 +153,11 @@ const MsgOptions = ({ message, setEditing }) => {
   }, []);
   return (
     <div
-      className="msg-options"
+      className="dots-options"
       onClick={() => setMsgOptions(message?.messageId)}>
       <div
         ref={msgOptionsRef}
-        className="msg-options-container"
+        className="dots-options-container"
         style={{ display: msgOptions === message?.messageId ? 'initial' : 'none' }}>
         <button onClick={() => copyMessage(message?.messageId)}>COPY</button>
         <button onClick={() => setEditing(message?.messageId)}>EDIT</button>

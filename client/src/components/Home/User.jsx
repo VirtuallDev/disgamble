@@ -4,7 +4,7 @@ import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
-import { apiRequest, API_URL } from '../../apiHandler';
+import { API_URL, socketRequest } from '../../apiHandler';
 import './user.css';
 
 const User = () => {
@@ -92,9 +92,7 @@ const StatusOptions = ({ statusOptions, setStatusOptions }) => {
   const statusOptionsRef = useRef(null);
 
   const handleStatusChange = async (statusString) => {
-    await apiRequest('changestatus', 'POST', {
-      statusString: statusString,
-    });
+    socketRequest('user:changestatus', statusString);
     setStatusOptions(false);
   };
 
