@@ -10,6 +10,24 @@ const DM = ({ friend }) => {
   const messagesArray = useSelector((state) => state.messages.messagesArray);
   const [searchValue, setSearchValue] = useState('');
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
+  const [editing, setEditing] = useState({
+    messageId: '',
+    message: '',
+  });
+
+  const handleEdit = () => {
+    socketRequest('dm:edit', editing.messageId, editing.message);
+    setEditing({
+      messageId: '',
+      message: '',
+    });
+  };
+  const handleCancel = () => {
+    setEditing({
+      messageId: '',
+      message: '',
+    });
+  };
 
   useEffect(() => {
     setFilteredDmHistory(messagesArray.filter((message) => message.recipients.includes(friend?.userId)));
@@ -49,9 +67,28 @@ const DM = ({ friend }) => {
                       <p className="msg-container-time">
                         {new Date(message?.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
                       </p>
-                      <MsgOptions message={message}></MsgOptions>
+                      <MsgOptions
+                        message={message}
+                        setEditing={setEditing}></MsgOptions>
+                      {message?.edited && <p className="isedited">Edited</p>}
                     </div>
-                    <p className="msg-container-msg">{message?.message}</p>
+                    {editing.messageId !== message.messageId ? (
+                      <p className="msg-container-msg">{message?.message}</p>
+                    ) : (
+                      <>
+                        <div className="edit-container">
+                          <input
+                            type="text"
+                            value={editing.message}
+                            onChange={(e) => setEditing((prev) => ({ ...prev, message: e.target.value }))}
+                          />
+                          <div className="edit-buttons">
+                            <button onClick={handleEdit}>Save</button>
+                            <button onClick={handleCancel}>Cancel</button>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -92,7 +129,7 @@ const MessageInput = ({ width, placeholder, userId }) => {
   );
 };
 
-const MsgOptions = ({ message }) => {
+const MsgOptions = ({ message, setEditing }) => {
   const [msgOptions, setMsgOptions] = useState('');
   const msgOptionsRef = useRef(null);
 
@@ -132,7 +169,7 @@ const MsgOptions = ({ message }) => {
         className="msg-options-container"
         style={{ display: msgOptions === message?.messageId ? 'initial' : 'none' }}>
         <button onClick={() => copyMessage(message?.messageId)}>COPY</button>
-        <button onClick={() => editMessage(message?.messageId)}>EDIT</button>
+        <button onClick={() => setEditing({ messageId: message?.messageId, message: message?.message })}>EDIT</button>
         <button
           onClick={() => deleteMessage(message?.messageId)}
           style={{ color: 'indianRed' }}>

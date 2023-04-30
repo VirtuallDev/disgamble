@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
     try {
       const { userId } = await getUserByAccessToken(accessToken);
       if (!userId) return;
-      const edited = await Dm.findOneAndUpdate({ authorId: userId, messageId: messageId }, { message: newMessage, edited: true });
+      const edited = await Dm.findOneAndUpdate({ authorId: userId, messageId: messageId }, { message: newMessage, edited: true }, { new: true });
       if (!edited) return;
       nodeEvents.emit('dm:messageUpdated', edited);
     } catch (e) {
@@ -149,6 +149,7 @@ nodeEvents.on('dm:messageAdded', async (messageObject) => {
 });
 
 nodeEvents.on('dm:messageUpdated', async (messageObject) => {
+  console.log(messageObject.message);
   for (const user of messageObject?.recipients) {
     io.to(`${user}`).emit('dm:messageUpdated', messageObject);
   }

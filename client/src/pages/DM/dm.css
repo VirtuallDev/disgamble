@@ -38,7 +38,6 @@
   display: flex;
   flex-direction: column;
   padding: 0.5em;
-  width: 100%;
 }
 
 .msg-container:hover {
@@ -46,6 +45,7 @@
 }
 
 .msg-container-user-time {
+  position: relative;
   display: flex;
   margin-left: 0.7em;
 }
@@ -75,6 +75,48 @@
   color: var(--dark3);
   margin-left: 0.7em;
   word-break: break-word;
+  width: calc(100% - 3.5em);
+}
+
+.edit-container {
+  position: relative;
+}
+
+.edit-container > input {
+  all: unset;
+  color: var(--dark3);
+  margin-left: 0.7em;
+  word-break: break-word;
+  background-color: var(--dark);
+  border-radius: 0.5em;
+  padding: 0.5em;
+  padding-bottom: 1.4em;
+  width: calc(100% - 4.5em);
+  height: auto;
+  resize: vertical;
+}
+
+.edit-buttons {
+  display: flex;
+  position: absolute;
+  bottom: 0.2em;
+  left: 1em;
+  background-color: var(--bg-primary-3);
+  border-radius: 0.2em;
+}
+
+.edit-buttons > button {
+  all: unset;
+  color: white;
+  text-align: center;
+  font-size: 0.8em;
+  width: 4em;
+  border-radius: 0.2em;
+}
+
+.edit-buttons > button:hover {
+  background-color: var(--color-primary-1);
+  cursor: pointer;
 }
 
 .msg-input-container {
@@ -124,6 +166,16 @@
   width: 1.5em;
   height: 1.5em;
   border-radius: 0.4em;
+  z-index: 1;
+}
+
+.isedited {
+  position: absolute;
+  right: 0;
+  top: 4em;
+  color: var(--bg-primary-4);
+  font-weight: 600;
+  font-size: 0.7em;
 }
 
 .msg-options:hover {
