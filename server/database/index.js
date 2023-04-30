@@ -42,10 +42,14 @@ const DmHistorySchema = new mongoose.Schema({
   authorId: String,
   authorName: String,
   authorImage: String,
+  recipientId: String,
+  recipientName: String,
+  recipientImage: String,
   recipients: Array,
   message: String,
   messageId: String,
   sentAt: Date,
+  edited: Boolean,
 });
 
 exports.User = mongoose.model('User', UserSchema, 'users');

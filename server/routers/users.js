@@ -76,17 +76,11 @@ router.post('/changestatus', async (req, res) => {
   }
 });
 
-router.get('/dmhistory/:id', async (req, res) => {
+router.get('/dmhistory', async (req, res) => {
   try {
-    let DmObject = {};
-    const dmhistory = await Dm.find({ recipients: { $all: [req.userID, req.params.id] } }).lean();
+    const dmhistory = await Dm.find({ recipients: { $in: [req.userID] } }).lean();
     if (dmhistory.length === 0) return res.status(500).json({ error: 'Something went wrong!' });
-    const receipent = await User.findOne({ userId: req.params.id }).lean();
-    if (!receipent) return res.status(500).json({ error: 'Something went wrong!' });
-    DmObject.receipentName = receipent.username;
-    DmObject.receipentImage = receipent.userImage;
-    DmObject.messages = dmhistory;
-    return res.status(200).json({ success: DmObject });
+    return res.status(200).json({ success: dmhistory });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: 'Something went wrong!' });

@@ -16,7 +16,7 @@ const Home = () => {
   const serverObject = useSelector((state) => state.server.serverObject);
   const { servername, serverId, serverImage, serverAddress, usersOnline, description, dateCreated, channels } = serverObject;
   const [current, setCurrent] = useState(true);
-  const [userId, setUserId] = useState(false);
+  const [friend, setFriend] = useState({});
 
   useEffect(() => {
     socket.on('server:connected', (server) => {
@@ -39,7 +39,7 @@ const Home = () => {
               size={'5em'}
               color={'inherit'}></FaExchangeAlt>
           </div>
-          <FriendsList setUserId={setUserId} />
+          <FriendsList setFriend={setFriend} />
           <User />
         </div>
         <div className="left-side">
@@ -55,7 +55,7 @@ const Home = () => {
               </div>
             </>
           ) : (
-            <DM userId={userId} />
+            <DM friend={friend} />
           )}
         </div>
       </div>

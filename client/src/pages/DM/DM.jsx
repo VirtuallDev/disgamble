@@ -2,30 +2,27 @@ import React, { useEffect, useRef, useState } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 import { BiSend } from 'react-icons/bi';
 import SearchInput from '../../components/Global/SearchInput';
-import { apiRequest, socketRequest } from '../../apiHandler';
+import { socketRequest } from '../../apiHandler';
+import { useSelector } from 'react-redux';
 import './dm.css';
 
-const DM = ({ userId }) => {
+const DM = ({ friend }) => {
+  const messagesArray = useSelector((state) => state.messages.messagesArray);
   const [searchValue, setSearchValue] = useState('');
-  const [dmhistory, setDmHistory] = useState({});
+  const [filteredDmHistory, setFilteredDmHistory] = useState([]);
 
   useEffect(() => {
-    const fetchHistory = async () => {
-      const jsonResponse = await apiRequest(`/dmhistory/${userId}`);
-      if (jsonResponse.success) setDmHistory(jsonResponse.success);
-    };
-    if (!userId) return;
-    fetchHistory();
-  }, [userId]);
+    setFilteredDmHistory(messagesArray.filter((message) => message.recipients.includes(friend?.userId)));
+  }, [friend, messagesArray]);
 
   return (
     <div className="dm-container">
       <div className="dm-header">
         <img
           className="dm-image"
-          src={dmhistory?.receipentImage}
+          src={friend?.userImage}
           alt=""></img>
-        <p className="dm-name">{dmhistory?.receipentName}</p>
+        <p className="dm-name">{friend?.username}</p>
         <SearchInput
           searchValue={searchValue}
           setSearchValue={setSearchValue}
@@ -33,8 +30,8 @@ const DM = ({ userId }) => {
           placeholder={'Search'}></SearchInput>
       </div>
       <div className="dm-messages">
-        {dmhistory?.messages
-          ?.filter((message) => message?.message?.toLowerCase().includes(searchValue.toLowerCase()))
+        {filteredDmHistory
+          .filter((message) => message?.message?.toLowerCase().includes(searchValue.toLowerCase()))
           .map((message, index) => {
             return (
               <div
@@ -63,8 +60,8 @@ const DM = ({ userId }) => {
       </div>
       <MessageInput
         width={'100%'}
-        placeholder={`Message @${dmhistory?.receipentName}`}
-        userId={userId}></MessageInput>
+        placeholder={`Message @${friend?.username}`}
+        userId={friend?.userId}></MessageInput>
     </div>
   );
 };

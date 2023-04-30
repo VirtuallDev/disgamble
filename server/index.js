@@ -56,6 +56,13 @@ async function getUserByAccessToken(accessToken) {
 }
 
 io.on('connection', (socket) => {
+  socket.on('initialConnection', async (accessToken) => {
+    if (!accessToken) return;
+    const { userId } = await getUserByAccessToken(accessToken);
+    if (!userId) return;
+    socket.join(userId);
+  });
+
   socket.on('server:connect', async (accessToken, serverId) => {
     const { userId, username, userImage } = await getUserByAccessToken(accessToken);
 
@@ -91,37 +98,66 @@ io.on('connection', (socket) => {
     try {
       const { userId, username, userImage } = await getUserByAccessToken(accessToken);
       if (!userId) return;
-      await Dm.create({
+      const recipient = await User.findOne({ userId: sendTo }, { username: 1, userId: 1, userImage: 1 });
+      if (!recipient) return;
+      const messageObject = await Dm.create({
         authorId: userId,
         authorName: username,
         authorImage: userImage,
+        recipientId: recipient.userId,
+        recipientName: recipient.username,
+        recipientImage: recipient.userImage,
         recipients: [userId, sendTo],
         message: content,
         messageId: crypto.randomBytes(16).toString('hex'),
         sentAt: Date.now(),
+        edited: false,
       });
-      const user = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1 }).lean();
-      io.emit('dm:message', content, user.username, user.userId, user.userImage);
+      nodeEvents.emit('dm:messageAdded', messageObject);
     } catch (e) {
       console.log(e);
     }
   });
   socket.on('dm:edit', async (accessToken, messageId, newMessage) => {
     try {
-      const { userId, username, userImage } = await getUserByAccessToken(accessToken);
+      const { userId } = await getUserByAccessToken(accessToken);
       if (!userId) return;
+      const edited = await Dm.findOneAndUpdate({ authorId: userId, messageId: messageId }, { message: newMessage, edited: true });
+      if (!edited) return;
+      nodeEvents.emit('dm:messageUpdated', edited);
     } catch (e) {
       console.log(e);
     }
   });
   socket.on('dm:delete', async (accessToken, messageId) => {
     try {
-      const { userId, username, userImage } = await getUserByAccessToken(accessToken);
+      const { userId } = await getUserByAccessToken(accessToken);
       if (!userId) return;
+      const deleted = await Dm.findOneAndDelete({ authorId: userId, messageId: messageId });
+      if (!deleted) return;
+      nodeEvents.emit('dm:messageDeleted', deleted);
     } catch (e) {
       console.log(e);
     }
   });
+});
+
+nodeEvents.on('dm:messageAdded', async (messageObject) => {
+  for (const user of messageObject?.recipients) {
+    io.to(`${user}`).emit('dm:messageAdded', messageObject);
+  }
+});
+
+nodeEvents.on('dm:messageUpdated', async (messageObject) => {
+  for (const user of messageObject?.recipients) {
+    io.to(`${user}`).emit('dm:messageUpdated', messageObject);
+  }
+});
+
+nodeEvents.on('dm:messageDeleted', async (messageObject) => {
+  for (const user of messageObject?.recipients) {
+    io.to(`${user}`).emit('dm:messageDeleted', messageObject);
+  }
 });
 
 nodeEvents.on('user:friendUpdate', async (userId) => {

@@ -1,36 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const messagesSlice = createSlice({
-  name: 'messageArray',
+  name: 'messagesArray',
   initialState: {
-    messageArray: [
-      {
-        authorId: '123',
-        authorName: '123',
-        authorImage: '1223',
-        recipients: [123, 123],
-        message: '123',
-        messageId: '123',
-        sentAt: '123',
-      },
-      {
-        authorId: '123',
-        authorName: '123',
-        authorImage: '1223',
-        recipients: [123, 123],
-        message: '123',
-        messageId: '123',
-        sentAt: '123',
-      },
-    ],
+    messagesArray: [],
   },
   reducers: {
-    newMessage: (state, action) => {
-      state.messageArray = action.payload;
+    initialMessages: (state, action) => {
+      state.messagesArray = action.payload;
+    },
+    messageAdded: (state, action) => {
+      state.messagesArray = [...state.messagesArray, action.payload];
+    },
+    messageUpdated: (state, action) => {
+      const index = state.messagesArray.findIndex((state) => state.messageId === action.payload?.messageId);
+      if (index !== -1) state.messagesArray[index] = action.payload;
+    },
+    messageDeleted: (state, action) => {
+      const index = state.messagesArray.findIndex((state) => state.messageId === action.payload?.messageId);
+      if (index !== -1) state.messagesArray.splice(index, 1);
     },
   },
 });
 
-export const { setServerObject } = messagesSlice.actions;
+export const { messageAdded, messageUpdated, messageDeleted, initialMessages } = messagesSlice.actions;
 
 export default messagesSlice.reducer;
