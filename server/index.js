@@ -10,8 +10,8 @@ const nodeEvents = require('./nodeEvents');
 const { User } = require('./database');
 const app = express();
 const options = {
-  key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.crt'),
+  key: fs.readFileSync('private.key'),
+  cert: fs.readFileSync('certificate.crt'),
 };
 
 const server = https.createServer(options, app).listen(3000, () => console.log(`HTTPS server running on port ${3000}`));

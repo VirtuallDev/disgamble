@@ -23,7 +23,7 @@ const App = () => {
     socketRequest('initialConnection');
     const fetchHistory = async () => {
       const jsonResponse = await apiRequest(`/dmhistory`);
-      if (jsonResponse.success) dispatch(initialMessages(jsonResponse.success));
+      if (jsonResponse?.success) dispatch(initialMessages(jsonResponse?.success));
     };
     fetchHistory();
 

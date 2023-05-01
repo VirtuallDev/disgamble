@@ -51,7 +51,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
               <div
                 key={index}
                 className="friends-container"
-                style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-8)' }}
+                style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-3)' }}
                 onClick={() => friendClick(friend)}>
                 <div className="image-container">
                   <img

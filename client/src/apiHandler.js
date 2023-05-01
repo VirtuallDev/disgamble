@@ -1,7 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import io from 'socket.io-client';
 
-export const API_URL = 'https://84.110.85.208:3000';
+export const API_URL = 'https://doriman.yachts:3000';
 
 let accessToken = null;
 
