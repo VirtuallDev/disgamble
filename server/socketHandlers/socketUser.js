@@ -1,12 +1,11 @@
 const { User } = require('../database');
-const { getUserByAccessToken } = require('../utils');
 const nodeEvents = require('../nodeEvents');
 
 function setupUserEvents(io) {
   io.on('connection', (socket) => {
-    socket.on('user:addfriend', async (accessToken, usernameToAdd) => {
+    socket.on('user:addfriend', async (usernameToAdd) => {
       try {
-        const { userId, userImage, username } = await getUserByAccessToken(accessToken);
+        const { userId, username, userImage } = await User.findOne({ userId: socket.userId }, { username: 1, userId: 1, userImage: 1 });
         if (!userId) return;
         const updatedUser = await User.findOneAndUpdate({ username: usernameToAdd }, { $push: { friendRequests: { userId: userId, username: username, userImage: userImage } } });
         if (!updatedUser) return;
@@ -17,9 +16,9 @@ function setupUserEvents(io) {
         console.log(e);
       }
     });
-    socket.on('user:accept', async (accessToken, userIdToAccept) => {
+    socket.on('user:accept', async (userIdToAccept) => {
       try {
-        const { userId } = await getUserByAccessToken(accessToken);
+        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
         if (!userId) return;
         const updatedUser = await User.findOneAndUpdate(
           { userId: userId },
@@ -34,9 +33,9 @@ function setupUserEvents(io) {
         console.log(e);
       }
     });
-    socket.on('user:decline', async (accessToken, userIdToDecline) => {
+    socket.on('user:decline', async (userIdToDecline) => {
       try {
-        const { userId } = await getUserByAccessToken(accessToken);
+        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
         if (!userId) return;
         const updatedUser = await User.findOneAndUpdate(
           { userId: userId },
@@ -50,9 +49,9 @@ function setupUserEvents(io) {
         console.log(e);
       }
     });
-    socket.on('user:changestatus', async (accessToken, statusString) => {
+    socket.on('user:changestatus', async (statusString) => {
       try {
-        const { userId } = await getUserByAccessToken(accessToken);
+        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
         if (!userId) return;
         if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
         const user = await User.findOneAndUpdate({ userId: userId }, { status: statusString });

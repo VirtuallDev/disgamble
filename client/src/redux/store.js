@@ -3,6 +3,7 @@ import userReducer from './user';
 import soundsReducer from './sounds';
 import serverReducer from './server';
 import messagesReducer from './messages';
+import accesstokenReducer from './accesstoken';
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     sounds: soundsReducer,
     server: serverReducer,
     messages: messagesReducer,
+    accesstoken: accesstokenReducer,
   },
 });

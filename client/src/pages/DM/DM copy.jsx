@@ -3,18 +3,19 @@ import { HiDotsVertical } from 'react-icons/hi';
 import { BiSend } from 'react-icons/bi';
 import SearchInput from '../../components/Global/SearchInput';
 import { useParams } from 'react-router-dom';
-import { apiRequest, socketRequest } from '../../apiHandler';
 import './dm.css';
+import useAuth from '../../customhooks/useAuth';
 
 const DM = () => {
   const [msgValue, setMsgValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [dmhistory, setDmHistory] = useState({});
   const { id: userId } = useParams();
+  const { useApi, useSocket, socket } = useAuth();
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const jsonResponse = await apiRequest(`/dmhistory/${userId}`);
+      const jsonResponse = await useApi(`/dmhistory/${userId}`);
       if (jsonResponse.success) setDmHistory(jsonResponse.success);
     };
     fetchHistory();
@@ -80,6 +81,8 @@ const DM = () => {
 export default DM;
 
 const MessageInput = ({ msgValue, setMsgValue, width, placeholder, userId }) => {
+  const { useApi, useSocket, socket } = useAuth();
+
   return (
     <div
       className="msg-input-container"
@@ -92,7 +95,7 @@ const MessageInput = ({ msgValue, setMsgValue, width, placeholder, userId }) => 
         onChange={(e) => setMsgValue(e.target.value)}></input>
       <div
         className="msg-send-button"
-        onClick={() => socketRequest('dm:message', msgValue, userId)}>
+        onClick={() => useSocket('dm:message', msgValue, userId)}>
         <BiSend
           size={'3em'}
           color={'inherit'}></BiSend>

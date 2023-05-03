@@ -4,8 +4,9 @@ import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
-import { API_URL, socketRequest } from '../../apiHandler';
+import { API_URL } from '../../oldAuth';
 import './user.css';
+import useAuth from '../../customhooks/useAuth';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -90,9 +91,10 @@ export default User;
 
 const StatusOptions = ({ statusOptions, setStatusOptions }) => {
   const statusOptionsRef = useRef(null);
+  const { useApi, useSocket, socket } = useAuth();
 
   const handleStatusChange = async (statusString) => {
-    socketRequest('user:changestatus', statusString);
+    useSocket('user:changestatus', statusString);
     setStatusOptions(false);
   };
 

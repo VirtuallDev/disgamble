@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { socketRequest } from '../../apiHandler';
+import useAuth from '../../customhooks/useAuth';
 
 const ChatInput = (props) => {
   const [message, setMessage] = useState('');
+  const { useApi, useSocket, socket } = useAuth();
 
   const sendMessage = async () => {
-    socketRequest('chat:message', props.recipientId, message);
+    useSocket('chat:message', props.recipientId, message);
   };
 
   return (

@@ -1,10 +1,9 @@
 const { Server } = require('../database');
-const { getUserByAccessToken } = require('../utils');
 
 function setupServerEvents(io) {
   io.on('connection', (socket) => {
-    socket.on('server:connect', async (accessToken, serverId) => {
-      const { userId, username, userImage } = await getUserByAccessToken(accessToken);
+    socket.on('server:connect', async (serverId) => {
+      const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
       if (!userId) return;
       socket.leaveAll();
       socket.join(userId);

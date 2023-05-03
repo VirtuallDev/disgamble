@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { apiRequest, socket, socketRequest } from './apiHandler';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Home from './pages/Home/Home';
@@ -11,18 +10,19 @@ import DM from './pages/DM/DM';
 import Voice from './pages/Voice/Voice';
 import { friendChange } from './redux/user';
 import { initialMessages, messageAdded, messageDeleted, messageUpdated } from './redux/messages';
+import useAuth from './customhooks/useAuth';
 
 const App = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userId } = userObject;
   const { loading, fetchUser } = useUpdateUser();
   const dispatch = useDispatch();
+  const { useApi, useSocket, socket } = useAuth();
 
   useEffect(() => {
     fetchUser();
-    socketRequest('initialConnection');
     const fetchHistory = async () => {
-      const jsonResponse = await apiRequest(`/dmhistory`);
+      const jsonResponse = await useApi(`/dmhistory`);
       if (jsonResponse?.success) dispatch(initialMessages(jsonResponse?.success));
     };
     fetchHistory();

@@ -7,9 +7,9 @@ import User from '../../components/Home/user';
 import { setServerObject } from '../../redux/server';
 import { useDispatch, useSelector } from 'react-redux';
 import './home.css';
-import { socket } from '../../apiHandler';
 import { FaExchangeAlt } from 'react-icons/fa';
 import DM from '../DM/DM';
+import useAuth from '../../customhooks/useAuth';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,7 @@ const Home = () => {
   const { servername, serverId, serverImage, serverAddress, usersOnline, description, dateCreated, channels } = serverObject;
   const [current, setCurrent] = useState(true);
   const [friend, setFriend] = useState({});
+  const { useApi, useSocket, socket } = useAuth();
 
   useEffect(() => {
     socket.on('server:connected', (server) => {

@@ -2,19 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 import { BiSend } from 'react-icons/bi';
 import SearchInput from '../../components/Global/SearchInput';
-import { socketRequest } from '../../apiHandler';
 import { useSelector } from 'react-redux';
 import './dm.css';
+import useAuth from '../../customhooks/useAuth';
 
 const DM = ({ friend }) => {
   const messagesArray = useSelector((state) => state.messages.messagesArray);
   const [searchValue, setSearchValue] = useState('');
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
   const [editing, setEditing] = useState('');
+  const { useApi, useSocket, socket } = useAuth();
 
   const editedMessageRef = useRef(null);
   const handleEdit = () => {
-    socketRequest('dm:edit', editedMessageRef.current.id, editedMessageRef.current.textContent);
+    useSocket('dm:edit', editedMessageRef.current.id, editedMessageRef.current.textContent);
     setEditing('');
   };
   const handleCancel = () => {
@@ -114,7 +115,7 @@ const MessageInput = ({ width, placeholder, userId }) => {
         onChange={(e) => setMsgValue(e.target.value)}></input>
       <div
         className="msg-send-button"
-        onClick={() => socketRequest('dm:message', msgValue, userId)}>
+        onClick={() => useSocket('dm:message', msgValue, userId)}>
         <BiSend
           size={'3em'}
           color={'inherit'}></BiSend>
@@ -133,7 +134,7 @@ const MsgOptions = ({ message, setEditing }) => {
   };
 
   const deleteMessage = (messageId) => {
-    socketRequest('dm:delete', messageId);
+    useSocket('dm:delete', messageId);
     setMsgOptions('');
   };
 

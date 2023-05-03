@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { API_URL } from '../../apiHandler';
+import { API_URL } from '../../oldAuth';
 import './Auth.css';
 
 const Register = () => {

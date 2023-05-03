@@ -13,11 +13,13 @@ const options = {
   key: fs.readFileSync('private.key'),
   cert: fs.readFileSync('certificate.crt'),
 };
+const jwt = require('jsonwebtoken');
 
 const server = https.createServer(options, app).listen(3000, () => console.log(`HTTPS server running on port ${3000}`));
 // const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
 
 const CLIENT_URL = process.env.CLIENT_URL;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(cookieParser());
 app.use(
@@ -43,7 +45,7 @@ const { setupDmEvents } = require('./socketHandlers/socketDm');
 const { setupServerEvents } = require('./socketHandlers/socketServer');
 const { setupUserEvents } = require('./socketHandlers/socketUser');
 const { setupWebRTCEvents } = require('./socketHandlers/socketWebRTC');
-const { getUserByAccessToken } = require('./utils');
+const { getUserByAccessToken, getUserInfoByAuthHeader } = require('./utils');
 
 setupDmEvents(io);
 setupServerEvents(io);
@@ -56,12 +58,20 @@ setupWebRTCEvents(io);
 })();
 */
 
-io.on('connection', (socket) => {
-  socket.on('initialConnection', async (accessToken) => {
-    if (!accessToken) return;
-    const { userId } = await getUserByAccessToken(accessToken);
-    if (!userId) return;
+io.use(async (socket, next) => {
+  try {
+    const token = socket.handshake.headers.authorization;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.userId;
     socket.join(userId);
+  } catch (e) {}
+  next();
+});
+
+io.on('connection', (socket) => {
+  socket.on('test', (ac) => {
+    const token = socket.handshake.headers.authorization;
+    console.log(token);
   });
 });
 
@@ -72,7 +82,6 @@ nodeEvents.on('dm:messageAdded', async (messageObject) => {
 });
 
 nodeEvents.on('dm:messageUpdated', async (messageObject) => {
-  console.log(messageObject.message);
   for (const user of messageObject?.recipients) {
     io.to(`${user}`).emit('dm:messageUpdated', messageObject);
   }

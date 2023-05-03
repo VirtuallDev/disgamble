@@ -1,13 +1,12 @@
 const { User, Dm } = require('../database');
-const { getUserByAccessToken } = require('../utils');
 const crypto = require('crypto');
 const nodeEvents = require('../nodeEvents');
 
 function setupDmEvents(io) {
   io.on('connection', (socket) => {
-    socket.on('dm:message', async (accessToken, content, sendTo) => {
+    socket.on('dm:message', async (content, sendTo) => {
       try {
-        const { userId, username, userImage } = await getUserByAccessToken(accessToken);
+        const { userId, username, userImage } = await User.findOne({ userId: socket.userId }, { username: 1, userId: 1, userImage: 1 });
         if (!userId) return;
         const recipient = await User.findOne({ userId: sendTo }, { username: 1, userId: 1, userImage: 1 });
         if (!recipient) return;
@@ -29,9 +28,9 @@ function setupDmEvents(io) {
         console.log(e);
       }
     });
-    socket.on('dm:edit', async (accessToken, messageId, newMessage) => {
+    socket.on('dm:edit', async (messageId, newMessage) => {
       try {
-        const { userId } = await getUserByAccessToken(accessToken);
+        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
         if (!userId) return;
         const edited = await Dm.findOneAndUpdate({ authorId: userId, messageId: messageId }, { message: newMessage, edited: true }, { new: true });
         if (!edited) return;
@@ -40,9 +39,9 @@ function setupDmEvents(io) {
         console.log(e);
       }
     });
-    socket.on('dm:delete', async (accessToken, messageId) => {
+    socket.on('dm:delete', async (messageId) => {
       try {
-        const { userId } = await getUserByAccessToken(accessToken);
+        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
         if (!userId) return;
         const deleted = await Dm.findOneAndDelete({ authorId: userId, messageId: messageId });
         if (!deleted) return;

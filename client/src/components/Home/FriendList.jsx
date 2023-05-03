@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Header } from './Header';
 import { useSelector } from 'react-redux';
-import { socketRequest } from '../../apiHandler';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { HiDotsVertical } from 'react-icons/hi';
 
 import './Friend.css';
+import useAuth from '../../customhooks/useAuth';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { friends, friendRequests } = userObject;
   const [friendOption, setFriendOption] = useState('All');
   const [filteredFriends, setFilteredFriends] = useState(friends);
+  const { useApi, useSocket, socket } = useAuth();
 
   const friendClick = (friend) => {
     setCurrent(false);
@@ -84,14 +85,14 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
                 <div className="pending-buttons">
                   <div
                     className="accept"
-                    onClick={() => socketRequest('user:accept', user.userId)}>
+                    onClick={() => useSocket('user:accept', user.userId)}>
                     <FaCheck
                       color={'inherit'}
                       size={'1.6em'}></FaCheck>
                   </div>
                   <div
                     className="decline"
-                    onClick={() => socketRequest('user:decline', user.userId)}>
+                    onClick={() => useSocket('user:decline', user.userId)}>
                     <FaTimes
                       color={'inherit'}
                       size={'1.6em'}></FaTimes>
@@ -204,6 +205,7 @@ const FriendsFilter = ({ setFriendOption, friendOption }) => {
 
 const AddFriend = () => {
   const [username, setUsername] = useState('');
+  const { useApi, useSocket, socket } = useAuth();
 
   return (
     <div
@@ -216,7 +218,7 @@ const AddFriend = () => {
         onChange={(e) => setUsername(e.target.value)}></input>
       <button
         className="friend-button"
-        onClick={() => socketRequest('user:addfriend', username)}>
+        onClick={() => useSocket('user:addfriend', username)}>
         Add Friend
       </button>
     </div>

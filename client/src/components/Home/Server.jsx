@@ -4,11 +4,12 @@ import './Server.css';
 import { ServerModal } from '../Modal/ServerModal';
 import { IoMdExpand } from 'react-icons/io';
 import SearchInput from '../Global/SearchInput';
-import { socketRequest } from '../../apiHandler';
+import useAuth from '../../customhooks/useAuth';
 
 export const ServerList = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { serverList } = userObject;
+  const { useApi, useSocket, socket } = useAuth();
 
   const [currentServer, setCurrentServer] = useState('');
   const [showServerModal, setShowServerModal] = useState(false);
@@ -38,7 +39,7 @@ export const ServerList = () => {
           <button className="server-button">Create Server</button>
           <button
             className="server-button"
-            onClick={() => socketRequest('server:connect', currentServer)}>
+            onClick={() => useSocket('server:connect', currentServer)}>
             Connect
           </button>
         </div>

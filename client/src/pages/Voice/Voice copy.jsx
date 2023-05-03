@@ -16,15 +16,13 @@ const Voice = () => {
   const soundObject = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened } = soundObject;
   const dispatch = useDispatch();
+  const { useApi, useSocket, socket } = useAuth();
 
   const [userId, setUserId] = useState('1');
   const [peerConnection, setPeerConnection] = useState(null);
   const [stream, setStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
   const [connection, setConnection] = useState('Initializing Peer Connection');
-  const [currentOffer, setCurrentOffer] = useState(null);
-
-  const { useApi, useSocket } = useAuth();
 
   const sendOffer = async () => {
     if (peerConnection && !peerConnection.localDescription) {
@@ -32,13 +30,6 @@ const Voice = () => {
       await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
       useSocket('webrtc:offer', offer, userId);
     }
-  };
-
-  const acceptOffer = async () => {
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(currentOffer));
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
-    useSocket('webrtc:answer', answer, userId);
   };
 
   useEffect(() => {
@@ -94,16 +85,27 @@ const Voice = () => {
       setConnection('Connection Established');
     };
 
-    socket.on('webrtc:answer', async (answer) => {
-      await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    socket.on('webrtc:answer', async (answer, id) => {
+      if (userId !== id) {
+        console.log('Received answer:', answer);
+        console.log('peerConnection:', peerConnection);
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+      }
     });
 
-    socket.on('webrtc:offer', async (offer) => {
-      setCurrentOffer(offer);
+    socket.on('webrtc:offer', async (offer, id) => {
+      if (userId !== id) {
+        console.log('Received offer:', offer);
+        console.log('peerConnection:', peerConnection);
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
+        useSocket('webrtc:answer', answer, userId);
+      }
     });
 
-    socket.on('webrtc:icecandidate', (candidate) => {
-      if (peerConnection && peerConnection.remoteDescription) {
+    socket.on('webrtc:icecandidate', (candidate, id) => {
+      if (userId !== id && peerConnection && peerConnection.remoteDescription) {
         console.log('Received ICE candidate:', candidate);
         peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
       }
@@ -152,11 +154,6 @@ const Voice = () => {
           ToggleDeafen {isDeafened.toString()} ?
         </button>
         <div style={{ color: 'white' }}>{connection}</div>
-        <button
-          style={{ width: '100px', height: '100px' }}
-          onClick={() => useSocket('test')}>
-          Test
-        </button>
       </div>
     </>
   );
