@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
+import useAuth from '../../customhooks/useAuth';
 
 const configuration = {
   iceServers: [
@@ -22,6 +23,7 @@ const Voice = () => {
   const [remoteStream, setRemoteStream] = useState(null);
   const [connection, setConnection] = useState('Initializing Peer Connection');
   const [currentOffer, setCurrentOffer] = useState(null);
+  const { useApi, useSocket, socket } = useAuth();
 
   const sendOffer = async () => {
     if (peerConnection && !peerConnection.localDescription) {
@@ -117,7 +119,7 @@ const Voice = () => {
     if (remoteAudioRef.current && remoteStream) {
       remoteAudioRef.current.srcObject = remoteStream;
     }
-  }, [remoteStream]);
+  }, [remoteStream, socket]);
 
   return (
     <>

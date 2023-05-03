@@ -11,7 +11,7 @@ function useUpdateUser() {
   async function fetchUser() {
     try {
       const jsonResponse = await useApi('getuserinfo');
-      if (jsonResponse.success) dispatch(setUserObject(jsonResponse.success));
+      if (jsonResponse && jsonResponse.success) dispatch(setUserObject(jsonResponse.success));
       setLoading(false);
     } catch (e) {
       setLoading(false);

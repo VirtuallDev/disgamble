@@ -1,7 +1,7 @@
 import React from 'react';
-import './Header.css';
+import './header.css';
 
-export const Header = ({ label, fontSize }) => {
+const Header = ({ label, fontSize }) => {
   return (
     <div
       className="header"
@@ -11,3 +11,5 @@ export const Header = ({ label, fontSize }) => {
     </div>
   );
 };
+
+export default Header;

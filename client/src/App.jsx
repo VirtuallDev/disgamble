@@ -23,10 +23,13 @@ const App = () => {
     fetchUser();
     const fetchHistory = async () => {
       const jsonResponse = await useApi(`/dmhistory`);
-      if (jsonResponse?.success) dispatch(initialMessages(jsonResponse?.success));
+      if (jsonResponse && jsonResponse.success) dispatch(initialMessages(jsonResponse.success));
     };
     fetchHistory();
+  }, []);
 
+  useEffect(() => {
+    if (!socket) return;
     socket.on('user:updateUser', () => {
       fetchUser();
     });
@@ -49,7 +52,7 @@ const App = () => {
       socket.off('dm:messageUpdated');
       socket.off('dm:messageDeleted');
     };
-  }, []);
+  }, [socket]);
 
   return (
     <div>

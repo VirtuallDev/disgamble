@@ -5,8 +5,8 @@ import { IoMdSettings } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
 import { API_URL } from '../../oldAuth';
-import './user.css';
 import useAuth from '../../customhooks/useAuth';
+import './user.css';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -22,7 +22,6 @@ const User = () => {
       method: 'POST',
       credentials: 'include',
     });
-    console.log('logged out', API_URL);
   };
 
   return (

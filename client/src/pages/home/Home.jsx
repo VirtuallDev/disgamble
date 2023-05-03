@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { ServerList } from '../../components/Home/Server';
-import FriendsList from '../../components/Home/FriendList';
-import { Header } from '../../components/Home/Header';
-import { Ads } from '../../components/Home/Ads';
-import User from '../../components/Home/user';
+import ServerList from './ServerList';
+import FriendsList from './FriendList';
+import Header from '../../components/Global/Header/Header';
+import Ads from '../../components/Global/Ads/Ads';
+import User from './User';
+import DM from '../../components/Global/DM/DM';
 import { setServerObject } from '../../redux/server';
 import { useDispatch, useSelector } from 'react-redux';
-import './home.css';
 import { FaExchangeAlt } from 'react-icons/fa';
-import DM from '../DM/DM';
 import useAuth from '../../customhooks/useAuth';
+import './home.css';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -20,13 +20,14 @@ const Home = () => {
   const { useApi, useSocket, socket } = useAuth();
 
   useEffect(() => {
+    if (!socket) return;
     socket.on('server:connected', (server) => {
       dispatch(setServerObject(server));
     });
     return () => {
       socket.off('server:connected');
     };
-  }, []);
+  }, [socket]);
 
   return (
     <>

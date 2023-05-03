@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import './Server.css';
 import { ServerModal } from '../Modal/ServerModal';
 import { IoMdExpand } from 'react-icons/io';
-import SearchInput from '../Global/SearchInput';
+import SearchInput from '../Global/SearchInput/SearchInput';
 import useAuth from '../../customhooks/useAuth';
+import './serverlist.css';
 
-export const ServerList = () => {
+const ServerList = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { serverList } = userObject;
   const { useApi, useSocket, socket } = useAuth();
@@ -78,3 +78,5 @@ export const ServerList = () => {
     </>
   );
 };
+
+export default ServerList;

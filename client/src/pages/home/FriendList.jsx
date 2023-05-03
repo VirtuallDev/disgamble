@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Header } from './Header';
+import React, { useEffect, useState } from 'react';
+import { Header } from '../Global/Header/Header';
 import { useSelector } from 'react-redux';
 import { FaCheck, FaTimes } from 'react-icons/fa';
-import { RiArrowDropDownLine } from 'react-icons/ri';
-import { HiDotsVertical } from 'react-icons/hi';
-
-import './Friend.css';
 import useAuth from '../../customhooks/useAuth';
+import Options from '../Global/Options/Options';
+import DropDown from '../Global/DropDown/DropDown';
+import './friendlist.css';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -19,6 +18,20 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
     setCurrent(false);
     setFriend(friend);
   };
+
+  const profileFriend = (friend) => {
+    console.log(friend.userId);
+  };
+
+  const deleteFriend = (friend) => {
+    console.log(friend.userId);
+  };
+
+  const buttonsArray = [
+    { name: 'PROFILE', color: 'white', handler: profileFriend },
+    { name: 'DELETE', color: 'red', handler: deleteFriend },
+  ];
+  const options = ['All', 'Online', 'Offline', 'Pending'];
 
   useEffect(() => {
     switch (friendOption) {
@@ -43,9 +56,11 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
         label={'Friends'}
       />
       <AddFriend></AddFriend>
-      <FriendsFilter
-        setFriendOption={setFriendOption}
-        friendOption={friendOption}></FriendsFilter>
+      <DropDown
+        value={friendOption}
+        setValue={setFriendOption}
+        name={'Filter'}
+        options={options}></DropDown>
       {friendOption !== 'Pending'
         ? filteredFriends.map((friend, index) => {
             return (
@@ -65,7 +80,10 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
                     style={{ backgroundColor: friend.status === 'Online' ? 'green' : friend.status === 'DND' ? 'red' : 'gray' }}></div>
                 </div>
                 <p className="friend-name">{friend.username}</p>
-                <FriendOptions friend={friend}></FriendOptions>
+                <Options
+                  currentValue={friend.userId}
+                  buttons={buttonsArray}
+                  object={friend}></Options>
               </div>
             );
           })
@@ -106,102 +124,6 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
 };
 
 export default FriendsList;
-
-const FriendOptions = ({ friend }) => {
-  const [friendOptions, setFriendOptions] = useState('');
-  const friendOptionsRef = useRef(null);
-
-  useEffect(() => {
-    window.addEventListener('mousedown', (e) => {
-      if (friendOptionsRef.current && !friendOptionsRef.current.contains(e.target)) {
-        setFriendOptions('');
-      }
-    });
-    return () => {
-      window.removeEventListener('mousedown', (e) => {
-        if (friendOptionsRef.current && !friendOptionsRef.current.contains(e.target)) {
-          setFriendOptions('');
-        }
-      });
-    };
-  }, []);
-  return (
-    <div
-      className="dots-options"
-      onClick={(e) => {
-        e.stopPropagation();
-        setFriendOptions(friend?.userId);
-      }}>
-      <div
-        ref={friendOptionsRef}
-        className="dots-options-container"
-        style={{ display: friendOptions === friend?.userId ? 'initial' : 'none' }}>
-        <button>PROFILE</button>
-        <button style={{ color: 'indianRed' }}>DELETE</button>
-      </div>
-      <HiDotsVertical
-        size={'1.5em'}
-        color={'var(--gray-2)'}></HiDotsVertical>
-    </div>
-  );
-};
-
-const FriendsFilter = ({ setFriendOption, friendOption }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const options = ['All', 'Online', 'Offline', 'Pending'];
-  const filterOptionsRef = useRef(null);
-
-  const handleFilterClick = (option) => {
-    setFriendOption(option);
-    setIsOpen(false);
-  };
-
-  useEffect(() => {
-    const handleMouseDown = (e) => {
-      if (filterOptionsRef.current && !filterOptionsRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener('mousedown', handleMouseDown);
-    return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-    };
-  }, []);
-
-  return (
-    <>
-      <div
-        className="friend-options-container"
-        ref={filterOptionsRef}>
-        <button
-          className="filter-button"
-          onClick={() => setIsOpen((prev) => !prev)}>
-          Filter
-          <RiArrowDropDownLine
-            className="filter-svg"
-            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-            color={'inherit'}
-            size={'2.8em'}></RiArrowDropDownLine>
-        </button>
-        <div
-          className="friend-options"
-          style={{ display: isOpen ? 'flex' : 'none' }}>
-          {options.map((option, index) => {
-            return (
-              <button
-                key={index}
-                onClick={() => handleFilterClick(option)}
-                className="friend-option"
-                style={{ backgroundColor: friendOption === option ? 'var(--bg-primary-3)' : '' }}>
-                {option}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </>
-  );
-};
 
 const AddFriend = () => {
   const [username, setUsername] = useState('');

@@ -24,7 +24,7 @@ const Voice = () => {
   const [connection, setConnection] = useState('Initializing Peer Connection');
   const [currentOffer, setCurrentOffer] = useState(null);
 
-  const { useApi, useSocket } = useAuth();
+  const { useApi, useSocket, socket } = useAuth();
 
   const sendOffer = async () => {
     if (peerConnection && !peerConnection.localDescription) {
@@ -79,7 +79,7 @@ const Voice = () => {
   }, [isMuted]);
 
   useEffect(() => {
-    if (!peerConnection) return;
+    if (!peerConnection || !socket) return;
     peerConnection.ontrack = (event) => {
       setRemoteStream(event.streams[0]);
     };
@@ -114,7 +114,7 @@ const Voice = () => {
       socket.off('webrtc:answer');
       socket.off('webrtc:offer');
     };
-  }, [peerConnection, userId]);
+  }, [peerConnection, userId, socket]);
 
   useEffect(() => {
     if (remoteAudioRef.current && remoteStream) {

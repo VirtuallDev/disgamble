@@ -9,9 +9,26 @@ export const API_URL = 'https://doriman.yachts:3000';
 function useAuth() {
   const dispatch = useDispatch();
   const socketRef = useRef(null);
+  const apiRef = useRef(null);
   const accessToken = useSelector((state) => state.accesstoken.accessToken);
 
   useEffect(() => {
+    apiRef.current = async function (endpoint, method = 'GET', body = null) {
+      try {
+        const headers = {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        };
+        const options = { method, headers };
+        if (body) options.body = JSON.stringify(body);
+        const response = await fetch(`${API_URL}/${endpoint}`, options);
+        const jsonResponse = await response.json();
+        return jsonResponse;
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
     socketRef.current = io(API_URL, {
       withCredentials: true,
       cors: true,
@@ -48,31 +65,20 @@ function useAuth() {
     }
   }
 
-  async function getAuthorizationHeader() {
-    if (isTokenExpired()) await getNewAccessToken();
-    return { authorization: `Bearer ${accessToken}` };
-  }
-
-  async function useApi(endpoint, method = 'GET', body = null) {
+  async function useSocket(endpoint, ...args) {
     try {
-      const headers = await getAuthorizationHeader();
-      const options = { method, headers };
-      if (body) {
-        options.body = JSON.stringify(body);
-        options.headers['Content-Type'] = 'application/json';
-      }
-      const response = await fetch(`${API_URL}/${endpoint}`, options);
-      const jsonResponse = await response.json();
-      return jsonResponse;
+      if (isTokenExpired()) await getNewAccessToken();
+      socketRef.current.emit(endpoint, ...args);
     } catch (e) {
       console.log(e);
     }
   }
 
-  async function useSocket(endpoint, ...args) {
+  async function useApi(endpoint, method = 'GET', body = null) {
     try {
       if (isTokenExpired()) await getNewAccessToken();
-      socketRef.current.emit(endpoint, accessToken, ...args);
+      const jsonResponse = await apiRef.current(endpoint, method, body);
+      return jsonResponse;
     } catch (e) {
       console.log(e);
     }

@@ -45,7 +45,6 @@ const { setupDmEvents } = require('./socketHandlers/socketDm');
 const { setupServerEvents } = require('./socketHandlers/socketServer');
 const { setupUserEvents } = require('./socketHandlers/socketUser');
 const { setupWebRTCEvents } = require('./socketHandlers/socketWebRTC');
-const { getUserByAccessToken, getUserInfoByAuthHeader } = require('./utils');
 
 setupDmEvents(io);
 setupServerEvents(io);
@@ -64,6 +63,8 @@ io.use(async (socket, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
     socket.join(userId);
+    // Remove later
+    socket.userId = userId;
   } catch (e) {}
   next();
 });
