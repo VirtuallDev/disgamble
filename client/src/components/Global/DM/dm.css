@@ -17,8 +17,8 @@
 
 .dm-image {
   border-radius: 100%;
-  width: 3em;
-  height: 3em;
+  min-width: 3em;
+  min-height: 3em;
   background-color: aliceblue;
   margin-inline: 0.5em;
 }
@@ -26,6 +26,8 @@
 .dm-name {
   color: var(--dark3);
   font-size: 1.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dm-messages {

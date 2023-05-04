@@ -6,6 +6,7 @@ import useAuth from '../../../customhooks/useAuth';
 import Options from '../Options/Options';
 import { CgPhone } from 'react-icons/cg';
 import './dm.css';
+import ToolTipIcon from '../ToolTip/ToolTipIcon';
 
 const DM = ({ friend }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -18,10 +19,17 @@ const DM = ({ friend }) => {
           src={friend?.userImage}
           alt=""></img>
         <p className="dm-name">{friend?.username}</p>
-        <CgPhone
-          style={{ marginLeft: 'auto' }}
-          size={'2em'}
-          color={'var(--gray-2)'}></CgPhone>
+        <div style={{ marginLeft: 'auto', marginRight: '0.5em' }}>
+          <ToolTipIcon
+            handler={() => dispatch(toggleMute())}
+            tooltip={'Call'}
+            direction="bottom"
+            icon={
+              <CgPhone
+                size={'2em'}
+                color={'white'}></CgPhone>
+            }></ToolTipIcon>
+        </div>
         <SearchInput
           searchValue={searchValue}
           setSearchValue={setSearchValue}

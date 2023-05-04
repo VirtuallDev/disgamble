@@ -13,7 +13,7 @@ const User = () => {
   const dispatch = useDispatch();
   const userObject = useSelector((state) => state.user.userObject);
   const { username, userId, userImage, status, bio, friends, friendRequests, blockedUsers, serverList } = userObject;
-
+  const buttonRef = useRef(null);
   const userSounds = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened } = userSounds;
   const [statusOptions, setStatusOptions] = useState(false);
@@ -65,31 +65,38 @@ const User = () => {
               size={'1.8em'}></IoMdSettings>
           }></ToolTipIcon>
       </div>
-      <div className="user-container-username">
-        <p>{username}</p>
-      </div>
       <div
-        className="user-image-container"
-        onClick={() => setStatusOptions((status) => !status)}>
-        <img
-          src={userImage}
-          className="user-image"
-          alt=""
-        />
-        <div
-          className="status"
-          style={{ backgroundColor: status === 'Online' ? 'green' : status === 'DND' ? 'red' : 'gray' }}></div>
+        className="user-wrapper"
+        ref={buttonRef}
+        style={{ backgroundColor: statusOptions && 'var(--bg-primary-3)' }}
+        onClick={() => {
+          setStatusOptions((status) => !status);
+        }}>
+        <div className="user-container-username">
+          <p>{username}</p>
+        </div>
+        <div className="user-image-container">
+          <img
+            src={userImage || 'https://html.com/wp-content/uploads/flamingo-fallback.jpg'}
+            className="user-image"
+            alt=""
+          />
+          <div
+            className="status"
+            style={{ backgroundColor: status === 'Online' ? 'green' : status === 'DND' ? 'red' : 'gray' }}></div>
+        </div>
       </div>
       <StatusOptions
         statusOptions={statusOptions}
-        setStatusOptions={setStatusOptions}></StatusOptions>
+        setStatusOptions={setStatusOptions}
+        buttonRef={buttonRef}></StatusOptions>
     </div>
   );
 };
 
 export default User;
 
-const StatusOptions = ({ statusOptions, setStatusOptions }) => {
+const StatusOptions = ({ statusOptions, setStatusOptions, buttonRef }) => {
   const statusOptionsRef = useRef(null);
   const { useApi, useSocket, socket } = useAuth();
 
@@ -100,9 +107,7 @@ const StatusOptions = ({ statusOptions, setStatusOptions }) => {
 
   useEffect(() => {
     const handleMouseDown = (e) => {
-      if (statusOptionsRef.current && !statusOptionsRef.current.contains(e.target)) {
-        setStatusOptions(false);
-      }
+      if (statusOptionsRef.current && !statusOptionsRef.current.contains(e.target) && buttonRef.current && !buttonRef.current.contains(e.target)) setStatusOptions(false);
     };
 
     window.addEventListener('mousedown', handleMouseDown);
@@ -115,8 +120,7 @@ const StatusOptions = ({ statusOptions, setStatusOptions }) => {
   return (
     <div
       ref={statusOptionsRef}
-      className="status-options"
-      style={{ display: statusOptions ? 'flex' : 'none' }}>
+      className={`status-options ${statusOptions ? 'show' : 'hide'}`}>
       <button
         className="status-option"
         onClick={() => handleStatusChange('Online')}>
