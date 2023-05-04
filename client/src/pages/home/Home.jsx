@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ServerList from './ServerList';
 import FriendsList from './FriendList';
 import Header from '../../components/Global/Header/Header';
-import Ads from '../../components/Global/Ads/Ads';
+import Ads from '../../components/Global/Dds/Dds';
 import User from './User';
 import DM from '../../components/Global/DM/DM';
 import { setServerObject } from '../../redux/server';
@@ -31,7 +31,6 @@ const Home = () => {
 
   return (
     <>
-      <div>{serverId}</div>
       <div className="home-container">
         <div className="right-side">
           <div className="change-container">

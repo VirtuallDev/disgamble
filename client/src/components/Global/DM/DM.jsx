@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BiSend } from 'react-icons/bi';
-import SearchInput from '../../components/Global/SearchInput/SearchInput';
+import SearchInput from '../SearchInput/SearchInput';
 import { useSelector } from 'react-redux';
+import useAuth from '../../../customhooks/useAuth';
+import Options from '../Options/Options';
+import { CgPhone } from 'react-icons/cg';
 import './dm.css';
-import useAuth from '../../customhooks/useAuth';
-import Options from '../../components/Global/Options/Options';
 
 const DM = ({ friend }) => {
   const [searchValue, setSearchValue] = useState('');
@@ -17,6 +18,10 @@ const DM = ({ friend }) => {
           src={friend?.userImage}
           alt=""></img>
         <p className="dm-name">{friend?.username}</p>
+        <CgPhone
+          style={{ marginLeft: 'auto' }}
+          size={'2em'}
+          color={'var(--gray-2)'}></CgPhone>
         <SearchInput
           searchValue={searchValue}
           setSearchValue={setSearchValue}
@@ -94,10 +99,12 @@ const Messages = ({ friend, searchValue }) => {
                     <p className="msg-container-time">
                       {new Date(message?.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
                     </p>
-                    <Options
-                      currentValue={message.messageId}
-                      buttons={buttonsArray}
-                      object={message}></Options>
+                    <div style={{ position: 'absolute', right: '0', top: '0' }}>
+                      <Options
+                        currentValue={message.messageId}
+                        buttons={buttonsArray}
+                        object={message}></Options>
+                    </div>
                   </div>
                   {editing !== message.messageId ? (
                     <p className="msg-container-msg">{message?.message}</p>

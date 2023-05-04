@@ -17,39 +17,6 @@
   position: relative;
 }
 
-.user-option {
-  margin-inline: 0.3em;
-  padding: 0.3em;
-}
-
-.user-option > svg {
-  cursor: pointer;
-}
-
-.user-option > p {
-  position: absolute;
-  font-size: 0.85em;
-  top: -2em;
-  background-color: rgb(35, 35, 35);
-  padding: 0.3em;
-  border-radius: 5px;
-  pointer-events: none;
-  white-space: nowrap;
-  display: none;
-  color: white;
-}
-
-.user-option:hover {
-  background-color: var(--color-primary-1);
-  border-radius: 5px;
-  padding: 0.3em;
-  cursor: pointer;
-}
-
-.user-option:hover p {
-  display: block;
-}
-
 .user-image-container {
   position: relative;
 }

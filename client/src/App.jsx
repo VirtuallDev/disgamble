@@ -6,7 +6,7 @@ import Home from './pages/Home/Home';
 import ProtectedRoutes from './components/Global/ProtectedRoutes';
 import { useDispatch, useSelector } from 'react-redux';
 import useUpdateUser from './customhooks/useUpdateUser';
-import DM from './pages/DM/DM';
+import DM from './components/Global/DM/DM';
 import Voice from './pages/Voice/Voice';
 import { friendChange } from './redux/user';
 import { initialMessages, messageAdded, messageDeleted, messageUpdated } from './redux/messages';

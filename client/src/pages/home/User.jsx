@@ -7,6 +7,7 @@ import { toggleDeafen, toggleMute } from '../../redux/sounds';
 import { API_URL } from '../../oldAuth';
 import useAuth from '../../customhooks/useAuth';
 import './user.css';
+import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -27,42 +28,42 @@ const User = () => {
   return (
     <div className="user-container">
       <div className="user-options">
-        <div
-          className="user-option"
-          onClick={() => dispatch(toggleMute())}>
-          <p>{isMuted ? 'Unmute' : 'Mute'}</p>
-          {isMuted ? (
-            <FaMicrophoneSlash
-              size={'1.8em'}
-              color={'red'}></FaMicrophoneSlash>
-          ) : (
-            <FaMicrophone
-              size={'1.8em'}
-              color={'white'}></FaMicrophone>
-          )}
-        </div>
-        <div
-          className="user-option"
-          onClick={() => dispatch(toggleDeafen())}>
-          <p>{isDeafened ? 'Undeafen' : 'Deafen'}</p>
-          {isDeafened ? (
-            <MdHeadsetOff
-              color={'red'}
-              size={'1.8em'}></MdHeadsetOff>
-          ) : (
-            <MdHeadsetMic
+        <ToolTipIcon
+          handler={() => dispatch(toggleMute())}
+          tooltip={isMuted ? 'Unmute' : 'Mute'}
+          icon={
+            isMuted ? (
+              <FaMicrophoneSlash
+                size={'1.8em'}
+                color={'red'}></FaMicrophoneSlash>
+            ) : (
+              <FaMicrophone
+                size={'1.8em'}
+                color={'white'}></FaMicrophone>
+            )
+          }></ToolTipIcon>
+        <ToolTipIcon
+          handler={() => dispatch(toggleDeafen())}
+          tooltip={isDeafened ? 'Undeafen' : 'Deafen'}
+          icon={
+            isDeafened ? (
+              <MdHeadsetOff
+                color={'red'}
+                size={'1.8em'}></MdHeadsetOff>
+            ) : (
+              <MdHeadsetMic
+                color={'white'}
+                size={'1.8em'}></MdHeadsetMic>
+            )
+          }></ToolTipIcon>
+        <ToolTipIcon
+          handler={() => handleUserSettings()}
+          tooltip={'User Settings'}
+          icon={
+            <IoMdSettings
               color={'white'}
-              size={'1.8em'}></MdHeadsetMic>
-          )}
-        </div>
-        <div
-          className="user-option"
-          onClick={handleUserSettings}>
-          <p>User Settings</p>
-          <IoMdSettings
-            color={'white'}
-            size={'1.8em'}></IoMdSettings>
-        </div>
+              size={'1.8em'}></IoMdSettings>
+          }></ToolTipIcon>
       </div>
       <div className="user-container-username">
         <p>{username}</p>

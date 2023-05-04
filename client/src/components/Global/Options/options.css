@@ -1,36 +1,24 @@
-.dots-options {
-  position: absolute;
-  right: 0;
-  top: 0.1em;
-  background-color: rgba(0, 0, 0, 0.2);
-  width: 1.5em;
-  height: 1.5em;
-  border-radius: 0.4em;
-  z-index: 1;
-}
-
-.dots-options:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  cursor: pointer;
-}
-
 .dots-options-container {
   position: absolute;
-  right: 1.4em;
-  top: 0;
+  bottom: 1;
+  right: 0;
   color: white;
   background-color: var(--bg-primary-3);
-  width: 5em;
   border-radius: 3px;
+  z-index: 2;
 }
 
 .dots-options-container > button {
-  all: unset;
-  width: 100%;
+  border: none;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 3px;
-  text-align: center;
   font-size: 0.9em;
   transition: all 0.15s;
+  padding: 0.2em;
+  width: 100%;
 }
 
 .dots-options-container > button:hover {

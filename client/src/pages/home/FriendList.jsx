@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Header } from '../Global/Header/Header';
+import Header from '../../components/Global/Header/Header';
 import { useSelector } from 'react-redux';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import useAuth from '../../customhooks/useAuth';
-import Options from '../Global/Options/Options';
-import DropDown from '../Global/DropDown/DropDown';
+import Options from '../../components/Global/Options/Options';
+import DropDown from '../../components/Global/DropDown/DropDown';
 import './friendlist.css';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
@@ -67,7 +67,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
               <div
                 key={index}
                 className="friends-container"
-                style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-3)' }}
+                style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-2)' }}
                 onClick={() => friendClick(friend)}>
                 <div className="image-container">
                   <img
@@ -80,10 +80,12 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
                     style={{ backgroundColor: friend.status === 'Online' ? 'green' : friend.status === 'DND' ? 'red' : 'gray' }}></div>
                 </div>
                 <p className="friend-name">{friend.username}</p>
-                <Options
-                  currentValue={friend.userId}
-                  buttons={buttonsArray}
-                  object={friend}></Options>
+                <div style={{ position: 'absolute', right: '0.2em', top: '0.2em' }}>
+                  <Options
+                    currentValue={friend.userId}
+                    buttons={buttonsArray}
+                    object={friend}></Options>
+                </div>
               </div>
             );
           })

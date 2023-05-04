@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ServerModal } from '../Modal/ServerModal';
+import { ServerModal } from '../../components/Modal/ServerModal';
 import { IoMdExpand } from 'react-icons/io';
-import SearchInput from '../Global/SearchInput/SearchInput';
+import SearchInput from '../../components/Global/SearchInput/SearchInput';
 import useAuth from '../../customhooks/useAuth';
 import './serverlist.css';
 
