@@ -19,27 +19,27 @@ const Options = ({ currentValue, buttons, object }) => {
 
   return (
     <>
-      <div style={{ position: 'relative' }}>
+      <div
+        style={{ position: 'relative' }}
+        ref={optionsRef}>
         <ToolTipIcon
-          handler={() => setCurrentOption(currentValue)}
+          handler={() => setCurrentOption(currentValue === currentOption ? '' : currentValue)}
           tooltip={'More'}
           icon={
             <HiDotsVertical
+              style={{ transform: 'rotate(90deg)' }}
               size={'1.8em'}
               color={'white'}></HiDotsVertical>
           }
           direction="left"
-          height="2em"
-          width="1.5em">
+          height="1.5em"
+          width="2tttem">
           <HiDotsVertical
             size={'1.5em'}
             color={'var(--gray-2)'}></HiDotsVertical>
         </ToolTipIcon>
 
-        <div
-          ref={optionsRef}
-          className="dots-options-container"
-          style={{ display: currentOption === currentValue ? 'initial' : 'none' }}>
+        <div className={`dots-options-container ${currentOption === currentValue ? 'show' : 'hide-down'}`}>
           {buttons.map((button, index) => {
             return (
               <button

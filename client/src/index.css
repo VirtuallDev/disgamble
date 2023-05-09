@@ -56,17 +56,6 @@ body {
   --button-color-active: rgb(86, 82, 154);
 }
 
-@keyframes ShowAnimation {
-  0% {
-    opacity: 0;
-    display: none;
-  }
-  100% {
-    opacity: 1;
-    display: flex;
-  }
-}
-
 .show {
   opacity: 1;
   transform: translateY(0);
@@ -76,5 +65,11 @@ body {
 .hide {
   opacity: 0;
   transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.hide-down {
+  opacity: 0;
+  transform: translateY(10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }

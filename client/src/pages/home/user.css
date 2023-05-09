@@ -38,7 +38,6 @@
   z-index: 1;
   background-color: var(--bg-primary-3);
   border-radius: 0.5em;
-  transition: display 2s ease-in-out;
 }
 
 .status-options::before {
@@ -50,7 +49,6 @@
   border-top: 0.5em solid var(--bg-primary-3);
   border-left: 0.5em solid transparent;
   border-right: 0.5em solid transparent;
-  transition: display 2s ease-in-out;
 }
 
 .status-option {

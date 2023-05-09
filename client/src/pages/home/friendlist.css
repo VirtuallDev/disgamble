@@ -36,7 +36,7 @@
   width: 1em;
   height: 1em;
   border-radius: 100%;
-  top: 1.8em;
+  top: 1.5em;
   border: 2.5px solid var(--bg-primary-0);
 }
 
@@ -113,4 +113,32 @@
 
 .decline:hover {
   color: red;
+}
+
+.unread-messages {
+  position: absolute;
+  left: 0.3em;
+  top: 0em;
+}
+
+.unread-messages > p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  bottom: 0.5em;
+  background-color: indianred;
+  border-radius: 100%;
+  font-size: 0.7em;
+  min-width: 1.7em;
+  min-height: 1.7em;
+  padding-inline: 0.3em;
+  width: fit-content;
+  color: white;
+}
+
+.unread-messages > svg {
+  color: var(--gray-6);
 }
