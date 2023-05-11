@@ -1,4 +1,4 @@
-const { User } = require('./database');
+const { User, Calls } = require('./database');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -31,5 +31,40 @@ async function getUserByAccessToken(accessToken) {
   }
 }
 
+async function onDisconnect(io, userId) {
+  if (!userId) return;
+  const isCaller = await Calls.findOne({ callerId: userId });
+  const isNotCaller = await Calls.findOne({ callTo: userId });
+  if (isCaller) {
+    io.to(`${isCaller.callerId}`).emit('webrtc:disconnect');
+    io.to(`${isCaller.callerId}`).emit('user:deleteCall', isCaller.callId);
+    if (isCaller.isConnected) {
+      io.to(`${isCaller.callTo}`).emit('webrtc:disconnect');
+      io.to(`${isCaller.callTo}`).emit('user:deleteCall', isCaller.callId);
+    }
+  }
+  if (isNotCaller) {
+    io.to(`${isNotCaller.callerId}`).emit('webrtc:disconnect');
+    io.to(`${isNotCaller.callerId}`).emit('user:deleteCall', isNotCaller.callId);
+    if (isNotCaller.isConnected) {
+      io.to(`${isNotCaller.callTo}`).emit('webrtc:disconnect');
+      io.to(`${isNotCaller.callTo}`).emit('user:deleteCall', isNotCaller.callId);
+    }
+  }
+}
+
+async function onCallEnd(io, callId) {
+  if (!callId) return;
+  const callObject = await Calls.findOne({ callId: callId });
+  if (!callObject) return;
+  io.to(`${callObject.callerId}`).emit('webrtc:disconnect');
+  io.to(`${callObject.callerId}`).emit('user:deleteCall', callObject.callId);
+  io.to(`${callObject.callTo}`).emit('user:deleteCall', callObject.callId);
+  if (callObject.isConnected) io.to(`${callObject.callTo}`).emit('webrtc:disconnect');
+  await Calls.deleteOne({ callId: callId });
+}
+
 exports.getUserInfoByAuthHeader = getUserInfoByAuthHeader;
 exports.getUserByAccessToken = getUserByAccessToken;
+exports.onDisconnect = onDisconnect;
+exports.onCallEnd = onCallEnd;

@@ -7,12 +7,12 @@ import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import ToolTipIcon from '../ToolTip/ToolTipIcon';
 import useAuth from '../../../customhooks/useAuth';
 
-const CallWindow = ({ answer, disconnect, friendImage, isConnected }) => {
+const CallWindow = ({ answer, friendImage, callObject }) => {
   const dispatch = useDispatch();
   const userSounds = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened } = userSounds;
   const userObject = useSelector((state) => state.user.userObject);
-  const { userImage } = userObject;
+  const { userImage, userId } = userObject;
   const { useApi, useSocket, socket } = useAuth();
 
   return (
@@ -27,7 +27,8 @@ const CallWindow = ({ answer, disconnect, friendImage, isConnected }) => {
             alt=""></img>
         </div>
         <div className="call-buttons">
-          {isConnected ? (
+          {`is ${callObject.isConnected}`} hello
+          {callObject?.isConnected || callObject?.callerId === userId ? (
             <>
               <ToolTipIcon
                 handler={() => dispatch(toggleMute())}
@@ -58,7 +59,7 @@ const CallWindow = ({ answer, disconnect, friendImage, isConnected }) => {
                   )
                 }></ToolTipIcon>
               <ToolTipIcon
-                handler={() => disconnect()}
+                handler={() => useSocket('user:callDisconnect', callObject?.callId)}
                 tooltip={'Disconnect'}
                 direction="top"
                 icon={

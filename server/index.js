@@ -45,6 +45,7 @@ const { setupDmEvents } = require('./socketHandlers/socketDm');
 const { setupServerEvents } = require('./socketHandlers/socketServer');
 const { setupUserEvents } = require('./socketHandlers/socketUser');
 const { setupWebRTCEvents } = require('./socketHandlers/socketWebRTC');
+const { onDisconnect } = require('./utils');
 
 setupDmEvents(io);
 setupServerEvents(io);
@@ -69,14 +70,8 @@ io.use(async (socket, next) => {
 });
 
 io.on('connection', (socket) => {
-  socket.on('test', (ac) => {
-    const token = socket.handshake.headers.authorization;
-    console.log(token);
-  });
   socket.on('disconnect', async () => {
-    console.log('disconnect', socket.userId);
-    await Calls.deleteMany({ callerId: socket.userId });
-    await Calls.deleteMany({ callTo: socket.userId });
+    onDisconnect(io, socket.userId);
   });
 });
 

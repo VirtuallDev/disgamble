@@ -15,6 +15,9 @@ const DM = ({ friend, call, answer, disconnect }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userId } = userObject;
 
+  useEffect(() => {
+    console.log(callsArray);
+  }, [callsArray]);
   return (
     <div className="dm-container">
       <div className="dm-header">
@@ -40,13 +43,11 @@ const DM = ({ friend, call, answer, disconnect }) => {
           width={'25%'}
           placeholder={'Search'}></SearchInput>
       </div>
-      {callsArray.some((call) => call?.callerId === friend?.userId && call?.callTo === userId) && (
+      {callsArray.some((call) => (call?.callerId === friend?.userId && call?.callTo === userId) || call?.callerId === userId) && (
         <CallWindow
           answer={() => answer(callsArray.find((call) => call?.callerId === friend?.userId && call?.callTo === userId)?.callId)}
-          disconnect={() => disconnect()}
-          userId={friend?.userId}
           friendImage={friend?.userImage}
-          isConnected={callsArray.find((call) => call?.callerId === friend?.userId && call?.callTo === userId)?.isConnected}></CallWindow>
+          callObject={callsArray.find((call) => call?.callerId === friend?.userId || call?.callerId === userId)}></CallWindow>
       )}
       <Messages
         friend={friend}

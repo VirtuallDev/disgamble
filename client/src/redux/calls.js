@@ -7,20 +7,18 @@ export const callsSlice = createSlice({
   },
   reducers: {
     addCall: (state, action) => {
-      const newCallsArray = [...state.callsArray, action.payload];
-      return { ...state, callsArray: newCallsArray };
+      state.callsArray = [...state.callsArray, action.payload];
     },
     updateCall: (state, action) => {
-      console.log(action.payload);
-      const newCallsArray = [...state.callsArray];
-      const index = newCallsArray.findIndex((call) => call.callId === action.payload.callId);
-      if (index === -1) return state;
-      newCallsArray.splice(index, 1, action.payload);
-      return { ...state, callsArray: newCallsArray };
+      const newArray = state.callsArray;
+      const index = newArray.findIndex((call) => call.callId === action.payload.callId);
+      if (index === -1) return;
+      newArray.splice(index, 1, action.payload);
+      state.callsArray = newArray;
     },
     deleteCall: (state, action) => {
-      const newCallsArray = state.callsArray.filter((call) => call.callId !== action.payload);
-      return { ...state, callsArray: newCallsArray };
+      const newArray = state.callsArray;
+      state.callsArray = newArray.filter((call) => call.callId !== action.payload);
     },
   },
 });

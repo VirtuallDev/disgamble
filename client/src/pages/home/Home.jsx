@@ -34,6 +34,7 @@ const Home = () => {
       dispatch(updateCall(callObject));
     });
     socket.on('user:deleteCall', (callId) => {
+      console.log('deleting', callId);
       dispatch(deleteCall(callId));
     });
     return () => {

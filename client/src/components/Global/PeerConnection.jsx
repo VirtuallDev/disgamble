@@ -19,6 +19,23 @@ const PeerConnection = forwardRef((props, ref) => {
   const [remoteStream, setRemoteStream] = useState(null);
   const { useApi, useSocket, socket } = useAuth();
 
+  console.log('rerender?');
+  const init = async () => {
+    try {
+      setStream(null);
+      setRemoteStream(null);
+      const newpeerConnection = new RTCPeerConnection(configuration);
+      const newStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      newStream.getAudioTracks().forEach((track) => {
+        newpeerConnection.addTrack(track, newStream);
+      });
+      setStream(newStream);
+      peerConnection.current = newpeerConnection;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   useImperativeHandle(ref, () => ({
     sendOffer: async (userId) => {
       if (peerConnection.current && !peerConnection.current.localDescription) {
@@ -28,33 +45,19 @@ const PeerConnection = forwardRef((props, ref) => {
       }
     },
     acceptOffer: async (callId) => {
-      if (peerConnection.current && !peerConnection.current.localDescription) {
+      if (peerConnection.current) {
         useSocket('user:answer', callId);
       }
-    },
-    disconnect: () => {
-      peerConnection.current = null;
     },
   }));
 
   useEffect(() => {
-    const init = async () => {
-      try {
-        const newpeerConnection = new RTCPeerConnection(configuration);
-        const newStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        newStream.getAudioTracks().forEach((track) => {
-          newpeerConnection.addTrack(track, newStream);
-        });
-        setStream(newStream);
-        peerConnection.current = newpeerConnection;
-      } catch (e) {
-        console.log(e);
-      }
-    };
     init();
-
     return () => {
-      if (peerConnection.current) peerConnection.current.close();
+      if (peerConnection.current) {
+        peerConnection.current.close();
+        peerConnection.current = null;
+      }
       if (stream) {
         stream.getTracks().forEach((track) => {
           track.stop();
@@ -103,18 +106,26 @@ const PeerConnection = forwardRef((props, ref) => {
       }
     });
 
+    socket.on('webrtc:disconnect', () => {
+      init();
+    });
+
     return () => {
       socket.off('webrtc:icecandidate');
       socket.off('webrtc:answer');
       socket.off('webrtc:offer');
     };
-  }, [peerConnection.current]);
+  }, [peerConnection.current, socket]);
 
   useEffect(() => {
     if (remoteAudioRef.current && remoteStream) {
       remoteAudioRef.current.srcObject = remoteStream;
     }
-  }, [remoteStream, socket]);
+  }, [remoteStream]);
+
+  useEffect(() => {
+    console.log(peerConnection.current?.signalingState);
+  }, [peerConnection.current]);
 
   return (
     <audio
