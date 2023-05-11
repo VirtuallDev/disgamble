@@ -95,10 +95,6 @@ const App = () => {
                 path="/"
                 element={<Home />}
               />
-              <Route
-                path="/dm/:id"
-                element={<DM />}
-              />
             </Route>
           )}
         </Routes>

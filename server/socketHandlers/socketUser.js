@@ -9,7 +9,7 @@ function setupUserEvents(io) {
         if (!userId) return;
         const updatedUser = await User.findOneAndUpdate({ username: usernameToAdd }, { $push: { friendRequests: { userId: userId, username: username, userImage: userImage } } });
         if (!updatedUser) return;
-
+        console.log(userId, 'added');
         // Error if already added
         nodeEvents.emit('user:friendUpdate', updatedUser.userId);
       } catch (e) {

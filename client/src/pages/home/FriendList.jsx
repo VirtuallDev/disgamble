@@ -46,7 +46,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
         setFilteredFriends(friends.filter((friend) => friend.status === 'Offline'));
         break;
       case 'Pending':
-        setFilteredFriends(friends.filter((friend) => friend.status !== 'Online' && friend.status !== 'Offline' && friend.status !== 'DND'));
+        setFilteredFriends(friendRequests);
         break;
       default:
         setFilteredFriends(friends);
@@ -56,8 +56,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   useEffect(() => {
     const online = friends.filter((friend) => friend.status === 'Online' || friend.status === 'DND');
     const offline = friends.filter((friend) => friend.status === 'Offline');
-    const pending = friends.filter((friend) => friend.status !== 'Online' && friend.status !== 'Offline' && friend.status !== 'DND');
-    setOptions([`All (${friends.length})`, `Online (${online.length})`, `Offline (${offline.length})`, `Pending (${pending.length})`]);
+    setOptions([`All (${friends.length})`, `Online (${online.length})`, `Offline (${offline.length})`, `Pending (${friendRequests.length})`]);
   }, [friends]);
 
   return (
@@ -74,7 +73,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
         options={options}
       />
       {filteredFriends.map((friend, index) => {
-        return friend?.status !== 'Pending' ? (
+        return friend.status ? (
           <div
             key={index}
             className="friends-container"
@@ -86,18 +85,18 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
             </div>
             <div className="image-container">
               <img
-                src={friend.userImage}
+                src={friend?.userImage}
                 className="user-image"
                 alt=""
               />
               <div
                 className="status"
-                style={{ backgroundColor: friend.status === 'Online' ? 'green' : friend.status === 'DND' ? 'red' : 'gray' }}></div>
+                style={{ backgroundColor: friend?.status === 'Online' ? 'green' : friend?.status === 'DND' ? 'red' : 'gray' }}></div>
             </div>
-            <p className="friend-name">{friend.username}</p>
+            <p className="friend-name">{friend?.username}</p>
             <div style={{ position: 'absolute', right: '0.2em', top: '0.2em' }}>
               <Options
-                currentValue={friend.userId}
+                currentValue={friend?.userId}
                 buttons={buttonsArray}
                 object={friend}
               />

@@ -5,11 +5,15 @@ import { useSelector } from 'react-redux';
 import useAuth from '../../../customhooks/useAuth';
 import Options from '../Options/Options';
 import { CgPhone } from 'react-icons/cg';
-import './dm.css';
 import ToolTipIcon from '../ToolTip/ToolTipIcon';
+import CallWindow from './CallWindow';
+import './dm.css';
 
-const DM = ({ friend }) => {
+const DM = ({ friend, call, answer, disconnect }) => {
   const [searchValue, setSearchValue] = useState('');
+  const callsArray = useSelector((state) => state.calls.callsArray);
+  const userObject = useSelector((state) => state.user.userObject);
+  const { userId } = userObject;
 
   return (
     <div className="dm-container">
@@ -21,7 +25,7 @@ const DM = ({ friend }) => {
         <p className="dm-name">{friend?.username}</p>
         <div style={{ marginLeft: 'auto', marginRight: '0.5em' }}>
           <ToolTipIcon
-            handler={() => dispatch(toggleMute())}
+            handler={() => call(friend?.userId)}
             tooltip={'Call'}
             direction="bottom"
             icon={
@@ -36,6 +40,14 @@ const DM = ({ friend }) => {
           width={'25%'}
           placeholder={'Search'}></SearchInput>
       </div>
+      {callsArray.some((call) => call?.callerId === friend?.userId && call?.callTo === userId) && (
+        <CallWindow
+          answer={() => answer(callsArray.find((call) => call?.callerId === friend?.userId && call?.callTo === userId)?.callId)}
+          disconnect={() => disconnect()}
+          userId={friend?.userId}
+          friendImage={friend?.userImage}
+          isConnected={callsArray.find((call) => call?.callerId === friend?.userId && call?.callTo === userId)?.isConnected}></CallWindow>
+      )}
       <Messages
         friend={friend}
         searchValue={searchValue}></Messages>

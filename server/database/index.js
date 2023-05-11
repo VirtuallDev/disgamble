@@ -52,7 +52,17 @@ const DmHistorySchema = new mongoose.Schema({
   edited: Boolean,
 });
 
+const CallSchema = new mongoose.Schema({
+  callId: String,
+  callerId: String,
+  callTo: String,
+  offer: Object,
+  answer: Object,
+  isConnected: Boolean,
+});
+
 exports.User = mongoose.model('User', UserSchema, 'users');
 exports.Message = mongoose.model('Message', MessageSchema, 'messages');
 exports.Server = mongoose.model('Server', ServerSchema, 'servers');
 exports.Dm = mongoose.model('DmHistory', DmHistorySchema, 'dmhistory');
+exports.Calls = mongoose.model('Calls', CallSchema, 'calls');

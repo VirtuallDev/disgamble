@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./routers/auth');
 const usersRouter = require('./routers/users');
 const nodeEvents = require('./nodeEvents');
-const { User } = require('./database');
+const { User, Calls } = require('./database');
 const app = express();
 const options = {
   key: fs.readFileSync('private.key'),
@@ -51,11 +51,10 @@ setupServerEvents(io);
 setupUserEvents(io);
 setupWebRTCEvents(io);
 
-/*(async function test() {
-  const test = await User.find({});
+(async function test() {
+  const test = await Calls.deleteMany({});
   console.log(test);
 })();
-*/
 
 io.use(async (socket, next) => {
   try {
@@ -73,6 +72,11 @@ io.on('connection', (socket) => {
   socket.on('test', (ac) => {
     const token = socket.handshake.headers.authorization;
     console.log(token);
+  });
+  socket.on('disconnect', async () => {
+    console.log('disconnect', socket.userId);
+    await Calls.deleteMany({ callerId: socket.userId });
+    await Calls.deleteMany({ callTo: socket.userId });
   });
 });
 

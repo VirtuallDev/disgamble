@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ServerList from './ServerList';
 import FriendsList from './FriendList';
 import Header from '../../components/Global/Header/Header';
@@ -8,8 +8,9 @@ import DM from '../../components/Global/DM/DM';
 import { setServerObject } from '../../redux/server';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaExchangeAlt } from 'react-icons/fa';
-import { ImNotification } from 'react-icons/im';
 import useAuth from '../../customhooks/useAuth';
+import PeerConnection from '../../components/Global/PeerConnection';
+import { addCall, updateCall, deleteCall } from '../../redux/calls';
 import './home.css';
 
 const Home = () => {
@@ -19,19 +20,33 @@ const Home = () => {
   const [current, setCurrent] = useState(true);
   const [friend, setFriend] = useState({});
   const { useApi, useSocket, socket } = useAuth();
+  const peerRef = useRef(null);
 
   useEffect(() => {
     if (!socket) return;
     socket.on('server:connected', (server) => {
       dispatch(setServerObject(server));
     });
+    socket.on('user:call', (callObject) => {
+      dispatch(addCall(callObject));
+    });
+    socket.on('user:updateCall', (callObject) => {
+      dispatch(updateCall(callObject));
+    });
+    socket.on('user:deleteCall', (callId) => {
+      dispatch(deleteCall(callId));
+    });
     return () => {
       socket.off('server:connected');
+      socket.off('user:call');
+      socket.off('user:updateCall');
+      socket.off('user:deleteCall');
     };
   }, [socket]);
 
   return (
     <>
+      <PeerConnection ref={peerRef}></PeerConnection>
       <div className="home-container">
         <div className="right-side">
           <div className="change-container">
@@ -62,7 +77,12 @@ const Home = () => {
               </div>
             </>
           ) : (
-            <DM friend={friend} />
+            <DM
+              friend={friend}
+              call={(userId) => peerRef.current.sendOffer(userId)}
+              answer={(callId) => peerRef.current.acceptOffer(callId)}
+              disconnect={() => peerRef.current.disconnect()}
+            />
           )}
         </div>
       </div>

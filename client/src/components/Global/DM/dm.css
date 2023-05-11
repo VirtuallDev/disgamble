@@ -172,3 +172,37 @@ p[contentEditable='true'] {
   height: auto;
   resize: vertical;
 }
+
+.call-container {
+  position: relative;
+  width: 100%;
+  height: 20em;
+  background-color: rgb(49, 49, 49);
+}
+
+.call-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 2em;
+}
+
+.call-images > img {
+  border-radius: 100%;
+  width: 10em;
+  height: 10em;
+  margin-top: 2em;
+}
+
+.call-buttons {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding-block: 0.3em;
+  width: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  bottom: 0.5em;
+  gap: 1em;
+}
