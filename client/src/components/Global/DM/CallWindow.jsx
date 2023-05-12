@@ -26,8 +26,10 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
             src={userImage}
             alt=""></img>
         </div>
-        <div className="call-buttons">
-          {`is ${callObject.isConnected}`} hello
+        <div
+          className="call-buttons"
+          style={{ color: 'indianRed' }}>
+          {`Connected: ${callObject?.isConnected}`}
           {callObject?.isConnected || callObject?.callerId === userId ? (
             <>
               <ToolTipIcon
@@ -71,7 +73,7 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
           ) : (
             <>
               <ToolTipIcon
-                handler={() => console.log('declined')}
+                handler={() => useSocket('user:callDecline', callObject?.callId)}
                 tooltip={'Decline'}
                 direction="top"
                 icon={

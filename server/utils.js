@@ -32,36 +32,36 @@ async function getUserByAccessToken(accessToken) {
 }
 
 async function onDisconnect(io, userId) {
-  if (!userId) return;
-  const isCaller = await Calls.findOne({ callerId: userId });
-  const isNotCaller = await Calls.findOne({ callTo: userId });
-  if (isCaller) {
-    io.to(`${isCaller.callerId}`).emit('webrtc:disconnect');
-    io.to(`${isCaller.callerId}`).emit('user:deleteCall', isCaller.callId);
-    if (isCaller.isConnected) {
-      io.to(`${isCaller.callTo}`).emit('webrtc:disconnect');
-      io.to(`${isCaller.callTo}`).emit('user:deleteCall', isCaller.callId);
+  try {
+    if (!userId) return;
+    const call = await Calls.findOne({ $or: [{ callerId: userId }, { callTo: userId }] });
+    if (call) {
+      io.to(`${call.callerId}`).emit('webrtc:disconnect');
+      io.to(`${call.callerId}`).emit('user:deleteCall', call.callId);
+      if (call.isConnected) {
+        io.to(`${call.callTo}`).emit('webrtc:disconnect');
+        io.to(`${call.callTo}`).emit('user:deleteCall', call.callId);
+      }
+      await Calls.deleteOne({ callId: call.callId });
     }
-  }
-  if (isNotCaller) {
-    io.to(`${isNotCaller.callerId}`).emit('webrtc:disconnect');
-    io.to(`${isNotCaller.callerId}`).emit('user:deleteCall', isNotCaller.callId);
-    if (isNotCaller.isConnected) {
-      io.to(`${isNotCaller.callTo}`).emit('webrtc:disconnect');
-      io.to(`${isNotCaller.callTo}`).emit('user:deleteCall', isNotCaller.callId);
-    }
+  } catch (e) {
+    console.log(e);
   }
 }
 
-async function onCallEnd(io, callId) {
-  if (!callId) return;
-  const callObject = await Calls.findOne({ callId: callId });
-  if (!callObject) return;
-  io.to(`${callObject.callerId}`).emit('webrtc:disconnect');
-  io.to(`${callObject.callerId}`).emit('user:deleteCall', callObject.callId);
-  io.to(`${callObject.callTo}`).emit('user:deleteCall', callObject.callId);
-  if (callObject.isConnected) io.to(`${callObject.callTo}`).emit('webrtc:disconnect');
-  await Calls.deleteOne({ callId: callId });
+async function onCallEnd(io, condition) {
+  try {
+    if (!condition.callId) return;
+    const callObject = await Calls.findOne(condition);
+    if (!callObject) return;
+    io.to(`${callObject.callerId}`).emit('webrtc:disconnect');
+    io.to(`${callObject.callerId}`).emit('user:deleteCall', callObject.callId);
+    io.to(`${callObject.callTo}`).emit('user:deleteCall', callObject.callId);
+    if (callObject.isConnected) io.to(`${callObject.callTo}`).emit('webrtc:disconnect');
+    await Calls.deleteOne({ callId: condition.callId });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 exports.getUserInfoByAuthHeader = getUserInfoByAuthHeader;

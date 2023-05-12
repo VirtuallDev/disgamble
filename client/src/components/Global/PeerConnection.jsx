@@ -17,11 +17,19 @@ const PeerConnection = forwardRef((props, ref) => {
   const peerConnection = useRef(null);
   const [stream, setStream] = useState(null);
   const [remoteStream, setRemoteStream] = useState(null);
+  const peerUserId = useRef(null);
+  const icesRef = useRef([]);
   const { useApi, useSocket, socket } = useAuth();
 
-  console.log('rerender?');
+  console.log('rerender');
   const init = async () => {
     try {
+      if (peerConnection.current) peerConnection.current.close();
+      if (stream)
+        stream.getTracks().forEach((track) => {
+          track.stop();
+        });
+      peerUserId.current = null;
       setStream(null);
       setRemoteStream(null);
       const newpeerConnection = new RTCPeerConnection(configuration);
@@ -79,41 +87,55 @@ const PeerConnection = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (!peerConnection.current) return;
+
     peerConnection.current.ontrack = (event) => {
       setRemoteStream(event.streams[0]);
     };
 
     peerConnection.current.onicecandidate = (event) => {
       if (event.candidate) {
-        useSocket('webrtc:icecandidate', event.candidate);
+        console.log('Ice ', icesRef.current);
+        icesRef.current = [...icesRef.current, event.candidate];
       }
     };
 
-    socket.on('webrtc:answer', async (answer) => {
+    socket.on('webrtc:answer', async (answer, userId) => {
+      peerUserId.current = userId;
       await peerConnection.current.setRemoteDescription(new RTCSessionDescription(answer));
     });
 
     socket.on('webrtc:offer', async (offer, userId) => {
+      peerUserId.current = userId;
       await peerConnection.current.setRemoteDescription(new RTCSessionDescription(offer));
       const answer = await peerConnection.current.createAnswer();
       await peerConnection.current.setLocalDescription(new RTCSessionDescription(answer));
       useSocket('webrtc:answer', answer, userId);
     });
 
-    socket.on('webrtc:icecandidate', (candidate) => {
+    socket.on('webrtc:icecandidate', (ices) => {
+      console.log('Ice Received');
       if (peerConnection.current && peerConnection.current.remoteDescription) {
-        peerConnection.current.addIceCandidate(new RTCIceCandidate(candidate));
+        ices.forEach((ice) => {
+          peerConnection.current.addIceCandidate(new RTCIceCandidate(ice));
+        });
       }
     });
 
     socket.on('webrtc:disconnect', () => {
+      console.log('disconnected');
       init();
     });
 
+    socket.on('webrtc:exchange', () => {
+      useSocket('webrtc:icecandidate', icesRef.current, peerUserId.current);
+    });
+
     return () => {
-      socket.off('webrtc:icecandidate');
       socket.off('webrtc:answer');
       socket.off('webrtc:offer');
+      socket.off('webrtc:icecandidate');
+      socket.off('webrtc:disconnect');
+      socket.off('webrtc:exchange');
     };
   }, [peerConnection.current, socket]);
 
