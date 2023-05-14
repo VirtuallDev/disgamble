@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from '../redux/accesstoken';
 
-export const API_URL = 'https://doriman.yachts:3000';
+export const API_URL = 'https://doriman.yachts:5001';
 
 function useAuth() {
   const dispatch = useDispatch();

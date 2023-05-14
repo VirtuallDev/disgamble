@@ -9,15 +9,12 @@ import ToolTipIcon from '../ToolTip/ToolTipIcon';
 import CallWindow from './CallWindow';
 import './dm.css';
 
-const DM = ({ friend, call, answer, disconnect }) => {
+const DM = ({ friend, call, answer }) => {
   const [searchValue, setSearchValue] = useState('');
   const callsArray = useSelector((state) => state.calls.callsArray);
   const userObject = useSelector((state) => state.user.userObject);
   const { userId } = userObject;
 
-  useEffect(() => {
-    console.log(callsArray);
-  }, [callsArray]);
   return (
     <div className="dm-container">
       <div className="dm-header">
@@ -70,7 +67,7 @@ const Messages = ({ friend, searchValue }) => {
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
 
   const copyMessage = (message) => {
-    console.log(message.messageId);
+    navigator.clipboard.writeText(message.message);
   };
 
   const deleteMessage = (message) => {
@@ -108,24 +105,23 @@ const Messages = ({ friend, searchValue }) => {
             <div
               className="msg-container"
               key={index}>
+              <Options
+                currentValue={friend?.userId}
+                buttons={buttonsArray}
+                object={friend}
+              />
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div className="msg-container-img">
                   <img
                     src={message?.authorImage}
                     alt=""></img>
                 </div>
-                <div style={{ width: '100%' }}>
+                <div style={{ width: 'calc(100% - 5em)' }}>
                   <div className="msg-container-user-time">
                     <p className="msg-container-username">{message?.authorName}</p>
                     <p className="msg-container-time">
                       {new Date(message?.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
                     </p>
-                    <div style={{ position: 'absolute', right: '0', top: '0' }}>
-                      <Options
-                        currentValue={message.messageId}
-                        buttons={buttonsArray}
-                        object={message}></Options>
-                    </div>
                   </div>
                   {editing !== message.messageId ? (
                     <p className="msg-container-msg">{message?.message}</p>

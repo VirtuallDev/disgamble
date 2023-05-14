@@ -1,18 +1,18 @@
 .dots-options-container {
   position: absolute;
-  top: 2.5em;
+  top: 35px;
   right: 0em;
   color: white;
   background-color: var(--bg-primary-3);
   border-radius: 3px;
   z-index: 2;
-  padding: 0.2em;
+  padding: 2px;
 }
 
 .dots-options-container::before {
   content: '';
   position: absolute;
-  top: -0.5em;
+  top: -7px;
   right: 0.9em;
   transform: translateX(50%);
   border-bottom: 0.5em solid var(--bg-primary-3);

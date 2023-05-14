@@ -4,10 +4,10 @@ import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
-import { API_URL } from '../../oldAuth';
 import useAuth from '../../customhooks/useAuth';
-import './user.css';
 import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
+import './user.css';
+const API_URL = 'https://doriman.yachts:5001';
 
 const User = () => {
   const dispatch = useDispatch();

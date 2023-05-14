@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { API_URL } from '../../oldAuth';
-import './Auth.css';
+import './auth.css';
+
+const API_URL = 'https://doriman.yachts:5001';
 
 const Login = () => {
   const [email, setEmail] = useState('');

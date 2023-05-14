@@ -10,7 +10,7 @@ import useAuth from '../../../customhooks/useAuth';
 const CallWindow = ({ answer, friendImage, callObject }) => {
   const dispatch = useDispatch();
   const userSounds = useSelector((state) => state.sounds.soundObject);
-  const { isMuted, isDeafened } = userSounds;
+  const { isMuted, isDeafened, pushToTalk, isTalking } = userSounds;
   const userObject = useSelector((state) => state.user.userObject);
   const { userImage, userId } = userObject;
   const { useApi, useSocket, socket } = useAuth();
@@ -19,12 +19,16 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
     <>
       <div className="call-container">
         <div className="call-images">
-          <img
-            src={friendImage}
-            alt=""></img>
-          <img
-            src={userImage}
-            alt=""></img>
+          <div style={{ backgroundColor: isTalking ? 'green' : 'transparent' }}>
+            <img
+              src={friendImage}
+              alt=""></img>
+          </div>
+          <div style={{ backgroundColor: pushToTalk ? 'green' : 'transparent' }}>
+            <img
+              src={userImage}
+              alt=""></img>
+          </div>
         </div>
         <div
           className="call-buttons"

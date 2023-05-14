@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import './DropDown.css';
+import './dropdown.css';
 
 const DropDown = ({ value, setValue, name, options }) => {
   const optionsRef = useRef(null);

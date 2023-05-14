@@ -58,7 +58,7 @@ async function onCallEnd(io, condition) {
     io.to(`${callObject.callerId}`).emit('user:deleteCall', callObject.callId);
     io.to(`${callObject.callTo}`).emit('user:deleteCall', callObject.callId);
     if (callObject.isConnected) io.to(`${callObject.callTo}`).emit('webrtc:disconnect');
-    await Calls.deleteOne({ callId: condition.callId });
+    await Calls.deleteOne({ callId: callObject.callId });
   } catch (e) {
     console.log(e);
   }

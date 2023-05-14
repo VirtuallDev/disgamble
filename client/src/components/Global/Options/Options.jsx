@@ -19,40 +19,42 @@ const Options = ({ currentValue, buttons, object }) => {
 
   return (
     <>
-      <div
-        style={{ position: 'relative' }}
-        ref={optionsRef}>
-        <ToolTipIcon
-          handler={() => setCurrentOption(currentValue === currentOption ? '' : currentValue)}
-          tooltip={'More'}
-          icon={
+      <div style={{ position: 'absolute', right: '0.2em', top: '0.2em' }}>
+        <div
+          style={{ position: 'relative' }}
+          ref={optionsRef}>
+          <ToolTipIcon
+            handler={() => setCurrentOption(currentValue === currentOption ? '' : currentValue)}
+            tooltip={'More'}
+            icon={
+              <HiDotsVertical
+                style={{ transform: 'rotate(90deg)' }}
+                size={'1.8em'}
+                color={'white'}></HiDotsVertical>
+            }
+            direction="left"
+            height="1.5em"
+            width="2em">
             <HiDotsVertical
-              style={{ transform: 'rotate(90deg)' }}
-              size={'1.8em'}
-              color={'white'}></HiDotsVertical>
-          }
-          direction="left"
-          height="1.5em"
-          width="2tttem">
-          <HiDotsVertical
-            size={'1.5em'}
-            color={'var(--gray-2)'}></HiDotsVertical>
-        </ToolTipIcon>
+              size={'1.5em'}
+              color={'var(--gray-2)'}></HiDotsVertical>
+          </ToolTipIcon>
 
-        <div className={`dots-options-container ${currentOption === currentValue ? 'show' : 'hide-down'}`}>
-          {buttons.map((button, index) => {
-            return (
-              <button
-                key={index}
-                onClick={() => {
-                  button.handler(object);
-                  setCurrentOption('');
-                }}
-                style={{ color: button.color }}>
-                {button.name}
-              </button>
-            );
-          })}
+          <div className={`dots-options-container ${currentOption === currentValue ? 'show' : 'hide-down'}`}>
+            {buttons.map((button, index) => {
+              return (
+                <button
+                  key={index}
+                  onClick={() => {
+                    button.handler(object);
+                    setCurrentOption('');
+                  }}
+                  style={{ color: button.color }}>
+                  {button.name}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>

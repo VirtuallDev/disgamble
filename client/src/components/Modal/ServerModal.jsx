@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import { RiFileCopy2Line } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
-import './ServerModal.css';
+import './servermodal.css';
 
 export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) => {
   const userObject = useSelector((state) => state.user.userObject);

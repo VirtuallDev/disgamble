@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Header from '../../components/Global/Header/Header';
 import { useSelector } from 'react-redux';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { BiEnvelope } from 'react-icons/bi';
@@ -60,82 +59,80 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   }, [friends]);
 
   return (
-    <div className="friend-list">
-      <Header
-        fontSize={'32px'}
-        label={'Friends'}
-      />
-      <AddFriend></AddFriend>
-      <DropDown
-        value={friendOption}
-        setValue={setFriendOption}
-        name={'Filter'}
-        options={options}
-      />
-      {filteredFriends.map((friend, index) => {
-        return friend.status ? (
-          <div
-            key={index}
-            className="friends-container"
-            style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-2)' }}
-            onClick={() => friendClick(friend)}>
-            <div className="unread-messages">
-              <p>12</p>
-              <BiEnvelope size={'3em'}></BiEnvelope>
-            </div>
-            <div className="image-container">
-              <img
-                src={friend?.userImage}
-                className="user-image"
-                alt=""
-              />
-              <div
-                className="status"
-                style={{ backgroundColor: friend?.status === 'Online' ? 'green' : friend?.status === 'DND' ? 'red' : 'gray' }}></div>
-            </div>
-            <p className="friend-name">{friend?.username}</p>
-            <div style={{ position: 'absolute', right: '0.2em', top: '0.2em' }}>
+    <>
+      <div style={{ width: '90%', marginBottom: '0.5em' }}>
+        <AddFriend></AddFriend>
+        <DropDown
+          value={friendOption}
+          setValue={setFriendOption}
+          name={'Filter'}
+          options={options}
+        />
+      </div>
+      <div className="friend-list">
+        {filteredFriends.map((friend, index) => {
+          return friend.status ? (
+            <div
+              key={index}
+              className="friends-container"
+              style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-2)' }}
+              onClick={() => friendClick(friend)}>
+              <div className="unread-messages">
+                <p>12</p>
+                <BiEnvelope size={'3em'}></BiEnvelope>
+              </div>
+              <div className="image-container">
+                <img
+                  src={friend?.userImage}
+                  className="user-image"
+                  alt=""
+                />
+                <div
+                  className="status"
+                  style={{ backgroundColor: friend?.status === 'Online' ? 'green' : friend?.status === 'DND' ? 'red' : 'gray' }}></div>
+              </div>
+              <p className="friend-name">{friend?.username}</p>
               <Options
                 currentValue={friend?.userId}
                 buttons={buttonsArray}
                 object={friend}
               />
             </div>
-          </div>
-        ) : (
-          <div
-            key={index}
-            className="friends-container">
-            <div className="image-container">
-              <img
-                src={friend.userImage}
-                className="user-image"
-                alt=""
-              />
-            </div>
-            <p className="friend-name">{friend.username}</p>
-            <div className="pending-buttons">
-              <div
-                className="accept"
-                onClick={() => useSocket('user:accept', friend.userId)}>
-                <FaCheck
-                  color={'inherit'}
-                  size={'1.6em'}
+          ) : (
+            <div
+              key={index}
+              className="friends-container">
+              <div className="image-container">
+                <img
+                  src={friend.userImage}
+                  className="user-image"
+                  alt=""
                 />
               </div>
-              <div
-                className="decline"
-                onClick={() => useSocket('user:decline', friend.userId)}>
-                <FaTimes
-                  color={'inherit'}
-                  size={'1.6em'}
-                />
+              <p className="friend-name">{friend.username}</p>
+              <div className="pending-buttons">
+                <div
+                  className="accept"
+                  onClick={() => useSocket('user:accept', friend.userId)}>
+                  <FaCheck
+                    color={'inherit'}
+                    size={'1.6em'}
+                  />
+                </div>
+                <div
+                  className="decline"
+                  onClick={() => useSocket('user:decline', friend.userId)}>
+                  <FaTimes
+                    color={'inherit'}
+                    size={'1.6em'}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 

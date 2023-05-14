@@ -5,12 +5,12 @@ import Register from './pages/Auth/Register';
 import Home from './pages/Home/Home';
 import ProtectedRoutes from './components/Global/ProtectedRoutes';
 import { useDispatch, useSelector } from 'react-redux';
-import useUpdateUser from './customhooks/useUpdateUser';
-import DM from './components/Global/DM/DM';
-import Voice from './pages/Voice/Voice';
 import { friendChange } from './redux/user';
 import { initialMessages, messageAdded, messageDeleted, messageUpdated } from './redux/messages';
+import useUpdateUser from './customhooks/useUpdateUser';
 import useAuth from './customhooks/useAuth';
+import { triggerPushToTalk } from './redux/sounds';
+import { addCall, deleteCall, updateCall } from './redux/calls';
 
 const App = () => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -26,6 +26,36 @@ const App = () => {
       if (jsonResponse && jsonResponse.success) dispatch(initialMessages(jsonResponse.success));
     };
     fetchHistory();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      if (e.key !== 't') return;
+      dispatch(triggerPushToTalk(true));
+    });
+    window.addEventListener('keyup', (e) => {
+      if (e.key !== 't') return;
+      dispatch(triggerPushToTalk(false));
+    });
+    window.addEventListener('blur', () => {
+      dispatch(triggerPushToTalk(false));
+    });
+
+    return () => {
+      window.removeEventListener('keydown', (e) => {
+        if (e.repeat) return;
+        if (e.key !== 't') return;
+        dispatch(triggerPushToTalk(true));
+      });
+      window.removeEventListener('keyup', (e) => {
+        if (e.key !== 't') return;
+        dispatch(triggerPushToTalk(false));
+      });
+      window.removeEventListener('blur', () => {
+        dispatch(triggerPushToTalk(false));
+      });
+    };
   }, []);
 
   useEffect(() => {
@@ -45,12 +75,30 @@ const App = () => {
     socket.on('dm:messageDeleted', (messageObject) => {
       dispatch(messageDeleted(messageObject));
     });
+    socket.on('server:connected', (server) => {
+      dispatch(setServerObject(server));
+    });
+    socket.on('user:call', (callObject) => {
+      dispatch(addCall(callObject));
+    });
+    socket.on('user:updateCall', (callObject) => {
+      dispatch(updateCall(callObject));
+    });
+    socket.on('user:deleteCall', (callId) => {
+      console.log('deleting', callId);
+      dispatch(deleteCall(callId));
+    });
+
     return () => {
       socket.off('user:updateUser');
       socket.off('user:friendUpdate');
       socket.off('dm:messageAdded');
       socket.off('dm:messageUpdated');
       socket.off('dm:messageDeleted');
+      socket.off('server:connected');
+      socket.off('user:call');
+      socket.off('user:updateCall');
+      socket.off('user:deleteCall');
     };
   }, [socket]);
 
@@ -58,12 +106,6 @@ const App = () => {
     <div>
       <BrowserRouter>
         <Routes>
-          <Route>
-            <Route
-              path="/voice"
-              element={<Voice />}
-            />
-          </Route>
           <Route
             element={
               <ProtectedRoutes
