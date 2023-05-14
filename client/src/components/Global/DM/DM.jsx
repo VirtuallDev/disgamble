@@ -67,7 +67,6 @@ const Messages = ({ friend, searchValue }) => {
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
 
   const copyMessage = (message) => {
-    console.log(message);
     navigator.clipboard.writeText(message.message);
   };
 

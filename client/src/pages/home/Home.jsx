@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { HiHome } from 'react-icons/hi';
 import PeerConnection from '../../components/Global/PeerConnection';
 import './home.css';
+import CallStack from '../../components/Global/CallStack/CallStack';
 
 const Home = () => {
   const serverObject = useSelector((state) => state.server.serverObject);
@@ -20,6 +21,7 @@ const Home = () => {
   return (
     <>
       <PeerConnection ref={peerRef}></PeerConnection>
+      <CallStack answer={(callId) => peerRef.current.acceptOffer(callId)}></CallStack>
       <div className="home-container">
         <div className="right-side">
           <div className="change-container">
