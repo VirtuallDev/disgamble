@@ -67,6 +67,7 @@ const Messages = ({ friend, searchValue }) => {
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
 
   const copyMessage = (message) => {
+    console.log(message);
     navigator.clipboard.writeText(message.message);
   };
 
@@ -108,7 +109,7 @@ const Messages = ({ friend, searchValue }) => {
               <Options
                 currentValue={friend?.userId}
                 buttons={buttonsArray}
-                object={friend}
+                object={message}
               />
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div className="msg-container-img">
