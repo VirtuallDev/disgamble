@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
   userId: String,
   userImage: String,
   status: String,
-  bio: String,
+  about: String,
   friends: Array,
   friendRequests: Array,
   blockedUsers: Array,

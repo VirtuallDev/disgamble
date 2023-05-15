@@ -7,12 +7,13 @@ import { toggleDeafen, toggleMute } from '../../redux/sounds';
 import useAuth from '../../customhooks/useAuth';
 import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
 import './user.css';
+import { Settings } from '../../components/Modal/Settings';
 const API_URL = 'https://doriman.yachts:5001';
 
 const User = () => {
   const dispatch = useDispatch();
   const userObject = useSelector((state) => state.user.userObject);
-  const { username, userId, userImage, status, bio, friends, friendRequests, blockedUsers, serverList } = userObject;
+  const { username, userId, userImage, status, about, friends, friendRequests, blockedUsers, serverList } = userObject;
   const buttonRef = useRef(null);
   const userSounds = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened } = userSounds;
@@ -27,6 +28,7 @@ const User = () => {
 
   return (
     <div className="user-container">
+      <Settings></Settings>
       <div className="user-options">
         <ToolTipIcon
           handler={() => dispatch(toggleMute())}

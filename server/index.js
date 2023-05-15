@@ -94,7 +94,7 @@ nodeEvents.on('dm:messageDeleted', async (messageObject) => {
 });
 
 nodeEvents.on('user:friendUpdate', async (userId) => {
-  const user = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1, status: 1, bio: 1, friends: 1 }).lean();
+  const user = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1, status: 1, about: 1, friends: 1 }).lean();
   if (!user) return;
   nodeEvents.emit('user:updateUser', user.userId);
   for (const friend of user?.friends) {

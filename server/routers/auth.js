@@ -65,7 +65,7 @@ router.post('/register', async (req, res) => {
       userId: userId,
       userImage: '',
       status: 'Online',
-      bio: '',
+      about: '',
       friends: [],
       friendRequests: [],
       blockedUsers: [],

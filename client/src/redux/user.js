@@ -8,7 +8,7 @@ export const userSlice = createSlice({
       userId: '',
       userImage: '',
       status: '',
-      bio: '',
+      about: '',
       friends: [],
       friendRequests: [],
       blockedUsers: [],
