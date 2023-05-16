@@ -13,14 +13,14 @@ function useAuth() {
   const accessToken = useSelector((state) => state.accesstoken.accessToken);
 
   useEffect(() => {
-    apiRef.current = async function (endpoint, method = 'GET', body = null) {
+    apiRef.current = async function (endpoint, method = 'GET', body = null, json = true) {
       try {
         const headers = {
-          'Content-Type': 'application/json',
+          ...(json && { 'Content-Type': 'application/json' }),
           authorization: `Bearer ${accessToken}`,
         };
         const options = { method, headers };
-        if (body) options.body = JSON.stringify(body);
+        body && json ? (options.body = JSON.stringify(body)) : (options.body = body);
         const response = await fetch(`${API_URL}/${endpoint}`, options);
         const jsonResponse = await response.json();
         return jsonResponse;
@@ -74,10 +74,10 @@ function useAuth() {
     }
   }
 
-  async function useApi(endpoint, method = 'GET', body = null) {
+  async function useApi(endpoint, method = 'GET', body = null, json = true) {
     try {
       if (isTokenExpired()) await getNewAccessToken();
-      const jsonResponse = await apiRef.current(endpoint, method, body);
+      const jsonResponse = await apiRef.current(endpoint, method, body, json);
       return jsonResponse;
     } catch (e) {
       console.log(e);

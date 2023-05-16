@@ -9,6 +9,7 @@
 
 body {
   background-color: var(--darkbg);
+  overflow: hidden;
 }
 
 :root {

@@ -65,6 +65,8 @@ const Messages = ({ friend, searchValue }) => {
   const [editing, setEditing] = useState('');
   const messagesArray = useSelector((state) => state.messages.messagesArray);
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
+  const userObject = useSelector((state) => state.user.userObject);
+  const { userId } = userObject;
 
   const copyMessage = (message) => {
     navigator.clipboard.writeText(message.message);
@@ -105,11 +107,19 @@ const Messages = ({ friend, searchValue }) => {
             <div
               className="msg-container"
               key={index}>
-              <Options
-                currentValue={friend?.userId}
-                buttons={buttonsArray}
-                object={message}
-              />
+              {message.authorId === userId ? (
+                <Options
+                  currentValue={friend?.userId}
+                  buttons={buttonsArray}
+                  object={message}
+                />
+              ) : (
+                <Options
+                  currentValue={friend?.userId}
+                  buttons={[{ name: 'COPY', color: 'white', handler: copyMessage }]}
+                  object={message}
+                />
+              )}
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div className="msg-container-img">
                   <img

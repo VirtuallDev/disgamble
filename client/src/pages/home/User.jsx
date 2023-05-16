@@ -18,17 +18,13 @@ const User = () => {
   const userSounds = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened } = userSounds;
   const [statusOptions, setStatusOptions] = useState(false);
-
-  const handleUserSettings = async () => {
-    await fetch(`${API_URL}/auth/logout`, {
-      method: 'POST',
-      credentials: 'include',
-    });
-  };
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   return (
     <div className="user-container">
-      <Settings></Settings>
+      <Settings
+        showSettingsModal={showSettingsModal}
+        setShowSettingsModal={setShowSettingsModal}></Settings>
       <div className="user-options">
         <ToolTipIcon
           handler={() => dispatch(toggleMute())}
@@ -59,7 +55,7 @@ const User = () => {
             )
           }></ToolTipIcon>
         <ToolTipIcon
-          handler={() => handleUserSettings()}
+          handler={() => setShowSettingsModal(true)}
           tooltip={'User Settings'}
           icon={
             <IoMdSettings

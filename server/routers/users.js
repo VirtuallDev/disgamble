@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User, Server, Dm } = require('../database');
 const { getUserInfoByAuthHeader } = require('../utils');
+const multer = require('multer');
 router.use(getUserInfoByAuthHeader);
 
 const adsArray = [
@@ -50,6 +51,34 @@ router.get('/dmhistory', async (req, res) => {
     const dmhistory = await Dm.find({ recipients: { $in: [req.userID] } }).lean();
     if (dmhistory.length === 0) return res.status(500).json({ error: 'Something went wrong!' });
     return res.status(200).json({ success: dmhistory });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: 'Something went wrong!' });
+  }
+});
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const fileExtension = file.originalname.split('.').pop();
+    cb(null, `${req.userID}.${fileExtension}`);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image files are allowed!'));
+    cb(null, true);
+  },
+  limits: { fileSize: 8 * 1024 * 1024 },
+});
+
+router.post('/upload', upload.single('file'), async (req, res) => {
+  try {
+    return res.status(200).json({ success: 'Upload successfully' });
   } catch (e) {
     console.log(e);
     return res.status(500).json({ error: 'Something went wrong!' });
