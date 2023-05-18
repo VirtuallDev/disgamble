@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '../../customhooks/useAuth';
+import { toggleIsTalking } from '../../redux/sounds';
 
 const configuration = {
   iceServers: [
@@ -20,6 +21,7 @@ const PeerConnection = forwardRef((props, ref) => {
   const peerUserId = useRef(null);
   const icesRef = useRef([]);
   const { useApi, useSocket, socket } = useAuth();
+  const dispatch = useDispatch();
 
   const init = async () => {
     try {
@@ -140,6 +142,26 @@ const PeerConnection = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (remoteAudioRef.current && remoteStream) remoteAudioRef.current.srcObject = remoteStream;
+  }, [remoteStream]);
+
+  useEffect(() => {
+    if (!remoteStream) return;
+    const audioContext = new AudioContext();
+    const sourceNode = audioContext.createMediaStreamSource(remoteStream);
+    const analyserNode = audioContext.createAnalyser();
+    analyserNode.fftSize = 2048;
+    sourceNode.connect(analyserNode);
+    const dataArray = new Uint8Array(analyserNode.frequencyBinCount);
+    const getAudioVolume = () => {
+      analyserNode.getByteFrequencyData(dataArray);
+      const total = dataArray.reduce((acc, val) => acc + val, 0);
+      const average = total / dataArray.length;
+      return average;
+    };
+    setInterval(() => {
+      const audioVolume = getAudioVolume();
+      dispatch(toggleIsTalking(audioVolume < 1 ? false : true));
+    }, 16);
   }, [remoteStream]);
 
   useEffect(() => {

@@ -17,9 +17,11 @@ const CallStack = ({ answer }) => {
       <div className="call-stack-container">
         {callsArray
           .filter((call) => call?.callerId !== userId && call?.isConnected === false)
-          .map((call) => {
+          .map((call, index) => {
             return (
-              <div className="call-noti">
+              <div
+                className="call-noti"
+                key={index}>
                 <RiCloseCircleLine className="call-noti-close"></RiCloseCircleLine>
                 <div className="call-noti-user-info">
                   <img

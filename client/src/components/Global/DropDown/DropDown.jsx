@@ -33,9 +33,7 @@ const DropDown = ({ value, setValue, name, options }) => {
             color={'inherit'}
             size={'2.8em'}></RiArrowDropDownLine>
         </button>
-        <div
-          className="dropdown-options"
-          style={{ display: isOpen ? 'flex' : 'none' }}>
+        <div className={`dropdown-options ${isOpen ? 'show' : 'hide'}`}>
           {options.map((option, index) => {
             return (
               <button

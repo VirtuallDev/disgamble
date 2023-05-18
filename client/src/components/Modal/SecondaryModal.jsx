@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import './modal.css';
-function Modal({ showModal, setShowModal, children, zIndex = 10 }) {
+
+function SecondaryModal({ showModal, setShowModal, children, zIndex = 11 }) {
   useEffect(() => {
     function handleClickOutside(event) {
-      if (event.target.className === 'modal-overlay') {
+      if (event.target.className === 'secondary-modal-overlay') {
         setShowModal(false);
       }
     }
@@ -17,13 +18,13 @@ function Modal({ showModal, setShowModal, children, zIndex = 10 }) {
   return createPortal(
     <>
       <div
-        className="modal-overlay"
+        className="secondary-modal-overlay"
         style={{ display: showModal ? 'flex' : 'none', zIndex: `${zIndex}` }}>
         {children}
       </div>
     </>,
-    document.getElementById('modal')
+    document.getElementById('secondarymodal')
   );
 }
 
-export default Modal;
+export default SecondaryModal;

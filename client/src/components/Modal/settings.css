@@ -72,7 +72,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--dark4);
   width: 90%;
   border-radius: 10px;
   padding: 0.8em;
@@ -115,7 +115,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--dark4);
   border-radius: 10px;
   padding-block: 1em;
   padding-inline: 3em;
@@ -174,4 +174,96 @@
 .settings-close:hover {
   cursor: pointer;
   color: var(--color-primary-1);
+}
+
+.upload {
+  position: relative;
+  display: inline-block;
+  background-color: var(--dark);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.9em;
+  margin-top: 1em;
+}
+
+.custom-file-label {
+  display: inline-block;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+.button-text {
+  display: inline-block;
+  vertical-align: middle;
+  border: none;
+}
+
+.hidden-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.settings-edit-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 340px;
+  height: 250px;
+  background-color: var(--dark4);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(150, 150, 150, 0.1);
+}
+
+.settings-edit-container > h1 {
+  font-size: 1.3em;
+  color: var(--gray-2);
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.settings-edit-container > p {
+  color: var(--dark3);
+  background-color: var(--color-primary-5);
+  min-height: 125px;
+  max-height: 125px;
+  border-radius: 5px;
+  overflow: auto;
+  resize: none;
+}
+
+.settings-edit-container > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  margin-top: auto;
+  height: 50px;
+  width: 100%;
+  background-color: var(--color-primary-5);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.settings-edit-container > div > button {
+  background-color: var(--dark);
+  border: none;
+  font-size: 1.3em;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 0.3em;
+  padding-inline: 0.7em;
+  transition: all 0.2s;
+}
+
+.settings-edit-container > div > button:hover {
+  cursor: pointer;
+  transform: translate(0, -2px);
+  opacity: 0.7;
 }

@@ -6,9 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
 import useAuth from '../../customhooks/useAuth';
 import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
-import './user.css';
 import { Settings } from '../../components/Modal/Settings';
-const API_URL = 'https://doriman.yachts:5001';
+import './user.css';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -107,9 +106,7 @@ const StatusOptions = ({ statusOptions, setStatusOptions, buttonRef }) => {
     const handleMouseDown = (e) => {
       if (statusOptionsRef.current && !statusOptionsRef.current.contains(e.target) && buttonRef.current && !buttonRef.current.contains(e.target)) setStatusOptions(false);
     };
-
     window.addEventListener('mousedown', handleMouseDown);
-
     return () => {
       window.removeEventListener('mousedown', handleMouseDown);
     };

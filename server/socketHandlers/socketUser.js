@@ -18,16 +18,14 @@ function setupUserEvents(io) {
     });
     socket.on('user:accept', async (userIdToAccept) => {
       try {
-        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
-        if (!userId) return;
-        const updatedUser = await User.findOneAndUpdate(
-          { userId: userId },
+        const user = await User.findOneAndUpdate(
+          { userId: socket.userId },
           {
             $push: { friends: userIdToAccept },
             $pull: { friendRequests: { userId: userIdToAccept } },
           }
         );
-        if (!updatedUser) return;
+        if (!user) return;
         nodeEvents.emit('user:friendUpdate', updatedUser.userId);
       } catch (e) {
         console.log(e);
@@ -35,15 +33,13 @@ function setupUserEvents(io) {
     });
     socket.on('user:decline', async (userIdToDecline) => {
       try {
-        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
-        if (!userId) return;
-        const updatedUser = await User.findOneAndUpdate(
-          { userId: userId },
+        const user = await User.findOneAndUpdate(
+          { userId: socket.userId },
           {
             $pull: { friendRequests: { userId: userIdToDecline } },
           }
         );
-        if (!updatedUser) return;
+        if (!user) return;
         nodeEvents.emit('user:friendUpdate', updatedUser.userId);
       } catch (e) {
         console.log(e);
@@ -51,10 +47,36 @@ function setupUserEvents(io) {
     });
     socket.on('user:changestatus', async (statusString) => {
       try {
-        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
-        if (!userId) return;
         if (!statusString && statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND') return res.status(500).json({ error: 'Something went wrong!' });
-        const user = await User.findOneAndUpdate({ userId: userId }, { status: statusString });
+        const user = await User.findOneAndUpdate({ userId: socket.userId }, { status: statusString });
+        if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+        nodeEvents.emit('user:friendUpdate', user.userId);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    socket.on('user:changeUsername', async (username) => {
+      try {
+        console.log(username, 'username');
+        const user = await User.findOneAndUpdate({ userId: socket.userId }, { username: username });
+        if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+        nodeEvents.emit('user:friendUpdate', user.userId);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    socket.on('user:changeEmail', async (email) => {
+      try {
+        const user = await User.findOneAndUpdate({ userId: socket.userId }, { email: email });
+        if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+        nodeEvents.emit('user:friendUpdate', user.userId);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    socket.on('user:changeAbout', async (about) => {
+      try {
+        const user = await User.findOneAndUpdate({ userId: socket.userId }, { about: about });
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
         nodeEvents.emit('user:friendUpdate', user.userId);
       } catch (e) {

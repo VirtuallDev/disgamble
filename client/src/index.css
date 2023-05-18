@@ -17,6 +17,7 @@ body {
   --dark: rgb(50, 50, 60);
   --dark2: rgb(43, 43, 49);
   --dark3: rgb(200, 200, 200);
+  --dark4: rgb(15, 17, 27);
   --color-primary-0: #2c3678;
   --color-primary-1: #6a73ab;
   --color-primary-2: #434e8f;
@@ -60,22 +61,28 @@ body {
 }
 
 .show {
-  display: block;
+  visibility: visible;
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .hide {
-  display: none;
+  visibility: hidden;
   opacity: 0;
   transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: transform 0.3s ease;
+  pointer-events: none; /* Disable pointer events */
 }
 
 .hide-down {
-  display: none;
+  visibility: hidden;
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: transform 0.3s ease;
+  pointer-events: none; /* Disable pointer events */
+}
+
+p[contentEditable='true'] {
+  resize: none;
 }

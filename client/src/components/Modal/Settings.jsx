@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from './Modal';
+import SecondaryModal from './SecondaryModal';
 import { ProfileModal } from './ProfileModal';
 import { useSelector } from 'react-redux';
 import { RiCloseCircleLine } from 'react-icons/ri';
@@ -43,11 +44,15 @@ export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
 const Profile = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userImage, username, about, status } = userObject;
+  const [image, setImage] = useState(null);
   const [fileToSend, setFileToSend] = useState(null);
   const { useApi, useSocket, socket } = useAuth();
+  const [showFieldModal, setShowFieldModal] = useState('');
+  const inputRef = useRef(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    setImage(file);
     const formData = new FormData();
     formData.append('file', file);
     setFileToSend(formData);
@@ -62,31 +67,79 @@ const Profile = () => {
       <div className="settings-profile-container">
         <div className="settings-profile-field-image">
           <img
-            src={userImage}
+            src={image ? URL.createObjectURL(image) : userImage}
             alt=""></img>
-          <input
-            type="file"
-            onChange={(e) => handleFileChange(e)}
-          />
-          <button onClick={() => handleFileUpload()}>CHANGE</button>
+          <div className="upload">
+            <label
+              htmlFor="fileInput"
+              className="custom-file-label">
+              CHOOSE IMAGE (8MB)
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              className="hidden-input"
+              onChange={(e) => handleFileChange(e)}
+            />
+          </div>
+          <button onClick={() => handleFileUpload()}>APPLY</button>
         </div>
-        <div className="settings-profile-field">
-          <h1>Username:</h1>
-          <p>{username}</p>
-          <button>EDIT</button>
-        </div>
-        <div className="settings-profile-field">
-          <h1>Email:</h1>
-          <p>BlaBla@gmail.com</p>
-          <button>EDIT</button>
-        </div>
-        <div className="settings-profile-field">
-          <h1>About:</h1>
-          <p style={{ color: !about && 'indianred' }}>{about || 'Unavailable'}</p>
-          <button>EDIT</button>
-        </div>
+        {[
+          { title: 'Username', value: username },
+          { title: 'Email', value: 'Email' },
+          { title: 'About', value: about },
+        ].map((object) => {
+          return (
+            <React.Fragment key={object.title}>
+              <SettingsField
+                setShowModal={setShowFieldModal}
+                title={object.title}
+                value={object.value}></SettingsField>
+              <SecondaryModal
+                showModal={showFieldModal === object.title}
+                setShowModal={setShowFieldModal}>
+                <div className="settings-edit-container">
+                  <RiCloseCircleLine
+                    style={{ width: '1.8em', height: '1.8em' }}
+                    className="settings-close"
+                    onClick={() => setShowFieldModal('')}></RiCloseCircleLine>
+                  <h1>Change your {object.title}</h1>
+                  <p
+                    ref={inputRef}
+                    contentEditable={true}
+                    dangerouslySetInnerHTML={{ __html: object.value }}></p>
+                  <div>
+                    <button onClick={() => setShowFieldModal('')}>Cancel</button>
+                    <button
+                      onClick={() => {
+                        useSocket(`user:change${object.title}`, inputRef.current.textContent);
+                        setShowFieldModal('');
+                      }}>
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              </SecondaryModal>
+            </React.Fragment>
+          );
+        })}
         <h1 className="preview">Profile Preview</h1>
-        <ProfileModal></ProfileModal>
+        <ProfileModal image={image ? URL.createObjectURL(image) : userImage}></ProfileModal>
+      </div>
+    </>
+  );
+};
+
+const SettingsField = ({ setShowModal, title, value }) => {
+  const { useApi, useSocket, socket } = useAuth();
+  const [inputValue, setInputValue] = useState(value);
+
+  return (
+    <>
+      <div className="settings-profile-field">
+        <h1>{title}:</h1>
+        <p style={{ color: !value && 'indianred' }}>{value || 'Unavailable'}</p>
+        <button onClick={() => setShowModal(title)}>EDIT</button>
       </div>
     </>
   );

@@ -2,15 +2,15 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import './profilemodal.css';
 
-export const ProfileModal = () => {
+export const ProfileModal = ({ image }) => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { userImage, username, about, status } = userObject;
+  const { username, about, status } = userObject;
 
   return (
     <>
       <div className="user-modal-container">
         <div className="user-modal-image">
-          <img src={userImage}></img>
+          <img src={image}></img>
           <div style={{ backgroundColor: status === 'Online' ? 'green' : status === 'DND' ? 'red' : 'gray' }}></div>
         </div>
         <div className="user-modal-container2">

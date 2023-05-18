@@ -143,8 +143,7 @@ const Messages = ({ friend, searchValue }) => {
                           className="msg-container-msg"
                           contentEditable={true}
                           dangerouslySetInnerHTML={{ __html: message?.message }}
-                          id={message?.messageId}
-                        />
+                          id={message?.messageId}></p>
                         <div className="edit-buttons">
                           <button onClick={handleEdit}>Save</button>
                           <button onClick={handleCancel}>Cancel</button>
