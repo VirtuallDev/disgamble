@@ -47,8 +47,6 @@ const Profile = () => {
   const [image, setImage] = useState(null);
   const [fileToSend, setFileToSend] = useState(null);
   const { useApi, useSocket, socket } = useAuth();
-  const [showFieldModal, setShowFieldModal] = useState('');
-  const inputRef = useRef(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -92,34 +90,8 @@ const Profile = () => {
           return (
             <React.Fragment key={object.title}>
               <SettingsField
-                setShowModal={setShowFieldModal}
                 title={object.title}
                 value={object.value}></SettingsField>
-              <SecondaryModal
-                showModal={showFieldModal === object.title}
-                setShowModal={setShowFieldModal}>
-                <div className="settings-edit-container">
-                  <RiCloseCircleLine
-                    style={{ width: '1.8em', height: '1.8em' }}
-                    className="settings-close"
-                    onClick={() => setShowFieldModal('')}></RiCloseCircleLine>
-                  <h1>Change your {object.title}</h1>
-                  <p
-                    ref={inputRef}
-                    contentEditable={true}
-                    dangerouslySetInnerHTML={{ __html: object.value }}></p>
-                  <div>
-                    <button onClick={() => setShowFieldModal('')}>Cancel</button>
-                    <button
-                      onClick={() => {
-                        useSocket(`user:change${object.title}`, inputRef.current.textContent);
-                        setShowFieldModal('');
-                      }}>
-                      Confirm
-                    </button>
-                  </div>
-                </div>
-              </SecondaryModal>
             </React.Fragment>
           );
         })}
@@ -130,16 +102,42 @@ const Profile = () => {
   );
 };
 
-const SettingsField = ({ setShowModal, title, value }) => {
+const SettingsField = ({ title, value }) => {
   const { useApi, useSocket, socket } = useAuth();
-  const [inputValue, setInputValue] = useState(value);
+  const [showFieldModal, setShowFieldModal] = useState('');
+  const inputRef = useRef(null);
 
   return (
     <>
+      <SecondaryModal
+        showModal={showFieldModal === title}
+        setShowModal={setShowFieldModal}>
+        <div className="settings-edit-container">
+          <RiCloseCircleLine
+            style={{ width: '1.8em', height: '1.8em' }}
+            className="settings-close"
+            onClick={() => setShowFieldModal('')}></RiCloseCircleLine>
+          <h1>Change your {title}</h1>
+          <p
+            ref={inputRef}
+            contentEditable={true}
+            dangerouslySetInnerHTML={{ __html: value }}></p>
+          <div>
+            <button onClick={() => setShowFieldModal('')}>Cancel</button>
+            <button
+              onClick={() => {
+                useSocket(`user:change${title}`, inputRef.current.textContent);
+                setShowFieldModal('');
+              }}>
+              Confirm
+            </button>
+          </div>
+        </div>
+      </SecondaryModal>
       <div className="settings-profile-field">
         <h1>{title}:</h1>
         <p style={{ color: !value && 'indianred' }}>{value || 'Unavailable'}</p>
-        <button onClick={() => setShowModal(title)}>EDIT</button>
+        <button onClick={() => setShowFieldModal(title)}>EDIT</button>
       </div>
     </>
   );

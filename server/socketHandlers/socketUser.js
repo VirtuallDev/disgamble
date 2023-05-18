@@ -57,7 +57,6 @@ function setupUserEvents(io) {
     });
     socket.on('user:changeUsername', async (username) => {
       try {
-        console.log(username, 'username');
         const user = await User.findOneAndUpdate({ userId: socket.userId }, { username: username });
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
         nodeEvents.emit('user:friendUpdate', user.userId);
