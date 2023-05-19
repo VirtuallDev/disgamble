@@ -8,15 +8,43 @@ import useAuth, { API_URL } from '../../customhooks/useAuth';
 import './settings.css';
 
 export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
+  const [showSecondaryModal, setShowSecondaryModal] = useState('');
+
   const handleLogout = async () => {
     await fetch(`${API_URL}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
     });
+    window.location.replace('/login');
   };
 
   return (
     <>
+      <SecondaryModal
+        showModal={showSecondaryModal === 'Logout'}
+        setShowModal={setShowSecondaryModal}>
+        <div
+          className="settings-edit-container"
+          style={{ height: '135px' }}>
+          <RiCloseCircleLine
+            style={{ width: '1.8em', height: '1.8em' }}
+            className="settings-close"
+            onClick={() => setShowSecondaryModal('')}></RiCloseCircleLine>
+          <h1>
+            Are you sure you want to
+            <br />
+            proceed with the logout?
+          </h1>
+          <div>
+            <button
+              style={{ color: 'indianred' }}
+              onClick={() => setShowSecondaryModal('')}>
+              Cancel
+            </button>
+            <button onClick={() => handleLogout()}>Confirm</button>
+          </div>
+        </div>
+      </SecondaryModal>
       <Modal
         showModal={showSettingsModal}
         setShowModal={setShowSettingsModal}>
@@ -29,11 +57,17 @@ export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
               <button>Profile</button>
               <button>Security</button>
               <button>Voice</button>
-              <button style={{ color: 'indianred', marginTop: 'auto' }}>Log Out</button>
+              <button
+                style={{ color: 'indianred', marginTop: 'auto' }}
+                onClick={() => setShowSecondaryModal('Logout')}>
+                Log Out
+              </button>
             </div>
           </div>
           <div className="settings-main">
-            <Profile></Profile>
+            <Profile
+              showSecondaryModal={showSecondaryModal}
+              setShowSecondaryModal={setShowSecondaryModal}></Profile>
           </div>
         </div>
       </Modal>
@@ -41,7 +75,7 @@ export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
   );
 };
 
-const Profile = () => {
+const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userImage, username, about, status } = userObject;
   const [image, setImage] = useState(null);
@@ -90,6 +124,8 @@ const Profile = () => {
           return (
             <React.Fragment key={object.title}>
               <SettingsField
+                showSecondaryModal={showSecondaryModal}
+                setShowSecondaryModal={setShowSecondaryModal}
                 title={object.title}
                 value={object.value}></SettingsField>
             </React.Fragment>
@@ -102,32 +138,35 @@ const Profile = () => {
   );
 };
 
-const SettingsField = ({ title, value }) => {
+const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal }) => {
   const { useApi, useSocket, socket } = useAuth();
-  const [showFieldModal, setShowFieldModal] = useState('');
   const inputRef = useRef(null);
 
   return (
     <>
       <SecondaryModal
-        showModal={showFieldModal === title}
-        setShowModal={setShowFieldModal}>
+        showModal={showSecondaryModal === title}
+        setShowModal={setShowSecondaryModal}>
         <div className="settings-edit-container">
           <RiCloseCircleLine
             style={{ width: '1.8em', height: '1.8em' }}
             className="settings-close"
-            onClick={() => setShowFieldModal('')}></RiCloseCircleLine>
+            onClick={() => setShowSecondaryModal('')}></RiCloseCircleLine>
           <h1>Change your {title}</h1>
           <p
             ref={inputRef}
             contentEditable={true}
             dangerouslySetInnerHTML={{ __html: value }}></p>
           <div>
-            <button onClick={() => setShowFieldModal('')}>Cancel</button>
+            <button
+              style={{ color: 'indianred' }}
+              onClick={() => setShowSecondaryModal('')}>
+              Cancel
+            </button>
             <button
               onClick={() => {
                 useSocket(`user:change${title}`, inputRef.current.textContent);
-                setShowFieldModal('');
+                setShowSecondaryModal('');
               }}>
               Confirm
             </button>
@@ -137,7 +176,7 @@ const SettingsField = ({ title, value }) => {
       <div className="settings-profile-field">
         <h1>{title}:</h1>
         <p style={{ color: !value && 'indianred' }}>{value || 'Unavailable'}</p>
-        <button onClick={() => setShowFieldModal(title)}>EDIT</button>
+        <button onClick={() => setShowSecondaryModal(title)}>EDIT</button>
       </div>
     </>
   );
