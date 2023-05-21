@@ -16,7 +16,7 @@ export const ProfileModal = ({ image }) => {
         <div className="user-modal-container2">
           <p className="user-modal-name">{username}</p>
           <p className="user-modal-label">About Me</p>
-          <p className="user-modal-para">{about}Extra</p>
+          <p className="user-modal-para">{about}</p>
           <p className="user-modal-label">Date of Birth</p>
           <p className="user-modal-para">{new Date(11111).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}</p>
           <p className="user-modal-label">Account Creation Date</p>

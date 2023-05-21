@@ -4,10 +4,13 @@ import SecondaryModal from './SecondaryModal';
 import { ProfileModal } from './ProfileModal';
 import { useSelector } from 'react-redux';
 import { RiCloseCircleLine } from 'react-icons/ri';
+import { BiRightArrow } from 'react-icons/bi';
+import { ImRadioUnchecked, ImRadioChecked } from 'react-icons/im';
 import useAuth, { API_URL } from '../../customhooks/useAuth';
 import './settings.css';
 
 export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
+  const [current, setCurrent] = useState('profile');
   const [showSecondaryModal, setShowSecondaryModal] = useState('');
 
   const handleLogout = async () => {
@@ -54,9 +57,18 @@ export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
             onClick={() => setShowSettingsModal(false)}></RiCloseCircleLine>
           <div className="settings-container">
             <div className="settings-sidebar-buttons">
-              <button>Profile</button>
-              <button>Security</button>
-              <button>Voice</button>
+              <button onClick={() => setCurrent('profile')}>
+                Profile
+                {current === 'profile' && <BiRightArrow className="arrow" />}
+              </button>
+              <button onClick={() => setCurrent('voice')}>
+                Voice
+                {current === 'voice' && <BiRightArrow className="arrow" />}
+              </button>
+              <button onClick={() => setCurrent('security')}>
+                Security
+                {current === 'security' && <BiRightArrow className="arrow" />}
+              </button>
               <button
                 style={{ color: 'indianred', marginTop: 'auto' }}
                 onClick={() => setShowSecondaryModal('Logout')}>
@@ -65,12 +77,96 @@ export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
             </div>
           </div>
           <div className="settings-main">
-            <Profile
-              showSecondaryModal={showSecondaryModal}
-              setShowSecondaryModal={setShowSecondaryModal}></Profile>
+            {current === 'profile' ? (
+              <Profile
+                showSecondaryModal={showSecondaryModal}
+                setShowSecondaryModal={setShowSecondaryModal}
+              />
+            ) : current === 'security' ? (
+              <Security />
+            ) : (
+              <Voice />
+            )}
           </div>
         </div>
       </Modal>
+    </>
+  );
+};
+
+const Voice = () => {
+  const userObject = useSelector((state) => state.user.userObject);
+  const { userImage, username, about, status } = userObject;
+  const [inputMode, setInputMode] = useState('push');
+  const [pushToTalkKey, setPushToTalkKey] = useState('1');
+  const [isListenerActive, setIsListenerActive] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (isListenerActive) {
+        setPushToTalkKey(event.key);
+        setIsListenerActive(false);
+      }
+    };
+    if (isListenerActive) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isListenerActive]);
+
+  return (
+    <>
+      <div className="settings-profile-container">
+        <div className="voice-field-container">
+          <p>Incoming Volume</p>
+          <input
+            className="slider"
+            type="range"
+            min="0"
+            max="100"
+          />
+        </div>
+        <div className="voice-field-container">
+          <p>Input Mode</p>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <button
+              className="voice-button"
+              onClick={() => setInputMode('push')}>
+              {inputMode === 'push' ? <ImRadioChecked style={{ marginRight: '0.5em' }} /> : <ImRadioUnchecked style={{ marginRight: '0.5em' }} />}
+              Push To Talk
+            </button>
+            <button
+              className="voice-button"
+              onClick={() => setInputMode('continuous')}>
+              {inputMode === 'continuous' ? <ImRadioChecked style={{ marginRight: '0.5em' }} /> : <ImRadioUnchecked style={{ marginRight: '0.5em' }} />}
+              Continuous Transmission
+            </button>
+          </div>
+          {inputMode === 'push' && (
+            <div
+              className="settings-profile-field"
+              style={{ width: '100%' }}>
+              <h1 style={{ whiteSpace: 'nowrap' }}>Push To Talk Key:</h1>
+              <p style={{ color: !isListenerActive ? 'white' : 'indianred' }}>{!isListenerActive ? pushToTalkKey : 'Press a Key'}</p>
+              <button onClick={() => setIsListenerActive(true)}>EDIT</button>
+            </div>
+          )}
+        </div>
+        <div>Mic Test</div>
+      </div>
+    </>
+  );
+};
+
+const Security = () => {
+  const userObject = useSelector((state) => state.user.userObject);
+  const { userImage, username, about, status } = userObject;
+
+  return (
+    <>
+      <div className="settings-profile-container"></div>
     </>
   );
 };

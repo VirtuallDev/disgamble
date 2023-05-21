@@ -11,14 +11,6 @@ export default defineConfig({
     },
     host: '0.0.0.0',
     port: 3001,
-    onError: (err) => {
-      try {
-        fs.appendFileSync('error.log', `${new Date().toLocaleString()} - ${err}\n`);
-      } catch (e) {
-        console.error(`Failed to log error: ${e}`);
-      }
-      console.error(err);
-    },
   },
   preview: {
     port: 8080,
