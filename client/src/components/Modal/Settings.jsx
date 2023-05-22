@@ -98,14 +98,13 @@ export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
 const Voice = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userImage, username, about, status } = userObject;
-  const [inputMode, setInputMode] = useState('push');
-  const [pushToTalkKey, setPushToTalkKey] = useState('1');
   const [isListenerActive, setIsListenerActive] = useState(false);
+  const [voiceObject, setVoiceObject] = useState({ volume: '1', inputMode: 'push', key: 'E' });
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (isListenerActive) {
-        setPushToTalkKey(event.key);
+        setVoiceObject((current) => ({ ...current, key: event.key }));
         setIsListenerActive(false);
       }
     };
@@ -122,12 +121,17 @@ const Voice = () => {
       <div className="settings-profile-container">
         <div className="voice-field-container">
           <p className="voice-settings-label">Incoming Volume</p>
-          <input
-            className="slider"
-            type="range"
-            min="0"
-            max="100"
-          />
+          <div className="volume-slider-container">
+            <input
+              className="slider"
+              type="range"
+              min="1"
+              max="100"
+              value={voiceObject.volume}
+              onChange={(e) => setVoiceObject((current) => ({ ...current, volume: e.target.value }))}
+            />
+            <p>{voiceObject.volume}</p>
+          </div>
         </div>
         <span style={{ marginBottom: '0.5em' }}></span>
         <div className="voice-field-container">
@@ -135,23 +139,23 @@ const Voice = () => {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <button
               className="voice-button"
-              onClick={() => setInputMode('push')}>
-              {inputMode === 'push' ? <ImRadioChecked style={{ marginRight: '0.5em' }} /> : <ImRadioUnchecked style={{ marginRight: '0.5em' }} />}
+              onClick={() => setVoiceObject((current) => ({ ...current, inputMode: 'push' }))}>
+              {voiceObject.inputMode === 'push' ? <ImRadioChecked style={{ marginRight: '0.5em' }} /> : <ImRadioUnchecked style={{ marginRight: '0.5em' }} />}
               Push To Talk
             </button>
             <button
               className="voice-button"
-              onClick={() => setInputMode('continuous')}>
-              {inputMode === 'continuous' ? <ImRadioChecked style={{ marginRight: '0.5em' }} /> : <ImRadioUnchecked style={{ marginRight: '0.5em' }} />}
+              onClick={() => setVoiceObject((current) => ({ ...current, inputMode: 'continuous' }))}>
+              {voiceObject.inputMode === 'continuous' ? <ImRadioChecked style={{ marginRight: '0.5em' }} /> : <ImRadioUnchecked style={{ marginRight: '0.5em' }} />}
               Continuous Transmission
             </button>
           </div>
-          {inputMode === 'push' && (
+          {voiceObject.inputMode === 'push' && (
             <div
               className="settings-profile-field"
               style={{ width: '100%' }}>
               <h1 style={{ whiteSpace: 'nowrap' }}>Push To Talk Key:</h1>
-              <p style={{ color: !isListenerActive ? 'white' : 'indianred' }}>{!isListenerActive ? pushToTalkKey : 'Press a Key'}</p>
+              <p style={{ color: !isListenerActive ? 'white' : 'indianred' }}>{!isListenerActive ? voiceObject.key : 'Press a Key'}</p>
               <button onClick={() => setIsListenerActive(true)}>EDIT</button>
             </div>
           )}

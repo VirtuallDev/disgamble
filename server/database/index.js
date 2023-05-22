@@ -12,14 +12,27 @@ const UserSchema = new mongoose.Schema({
   userImage: String,
   status: String,
   about: String,
-  friends: Array,
-  friendRequests: Array,
-  blockedUsers: Array,
-  serverList: Array,
+  friends: [String],
+  friendRequests: [String],
+  blockedUsers: [String],
+  serverList: [String],
   refreshToken: Object,
   dateOfBirth: Date,
+
+  voice: {
+    type: String,
+    volume: String,
+    key: String,
+  },
 });
 
+/* 
+  friends: {
+    friends: [String],
+    requests: [String],
+    requests: [{ type: String }, { type: String }],
+  },
+  */
 const MessageSchema = new mongoose.Schema({
   username: String,
   userId: String,

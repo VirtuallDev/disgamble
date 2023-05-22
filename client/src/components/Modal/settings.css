@@ -421,3 +421,19 @@
   transition: all 0.17s;
   -moz-transition: all 0.17s;
 }
+
+.volume-slider-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.volume-slider-container > p {
+  color: var(--dark3);
+  font-size: 1.5em;
+  background-color: var(--dark4);
+  border-radius: 5px;
+  padding: 0.1em;
+  padding-inline: 0.5em;
+  margin-left: 0.5em;
+}
