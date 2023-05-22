@@ -8,6 +8,7 @@ import { BiRightArrow } from 'react-icons/bi';
 import { ImRadioUnchecked, ImRadioChecked } from 'react-icons/im';
 import useAuth, { API_URL } from '../../customhooks/useAuth';
 import './settings.css';
+import MicTest from './MicTest';
 
 export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
   const [current, setCurrent] = useState('profile');
@@ -120,7 +121,7 @@ const Voice = () => {
     <>
       <div className="settings-profile-container">
         <div className="voice-field-container">
-          <p>Incoming Volume</p>
+          <p className="voice-settings-label">Incoming Volume</p>
           <input
             className="slider"
             type="range"
@@ -128,8 +129,9 @@ const Voice = () => {
             max="100"
           />
         </div>
+        <span style={{ marginBottom: '0.5em' }}></span>
         <div className="voice-field-container">
-          <p>Input Mode</p>
+          <p className="voice-settings-label">Input Mode</p>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <button
               className="voice-button"
@@ -154,7 +156,8 @@ const Voice = () => {
             </div>
           )}
         </div>
-        <div>Mic Test</div>
+        <span style={{ marginBottom: '0.5em' }}></span>
+        <MicTest></MicTest>
       </div>
     </>
   );
