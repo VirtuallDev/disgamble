@@ -130,7 +130,14 @@ const Messages = ({ friend, searchValue }) => {
                   <div className="msg-container-user-time">
                     <p className="msg-container-username">{messageObject.author.username}</p>
                     <p className="msg-container-time">
-                      {new Date(messageObject.message.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
+                      {new Date(messageObject.message.sentAt).toLocaleString('en-US', {
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true,
+                        month: 'short',
+                        day: 'numeric',
+                      })}
                     </p>
                   </div>
                   {editing !== messageObject.message.id ? (

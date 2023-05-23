@@ -14,6 +14,7 @@ const options = {
   cert: fs.readFileSync('certificate.crt'),
 };
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 const server = https.createServer(options, app).listen(5001, () => console.log(`HTTPS server running on port ${5001}`));
 // const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
@@ -30,6 +31,14 @@ app.use(
 );
 
 app.use(express.json());
+
+app.get('/images/:image', (req, res) => {
+  const imageName = req.params.image;
+  const imagePath = path.resolve(__dirname, 'images', imageName);
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.setHeader('Expires', new Date(Date.now() + 3600000).toUTCString());
+  res.sendFile(imagePath);
+});
 
 app.use('/auth', authRouter);
 app.use('', usersRouter);
@@ -62,42 +71,45 @@ io.use(async (socket, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     const userId = decoded.userId;
     socket.join(userId);
-    // Remove later
     socket.userId = userId;
   } catch (e) {}
   next();
 });
 
 io.on('connection', (socket) => {
-  socket.on('disconnect', async () => {
+  socket.on('disconnect', () => {
     onDisconnect(io, socket.userId);
   });
 });
 
-nodeEvents.on('dm:messageAdded', async (messageObject) => {
+nodeEvents.on('dm:messageAdded', (messageObject) => {
   for (const user of messageObject?.recipients) {
     io.to(`${user}`).emit('dm:messageAdded', messageObject);
   }
 });
 
-nodeEvents.on('dm:messageUpdated', async (messageObject) => {
+nodeEvents.on('dm:messageUpdated', (messageObject) => {
   for (const user of messageObject?.recipients) {
     io.to(`${user}`).emit('dm:messageUpdated', messageObject);
   }
 });
 
-nodeEvents.on('dm:messageDeleted', async (messageObject) => {
+nodeEvents.on('dm:messageDeleted', (messageObject) => {
   for (const user of messageObject?.recipients) {
     io.to(`${user}`).emit('dm:messageDeleted', messageObject);
   }
 });
 
 nodeEvents.on('user:friendUpdate', async (userId) => {
-  const user = await User.findOne({ 'userInfo.userId': userId }).lean();
-  if (!user) return;
-  nodeEvents.emit('user:updateUser', user.userInfo.userId);
-  for (const friend of user.friends.friends) {
-    io.to(`${friend}`).emit('user:friendUpdate', user);
+  try {
+    const user = await User.findOne({ 'userInfo.userId': userId }).lean();
+    if (!user) return;
+    nodeEvents.emit('user:updateUser', user.userInfo.userId);
+    for (const friend of user.friends.friends) {
+      io.to(`${friend}`).emit('user:friendUpdate', user);
+    }
+  } catch (e) {
+    console.log(e);
   }
 });
 

@@ -45,11 +45,12 @@ router.get('/dmhistory', async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, 'images/');
   },
   filename: function (req, file, cb) {
     const fileExtension = file.originalname.split('.').pop();
-    cb(null, `${req.userID}.${fileExtension}`);
+    req.imgName = `${req.userID}.${fileExtension}`;
+    cb(null, req.imgName);
   },
 });
 
@@ -64,6 +65,8 @@ const upload = multer({
 
 router.post('/upload', upload.single('file'), async (req, res) => {
   try {
+    const user = await User.findOneAndUpdate({ 'userInfo.userId': req.userID }, { 'userInfo.image': `https://doriman.yachts:5001/images/${req.imgName}` });
+    if (!user) return res.status(500).json({ error: 'Something went wrong!' });
     return res.status(200).json({ success: 'Uploaded successfully' });
   } catch (e) {
     console.log(e);

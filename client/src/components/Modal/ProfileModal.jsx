@@ -18,9 +18,14 @@ export const ProfileModal = ({ image }) => {
           <p className="user-modal-label">About Me</p>
           <p className="user-modal-para">{userInfo.about}</p>
           <p className="user-modal-label">Date of Birth</p>
-          <p className="user-modal-para">{new Date(11111).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}</p>
+
+          <p className="user-modal-para">
+            {new Date(userInfo.dateOfBirth).toLocaleString('en-US', { year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
+          </p>
           <p className="user-modal-label">Account Creation Date</p>
-          <p className="user-modal-para">{new Date(11111).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}</p>
+          <p className="user-modal-para">
+            {new Date(userInfo.creationDate).toLocaleString('en-US', { year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
+          </p>
         </div>
         <span style={{ height: '1em' }}></span>
       </div>

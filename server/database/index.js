@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
     status: String,
     about: String,
     dateOfBirth: Date,
+    creationDate: Date,
   },
   userAuth: {
     email: String,

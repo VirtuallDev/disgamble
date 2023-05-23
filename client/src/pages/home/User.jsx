@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
 import useAuth from '../../customhooks/useAuth';
 import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
-import { Settings } from '../../components/Modal/Settings';
+import Settings from '../../components/Settings/Settings';
 import './user.css';
 
 const User = () => {
@@ -74,7 +74,7 @@ const User = () => {
         </div>
         <div className="user-image-container">
           <img
-            src={userInfo.image || 'https://html.com/wp-content/uploads/flamingo-fallback.jpg'}
+            src={userInfo.image}
             className="user-image"
             alt=""
           />

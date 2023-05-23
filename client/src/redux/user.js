@@ -10,7 +10,8 @@ const userSlice = createSlice({
         image: '',
         status: '',
         about: '',
-        dateOfBirth: null,
+        dateOfBirth: Date.now(),
+        creationDate: Date.now(),
       },
       userAuth: {
         email: '',

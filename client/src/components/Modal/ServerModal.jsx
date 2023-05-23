@@ -61,7 +61,7 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
             <p className="modal-para">{server?.description}</p>
             <p className="modal-label">Creation Date</p>
             <p className="modal-para">
-              {new Date(server?.dateCreated).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
+              {new Date(server?.dateCreated).toLocaleString('en-US', { year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
             </p>
           </div>
           <span style={{ height: '1em' }}></span>
