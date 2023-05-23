@@ -10,20 +10,20 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(406).json({ error: 'All fields are required.' });
-    const user = await User.findOne({ email: email }, { email: 1, password: 1, salt: 1, userId: 1 });
+    const user = await User.findOne({ 'userAuth.email': email });
     if (!user)
       return res.status(406).json({
         error: 'We cannot find an account with that email address.',
       });
-    const passwordHash = crypto.createHmac('sha256', user.salt).update(password).digest('hex');
-    const verifyPassword = passwordHash === user.password;
+    const passwordHash = crypto.createHmac('sha256', user.userAuth.salt).update(password).digest('hex');
+    const verifyPassword = passwordHash === user.userAuth.password;
     if (!verifyPassword) return res.status(406).json({ error: 'Incorrect password.' });
     const refreshToken = crypto.randomBytes(32).toString('hex');
     await User.findOneAndUpdate(
-      { email: email },
+      { 'userAuth.email': email },
       {
         $set: {
-          refreshToken: { refreshToken, issued: Date.now() },
+          'userAuth.refreshToken': { refreshToken, issued: Date.now() },
         },
       }
     );
@@ -51,27 +51,33 @@ router.post('/register', async (req, res) => {
       return res.status(406).json({ error: 'Password should have at least one alphabetic letter, one capital letter and one numeric letter.', type: 'password' });
     if (password !== confirmPassword) return res.status(406).json({ error: 'Passwords do not match.', type: 'confirmPassword' });
 
-    const usernameExists = await User.findOne({ username: username }, { username: 1 });
+    const usernameExists = await User.findOne({ 'userInfo.username': username });
     if (usernameExists) return res.status(406).json({ error: 'Username is already taken.', type: 'username' });
     const salt = crypto.randomBytes(16).toString('hex');
     const passwordHash = crypto.createHmac('sha256', salt).update(password).digest('hex');
     const userId = crypto.randomBytes(32).toString('hex');
 
     await User.create({
-      username: username,
-      email: email,
-      password: passwordHash,
-      salt: salt,
-      userId: userId,
-      userImage: '',
-      status: 'Online',
-      about: '',
-      friends: [],
-      friendRequests: [],
-      blockedUsers: [],
-      serverList: [],
-      refreshToken: { refreshToken: 'none', issued: Date.now() },
-      dateOfBirth: dateOfBirth,
+      userInfo: {
+        username: username,
+        userId: userId,
+        image: '',
+        status: 'Offline',
+        about: '',
+        dateOfBirth: dateOfBirth,
+      },
+      userAuth: {
+        email: email,
+        salt: salt,
+        password: passwordHash,
+        refreshToken: { refreshToken: 'none', issued: Date.now() },
+      },
+      voiceSettings: {
+        inputMode: 'continuous',
+        volume: '50',
+        key: 't',
+      },
+      friends: { requests: [], friends: [], blocked: [] },
     });
     return res.status(200).json({ success: 'Successfully Registered!' });
   } catch (e) {
@@ -84,12 +90,10 @@ router.post('/logout', async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     const user = await User.findOneAndUpdate(
-      {
-        'refreshToken.refreshToken': refreshToken,
-      },
+      { 'userAuth.refreshToken.refreshToken': refreshToken },
       {
         $set: {
-          refreshToken: { refreshToken: 'none', issued: Date.now() },
+          'userAuth.refreshToken': { refreshToken: '', issued: Date.now() },
         },
       }
     );
@@ -113,19 +117,16 @@ router.post('/logout', async (req, res) => {
 router.post('/refreshtoken', async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    const user = await User.findOne(
-      {
-        'refreshToken.refreshToken': refreshToken,
-      },
-      { username: 1, userId: 1, refreshToken: 1 }
-    );
+    const user = await User.findOne({
+      'userAuth.refreshToken.refreshToken': refreshToken,
+    });
     if (!user) return res.status(401).json({ error: 'You are not logged in.' });
 
     const currentTime = new Date();
-    const timePassed = (currentTime - user.refreshToken.issued) / 3600000;
+    const timePassed = (currentTime - user.userAuth.refreshToken?.issued) / 3600000;
     if (timePassed > 24) return res.status(401).json({ error: 'You are not logged in.' });
 
-    const userObject = { userId: user.userId, name: user.username };
+    const userObject = { userId: user.userInfo.userId, name: user.userInfo.username };
     const accessToken = jwt.sign(userObject, JWT_SECRET, { expiresIn: '30m' });
     return res.status(200).json({ accessToken: accessToken });
   } catch (e) {

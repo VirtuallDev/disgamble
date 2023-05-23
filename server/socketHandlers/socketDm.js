@@ -6,22 +6,28 @@ function setupDmEvents(io) {
   io.on('connection', (socket) => {
     socket.on('dm:message', async (content, sendTo) => {
       try {
-        const { userId, username, userImage } = await User.findOne({ userId: socket.userId }, { username: 1, userId: 1, userImage: 1 });
-        if (!userId) return;
-        const recipient = await User.findOne({ userId: sendTo }, { username: 1, userId: 1, userImage: 1 });
+        const user = await User.findOne({ 'userInfo.userId': socket.userId });
+        if (!user) return;
+        const recipient = await User.findOne({ 'userInfo.userId': sendTo });
         if (!recipient) return;
         const messageObject = await Dm.create({
-          authorId: userId,
-          authorName: username,
-          authorImage: userImage,
-          recipientId: recipient.userId,
-          recipientName: recipient.username,
-          recipientImage: recipient.userImage,
-          recipients: [userId, sendTo],
-          message: content,
-          messageId: crypto.randomBytes(16).toString('hex'),
-          sentAt: Date.now(),
-          edited: false,
+          author: {
+            userId: user.userInfo.userId,
+            username: user.userInfo.username,
+            image: user.userInfo.image,
+          },
+          recipient: {
+            userId: recipient.userInfo.userId,
+            username: recipient.userInfo.username,
+            image: recipient.userInfo.image,
+          },
+          message: {
+            message: content,
+            id: crypto.randomBytes(16).toString('hex'),
+            sentAt: Date.now(),
+            isEdited: false,
+          },
+          recipients: [user.userInfo.userId, sendTo],
         });
         nodeEvents.emit('dm:messageAdded', messageObject);
       } catch (e) {
@@ -30,9 +36,13 @@ function setupDmEvents(io) {
     });
     socket.on('dm:edit', async (messageId, newMessage) => {
       try {
-        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
-        if (!userId) return;
-        const edited = await Dm.findOneAndUpdate({ authorId: userId, messageId: messageId }, { message: newMessage, edited: true }, { new: true });
+        const user = await User.findOne({ 'userInfo.userId': socket.userId });
+        if (!user) return;
+        const edited = await Dm.findOneAndUpdate(
+          { 'author.userId': socket.userId, 'message.id': messageId },
+          { 'message.message': newMessage, 'message.isEdited': true },
+          { new: true }
+        );
         if (!edited) return;
         nodeEvents.emit('dm:messageUpdated', edited);
       } catch (e) {
@@ -41,9 +51,9 @@ function setupDmEvents(io) {
     });
     socket.on('dm:delete', async (messageId) => {
       try {
-        const { userId } = await User.findOne({ userId: socket.userId }, { userId: 1 });
-        if (!userId) return;
-        const deleted = await Dm.findOneAndDelete({ authorId: userId, messageId: messageId });
+        const user = await User.findOne({ 'userInfo.userId': socket.userId });
+        if (!user) return;
+        const deleted = await Dm.findOneAndDelete({ 'author.userId': socket.userId, 'message.id': messageId });
         if (!deleted) return;
         nodeEvents.emit('dm:messageDeleted', deleted);
       } catch (e) {

@@ -14,7 +14,7 @@ import { addCall, deleteCall, updateCall } from './redux/calls';
 
 const App = () => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { userId } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const { loading, fetchUser } = useUpdateUser();
   const dispatch = useDispatch();
   const { useApi, useSocket, socket } = useAuth();
@@ -31,11 +31,11 @@ const App = () => {
   useEffect(() => {
     window.addEventListener('keydown', (e) => {
       if (e.repeat) return;
-      if (e.key !== 't') return;
+      if (e.key !== voiceSettings.key) return;
       dispatch(triggerPushToTalk(true));
     });
     window.addEventListener('keyup', (e) => {
-      if (e.key !== 't') return;
+      if (e.key !== voiceSettings.key) return;
       dispatch(triggerPushToTalk(false));
     });
     window.addEventListener('blur', () => {
@@ -45,18 +45,18 @@ const App = () => {
     return () => {
       window.removeEventListener('keydown', (e) => {
         if (e.repeat) return;
-        if (e.key !== 't') return;
+        if (e.key !== voiceSettings.key) return;
         dispatch(triggerPushToTalk(true));
       });
       window.removeEventListener('keyup', (e) => {
-        if (e.key !== 't') return;
+        if (e.key !== voiceSettings.key) return;
         dispatch(triggerPushToTalk(false));
       });
       window.removeEventListener('blur', () => {
         dispatch(triggerPushToTalk(false));
       });
     };
-  }, []);
+  }, [voiceSettings]);
 
   useEffect(() => {
     if (!socket) return;
@@ -109,7 +109,7 @@ const App = () => {
           <Route
             element={
               <ProtectedRoutes
-                condition={userId}
+                condition={userInfo.userId}
                 redirect={'/'}
               />
             }>
@@ -128,7 +128,7 @@ const App = () => {
             <Route
               element={
                 <ProtectedRoutes
-                  condition={!userId}
+                  condition={!userInfo.userId}
                   redirect={'/login'}
                 />
               }>

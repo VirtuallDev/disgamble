@@ -6,7 +6,7 @@ import './servermodal.css';
 
 export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { serverList } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const [server, setServer] = useState({});
 
   const copyAddress = (serverAddress) => {
@@ -14,7 +14,7 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
   };
 
   useEffect(() => {
-    const findServer = serverList.find((server) => server.serverId === serverId);
+    const findServer = [].find((server) => server.serverId === serverId);
     if (findServer) setServer(findServer);
   }, [serverId]);
 
@@ -50,7 +50,7 @@ export const ServerModal = ({ showServerModal, setShowServerModal, serverId }) =
                 return (
                   <div key={index}>
                     <img
-                      src={user?.userImage}
+                      src={user?.image}
                       alt=""></img>
                     <p>{user?.username}</p>
                   </div>

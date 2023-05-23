@@ -13,14 +13,14 @@ const DM = ({ friend, call, answer }) => {
   const [searchValue, setSearchValue] = useState('');
   const callsArray = useSelector((state) => state.calls.callsArray);
   const userObject = useSelector((state) => state.user.userObject);
-  const { userId } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
 
   return (
     <div className="dm-container">
       <div className="dm-header">
         <img
           className="dm-image"
-          src={friend?.userImage}
+          src={friend?.image}
           alt=""></img>
         <p className="dm-name">{friend?.username}</p>
         <div style={{ marginLeft: 'auto', marginRight: '0.5em' }}>
@@ -40,11 +40,11 @@ const DM = ({ friend, call, answer }) => {
           width={'25%'}
           placeholder={'Search'}></SearchInput>
       </div>
-      {callsArray.some((call) => (call?.callerId === friend?.userId && call?.callTo === userId) || call?.callerId === userId) && (
+      {callsArray.some((call) => (call.author.userId === friend?.userId && call.recipient.userId === userInfo.userId) || call.author.userId === userInfo.userId) && (
         <CallWindow
-          answer={() => answer(callsArray.find((call) => call?.callerId === friend?.userId && call?.callTo === userId)?.callId)}
-          friendImage={friend?.userImage}
-          callObject={callsArray.find((call) => call?.callerId === friend?.userId || call?.callerId === userId)}></CallWindow>
+          answer={() => answer(callsArray.find((call) => call.author.userId === friend.userId && call.recipient.userId === userInfo.userId).callId)}
+          friendImage={friend?.image}
+          callObject={callsArray.find((call) => call.author.userId === friend.userId || call.author.userId === userInfo.userId)}></CallWindow>
       )}
       <Messages
         friend={friend}
@@ -66,18 +66,18 @@ const Messages = ({ friend, searchValue }) => {
   const messagesArray = useSelector((state) => state.messages.messagesArray);
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
   const userObject = useSelector((state) => state.user.userObject);
-  const { userId } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
 
   const copyMessage = (message) => {
     navigator.clipboard.writeText(message.message);
   };
 
   const deleteMessage = (message) => {
-    useSocket('dm:delete', message.messageId);
+    useSocket('dm:delete', message.id);
   };
 
   const editMessage = (message) => {
-    setEditing(message.messageId);
+    setEditing(message.id);
   };
 
   const handleEdit = () => {
@@ -101,40 +101,40 @@ const Messages = ({ friend, searchValue }) => {
   return (
     <div className="dm-messages">
       {filteredDmHistory
-        .filter((message) => message?.message?.toLowerCase().includes(searchValue.toLowerCase()))
-        .map((message, index) => {
+        .filter((messageObject) => messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase()))
+        .map((messageObject, index) => {
           return (
             <div
               className="msg-container"
               key={index}>
-              {message.authorId === userId ? (
+              {messageObject.author.userId === userInfo.userId ? (
                 <Options
                   currentValue={friend?.userId}
                   buttons={buttonsArray}
-                  object={message}
+                  object={messageObject}
                 />
               ) : (
                 <Options
                   currentValue={friend?.userId}
                   buttons={[{ name: 'COPY', color: 'white', handler: copyMessage }]}
-                  object={message}
+                  object={messageObject}
                 />
               )}
               <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div className="msg-container-img">
                   <img
-                    src={message?.authorImage}
+                    src={messageObject.author.image}
                     alt=""></img>
                 </div>
                 <div style={{ width: 'calc(100% - 5em)' }}>
                   <div className="msg-container-user-time">
-                    <p className="msg-container-username">{message?.authorName}</p>
+                    <p className="msg-container-username">{messageObject.author.username}</p>
                     <p className="msg-container-time">
-                      {new Date(message?.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
+                      {new Date(messageObject.message.sentAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true, month: 'short', day: 'numeric' })}
                     </p>
                   </div>
-                  {editing !== message.messageId ? (
-                    <p className="msg-container-msg">{message?.message}</p>
+                  {editing !== messageObject.message.id ? (
+                    <p className="msg-container-msg">{messageObject.message.message}</p>
                   ) : (
                     <>
                       <div className="edit-container">
@@ -142,8 +142,8 @@ const Messages = ({ friend, searchValue }) => {
                           ref={editedMessageRef}
                           className="msg-container-msg"
                           contentEditable={true}
-                          dangerouslySetInnerHTML={{ __html: message?.message }}
-                          id={message?.messageId}></p>
+                          dangerouslySetInnerHTML={{ __html: messageObject.message.message }}
+                          id={messageObject.message.id}></p>
                         <div className="edit-buttons">
                           <button onClick={handleEdit}>Save</button>
                           <button onClick={handleCancel}>Cancel</button>
@@ -153,7 +153,7 @@ const Messages = ({ friend, searchValue }) => {
                   )}
                 </div>
               </div>
-              {message?.edited && <p className="isedited">Edited</p>}
+              {messageObject.message.isEdited && <p className="isedited">Edited</p>}
             </div>
           );
         })}

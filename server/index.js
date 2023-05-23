@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./routers/auth');
 const usersRouter = require('./routers/users');
 const nodeEvents = require('./nodeEvents');
-const { User, Calls } = require('./database');
+const { User, Calls, Dm } = require('./database');
 const app = express();
 const options = {
   key: fs.readFileSync('private.key'),
@@ -43,13 +43,11 @@ const io = require('socket.io')(server, {
 });
 
 const { setupDmEvents } = require('./socketHandlers/socketDm');
-const { setupServerEvents } = require('./socketHandlers/socketServer');
 const { setupUserEvents } = require('./socketHandlers/socketUser');
 const { setupWebRTCEvents } = require('./socketHandlers/socketWebRTC');
 const { onDisconnect } = require('./utils');
 
 setupDmEvents(io);
-setupServerEvents(io);
 setupUserEvents(io);
 setupWebRTCEvents(io);
 
@@ -95,10 +93,10 @@ nodeEvents.on('dm:messageDeleted', async (messageObject) => {
 });
 
 nodeEvents.on('user:friendUpdate', async (userId) => {
-  const user = await User.findOne({ userId: userId }, { username: 1, userId: 1, userImage: 1, status: 1, about: 1, friends: 1 }).lean();
+  const user = await User.findOne({ 'userInfo.userId': userId }).lean();
   if (!user) return;
-  nodeEvents.emit('user:updateUser', user.userId);
-  for (const friend of user?.friends) {
+  nodeEvents.emit('user:updateUser', user.userInfo.userId);
+  for (const friend of user.friends.friends) {
     io.to(`${friend}`).emit('user:friendUpdate', user);
   }
 });

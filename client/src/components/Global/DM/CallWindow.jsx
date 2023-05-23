@@ -12,7 +12,7 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
   const userSounds = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened, pushToTalk, isTalking } = userSounds;
   const userObject = useSelector((state) => state.user.userObject);
-  const { userImage, userId } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const { useApi, useSocket, socket } = useAuth();
 
   return (
@@ -26,7 +26,7 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
           </div>
           <div style={{ backgroundColor: pushToTalk ? 'green' : 'transparent' }}>
             <img
-              src={userImage}
+              src={userInfo.image}
               alt=""></img>
           </div>
         </div>
@@ -34,7 +34,7 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
           className="call-buttons"
           style={{ color: 'indianRed' }}>
           {`Connected: ${callObject?.isConnected}`}
-          {callObject?.isConnected || callObject?.callerId === userId ? (
+          {callObject?.isConnected || callObject?.callerId === userInfo.userId ? (
             <>
               <ToolTipIcon
                 handler={() => dispatch(toggleMute())}

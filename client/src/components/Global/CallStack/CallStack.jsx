@@ -9,14 +9,14 @@ import './callstack.css';
 const CallStack = ({ answer }) => {
   const callsArray = useSelector((state) => state.calls.callsArray);
   const userObject = useSelector((state) => state.user.userObject);
-  const { friends, userId } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const { useApi, useSocket, socket } = useAuth();
 
   return (
     <>
       <div className="call-stack-container">
         {callsArray
-          .filter((call) => call?.callerId !== userId && call?.isConnected === false)
+          .filter((call) => call.author.userId !== userInfo.userId && call.isConnected === false)
           .map((call, index) => {
             return (
               <div
@@ -26,13 +26,13 @@ const CallStack = ({ answer }) => {
                 <div className="call-noti-user-info">
                   <img
                     className="call-noti-image"
-                    src={friends?.find((friend) => friend?.userId === call?.callerId)?.userImage}
+                    src={friends.friends.find((friend) => friend?.userId === call.author.userId)?.image}
                     alt=""></img>
-                  <p className="caller-name">{friends?.find((friend) => friend?.userId === call?.callerId)?.username}</p>
+                  <p className="caller-name">{friends.friends.find((friend) => friend?.userId === call.author.userId)?.username}</p>
                 </div>
                 <div className="call-noti-buttons">
                   <ToolTipIcon
-                    handler={() => useSocket('user:callDecline', call?.callId)}
+                    handler={() => useSocket('user:callDecline', call.callId)}
                     tooltip={'Decline'}
                     direction="top"
                     icon={
@@ -41,7 +41,7 @@ const CallStack = ({ answer }) => {
                         color={'indianRed'}></BsTelephoneXFill>
                     }></ToolTipIcon>
                   <ToolTipIcon
-                    handler={() => answer(call?.callId)}
+                    handler={() => answer(call.callId)}
                     tooltip={'Answer'}
                     direction="top"
                     icon={

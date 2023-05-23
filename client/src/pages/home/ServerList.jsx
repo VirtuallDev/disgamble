@@ -8,7 +8,7 @@ import './serverlist.css';
 
 const ServerList = () => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { serverList } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const { useApi, useSocket, socket } = useAuth();
 
   const [currentServer, setCurrentServer] = useState('');
@@ -49,7 +49,7 @@ const ServerList = () => {
           width={'100%'}
           placeholder={'Search a server!'}></SearchInput>
         <div style={{ marginBottom: '0.5em' }}></div>
-        {serverList
+        {[]
           .filter((item) => item?.servername?.toLowerCase().includes(searchValue.toLowerCase()))
           .map((server, index) => {
             return (

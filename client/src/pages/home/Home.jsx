@@ -42,7 +42,7 @@ const Home = () => {
         <div className="left-side">
           {current ? (
             <>
-              <Ads />
+              {false === true ? <Ads /> : ''}
               <div className="serverlist-container">
                 <Header
                   fontSize={'32px'}

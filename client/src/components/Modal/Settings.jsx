@@ -97,7 +97,7 @@ export const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
 
 const Voice = () => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { userImage, username, about, status } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const [isListenerActive, setIsListenerActive] = useState(false);
   const [voiceObject, setVoiceObject] = useState({ volume: '1', inputMode: 'push', key: 'E' });
 
@@ -169,7 +169,7 @@ const Voice = () => {
 
 const Security = () => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { userImage, username, about, status } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
 
   return (
     <>
@@ -180,7 +180,7 @@ const Security = () => {
 
 const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { userImage, username, about, status } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const [image, setImage] = useState(null);
   const [fileToSend, setFileToSend] = useState(null);
   const { useApi, useSocket, socket } = useAuth();
@@ -202,7 +202,7 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
       <div className="settings-profile-container">
         <div className="settings-profile-field-image">
           <img
-            src={image ? URL.createObjectURL(image) : userImage}
+            src={image ? URL.createObjectURL(image) : userInfo.image}
             alt=""></img>
           <div className="upload">
             <label
@@ -220,9 +220,9 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
           <button onClick={() => handleFileUpload()}>APPLY</button>
         </div>
         {[
-          { title: 'Username', value: username },
-          { title: 'Email', value: 'Email' },
-          { title: 'About', value: about },
+          { title: 'Username', value: userInfo.username },
+          { title: 'Email', value: userAuth.email },
+          { title: 'About', value: userInfo.about },
         ].map((object) => {
           return (
             <React.Fragment key={object.title}>
@@ -235,7 +235,7 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
           );
         })}
         <h1 className="preview">Profile Preview</h1>
-        <ProfileModal image={image ? URL.createObjectURL(image) : userImage}></ProfileModal>
+        <ProfileModal image={image ? URL.createObjectURL(image) : userInfo.image}></ProfileModal>
       </div>
     </>
   );

@@ -9,9 +9,10 @@ import './friendlist.css';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
-  const { friends, friendRequests } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
+
   const [friendOption, setFriendOption] = useState('All (0)');
-  const [filteredFriends, setFilteredFriends] = useState(friends);
+  const [filteredFriends, setFilteredFriends] = useState(friends.friends);
   const { useApi, useSocket, socket } = useAuth();
   const [options, setOptions] = useState(['All (0)', 'Online (0)', 'Offline (0)', 'Pending (0)']);
 
@@ -36,26 +37,26 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   useEffect(() => {
     switch (friendOption.split(' ')[0]) {
       case 'All':
-        setFilteredFriends(friends);
+        setFilteredFriends(friends.friends);
         break;
       case 'Online':
-        setFilteredFriends(friends.filter((friend) => friend.status === 'Online'));
+        setFilteredFriends(friends.friends.filter((friend) => friend.status === 'Online'));
         break;
       case 'Offline':
-        setFilteredFriends(friends.filter((friend) => friend.status === 'Offline'));
+        setFilteredFriends(friends.friends.filter((friend) => friend.status === 'Offline'));
         break;
       case 'Pending':
-        setFilteredFriends(friendRequests);
+        setFilteredFriends(friends.requests);
         break;
       default:
-        setFilteredFriends(friends);
+        setFilteredFriends(friends.friends);
     }
   }, [friendOption]);
 
   useEffect(() => {
-    const online = friends.filter((friend) => friend.status === 'Online' || friend.status === 'DND');
-    const offline = friends.filter((friend) => friend.status === 'Offline');
-    setOptions([`All (${friends.length})`, `Online (${online.length})`, `Offline (${offline.length})`, `Pending (${friendRequests.length})`]);
+    const online = friends.friends.filter((friend) => friend.status === 'Online' || friend.status === 'DND');
+    const offline = friends.friends.filter((friend) => friend.status === 'Offline');
+    setOptions([`All (${friends.friends.length})`, `Online (${online.length})`, `Offline (${offline.length})`, `Pending (${friends.requests.length})`]);
   }, [friends]);
 
   return (
@@ -83,7 +84,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
               </div>
               <div className="image-container">
                 <img
-                  src={friend?.userImage}
+                  src={friend?.image}
                   className="user-image"
                   alt=""
                 />
@@ -104,7 +105,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
               className="friends-container">
               <div className="image-container">
                 <img
-                  src={friend.userImage}
+                  src={friend.image}
                   className="user-image"
                   alt=""
                 />

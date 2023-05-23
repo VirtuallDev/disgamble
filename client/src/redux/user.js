@@ -1,19 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const userSlice = createSlice({
-  name: 'userObject',
+const userSlice = createSlice({
+  name: 'user',
   initialState: {
     userObject: {
-      username: '',
-      userId: '',
-      userImage: '',
-      status: '',
-      about: '',
-      friends: [],
-      friendRequests: [],
-      blockedUsers: [],
-      serverList: [],
-      ads: [],
+      userInfo: {
+        username: '',
+        userId: '',
+        image: '',
+        status: '',
+        about: '',
+        dateOfBirth: null,
+      },
+      userAuth: {
+        email: '',
+      },
+      voiceSettings: {
+        type: '',
+        volume: '',
+        key: '',
+      },
+      friends: {
+        requests: [],
+        friends: [],
+        blocked: [],
+      },
     },
   },
   reducers: {
@@ -21,8 +32,8 @@ export const userSlice = createSlice({
       state.userObject = action.payload;
     },
     friendChange: (state, action) => {
-      const index = state.userObject.friends.findIndex((friend) => action.payload.userObject.userId === friend);
-      if (!index === -1) state.userObject.friends[index] = action.payload.userObject;
+      const friendIndex = state.userObject.friends.friends.findIndex((friend) => friend === action.payload.userObject.userInfo.userId);
+      if (friendIndex !== -1) state.userObject.friends.friends[friendIndex] = action.payload.userObject;
     },
   },
 });

@@ -12,7 +12,7 @@ import './user.css';
 const User = () => {
   const dispatch = useDispatch();
   const userObject = useSelector((state) => state.user.userObject);
-  const { username, userId, userImage, status, about, friends, friendRequests, blockedUsers, serverList } = userObject;
+  const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const buttonRef = useRef(null);
   const userSounds = useSelector((state) => state.sounds.soundObject);
   const { isMuted, isDeafened } = userSounds;
@@ -70,17 +70,17 @@ const User = () => {
           setStatusOptions((status) => !status);
         }}>
         <div className="user-container-username">
-          <p>{username}</p>
+          <p>{userInfo.username}</p>
         </div>
         <div className="user-image-container">
           <img
-            src={userImage || 'https://html.com/wp-content/uploads/flamingo-fallback.jpg'}
+            src={userInfo.image || 'https://html.com/wp-content/uploads/flamingo-fallback.jpg'}
             className="user-image"
             alt=""
           />
           <div
             className="status"
-            style={{ backgroundColor: status === 'Online' ? 'green' : status === 'DND' ? 'red' : 'gray' }}></div>
+            style={{ backgroundColor: userInfo.status === 'Online' ? 'green' : userInfo.status === 'DND' ? 'red' : 'gray' }}></div>
         </div>
       </div>
       <StatusOptions

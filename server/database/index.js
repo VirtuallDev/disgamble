@@ -1,45 +1,90 @@
+const mongoose = require('mongoose');
 const MONGO_URI = process.env.MONGO_URI;
 
-const mongoose = require('mongoose');
-mongoose.connect(MONGO_URI);
+// Connect to the database
+mongoose
+  .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to the database');
+  })
+  .catch((error) => {
+    console.error('Error connecting to the database:', error);
+  });
 
-const UserSchema = new mongoose.Schema({
-  username: String,
-  email: String,
-  password: String,
-  salt: String,
-  userId: String,
-  userImage: String,
-  status: String,
-  about: String,
-  friends: [String],
-  friendRequests: [String],
-  blockedUsers: [String],
-  serverList: [String],
-  refreshToken: Object,
-  dateOfBirth: Date,
+const refreshTokenSchema = new mongoose.Schema({
+  refreshToken: String,
+  issued: Date,
+});
 
-  voice: {
-    type: String,
+const userSchema = new mongoose.Schema({
+  userInfo: {
+    username: String,
+    userId: String,
+    image: String,
+    status: String,
+    about: String,
+    dateOfBirth: Date,
+  },
+  userAuth: {
+    email: String,
+    salt: String,
+    password: String,
+    refreshToken: refreshTokenSchema,
+  },
+  voiceSettings: {
+    inputMode: String,
     volume: String,
     key: String,
   },
+  friends: {
+    requests: Array,
+    friends: Array,
+    blocked: Array,
+  },
 });
 
-/* 
-  friends: {
-    friends: [String],
-    requests: [String],
-    requests: [{ type: String }, { type: String }],
+exports.User = mongoose.model('User', userSchema, 'users');
+
+const DmHistorySchema = new mongoose.Schema({
+  author: {
+    userId: String,
+    username: String,
+    image: String,
   },
-  */
-const MessageSchema = new mongoose.Schema({
-  username: String,
-  userId: String,
-  userImage: String,
-  message: String,
-  timestamp: Date,
+  recipient: {
+    userId: String,
+    username: String,
+    image: String,
+  },
+  message: {
+    message: String,
+    id: String,
+    sentAt: Date,
+    isEdited: Boolean,
+  },
+  recipients: [String],
 });
+
+exports.Dm = mongoose.model('DmHistory', DmHistorySchema, 'dmhistory');
+
+const CallSchema = new mongoose.Schema({
+  author: {
+    userId: String,
+    username: String,
+    image: String,
+  },
+  recipient: {
+    userId: String,
+    username: String,
+    image: String,
+  },
+  callId: String,
+  offer: Object,
+  answer: Object,
+  isConnected: Boolean,
+});
+
+exports.Calls = mongoose.model('Calls', CallSchema, 'calls');
 
 const ServerSchema = new mongoose.Schema({
   servername: String,
@@ -51,31 +96,4 @@ const ServerSchema = new mongoose.Schema({
   dateCreated: Date,
 });
 
-const DmHistorySchema = new mongoose.Schema({
-  authorId: String,
-  authorName: String,
-  authorImage: String,
-  recipientId: String,
-  recipientName: String,
-  recipientImage: String,
-  recipients: Array,
-  message: String,
-  messageId: String,
-  sentAt: Date,
-  edited: Boolean,
-});
-
-const CallSchema = new mongoose.Schema({
-  callId: String,
-  callerId: String,
-  callTo: String,
-  offer: Object,
-  answer: Object,
-  isConnected: Boolean,
-});
-
-exports.User = mongoose.model('User', UserSchema, 'users');
-exports.Message = mongoose.model('Message', MessageSchema, 'messages');
 exports.Server = mongoose.model('Server', ServerSchema, 'servers');
-exports.Dm = mongoose.model('DmHistory', DmHistorySchema, 'dmhistory');
-exports.Calls = mongoose.model('Calls', CallSchema, 'calls');
