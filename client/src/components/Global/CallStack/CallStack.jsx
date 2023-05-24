@@ -1,5 +1,4 @@
 import React from 'react';
-import { RiCloseCircleLine } from 'react-icons/ri';
 import { BsTelephonePlusFill, BsTelephoneXFill } from 'react-icons/bs';
 import ToolTipIcon from '../ToolTip/ToolTipIcon';
 import { useSelector } from 'react-redux';
@@ -22,13 +21,12 @@ const CallStack = ({ answer }) => {
               <div
                 className="call-noti"
                 key={index}>
-                <RiCloseCircleLine className="call-noti-close"></RiCloseCircleLine>
                 <div className="call-noti-user-info">
                   <img
                     className="call-noti-image"
-                    src={friends.friends.find((friend) => friend?.userId === call.author.userId)?.image}
+                    src={friends.friends.find((friend) => friend?.userInfo?.userId === call.author.userId)?.userInfo?.image}
                     alt=""></img>
-                  <p className="caller-name">{friends.friends.find((friend) => friend?.userId === call.author.userId)?.username}</p>
+                  <p className="caller-name">{friends.friends.find((friend) => friend?.userInfo?.userId === call.author.userId)?.userInfo?.username}</p>
                 </div>
                 <div className="call-noti-buttons">
                   <ToolTipIcon

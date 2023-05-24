@@ -4,8 +4,6 @@
   flex-direction: row;
   align-items: center;
   padding: 0.3em;
-  border-radius: 8px;
-  margin-block: 0.25em;
   color: rgb(160, 160, 160);
   font-size: 1em;
   transition: all 0.2s;
@@ -64,15 +62,20 @@
   flex-direction: column;
   width: 100%;
   position: relative;
+  margin-bottom: 1em;
 }
 
 .add-friend > input {
   all: unset;
-  color: var(--dark3);
-  background-color: var(--bg-primary-3);
+  color: white;
+  background-color: var(--bg-primary-8);
   padding: 0.6em;
   border-top-left-radius: 0.5em;
   border-top-right-radius: 0.5em;
+}
+
+.add-friend > input::placeholder {
+  color: rgb(139, 139, 139);
 }
 
 .friend-button {

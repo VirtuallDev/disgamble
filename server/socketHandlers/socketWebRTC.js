@@ -1,4 +1,4 @@
-const { Calls } = require('../database');
+const { Calls, User } = require('../database');
 const { onDisconnect, onCallEnd } = require('../utils');
 
 function setupWebRTCEvents(io) {

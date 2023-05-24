@@ -40,13 +40,26 @@ const DM = ({ friend, call, answer }) => {
           width={'25%'}
           placeholder={'Search'}></SearchInput>
       </div>
-      {callsArray.some((call) => (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) || call.author.userId === userInfo.userId) && (
+      {callsArray.some(
+        (call) =>
+          (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) ||
+          (call.author.userId === userInfo.userId && call.recipient.userId === friend?.userInfo?.userId)
+      ) && (
         <CallWindow
           answer={() => answer(callsArray.find((call) => call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId).callId)}
           friendImage={friend?.userInfo?.image}
           callObject={callsArray.find((call) => call.author.userId === friend?.userInfo?.userId || call.author.userId === userInfo.userId)}></CallWindow>
       )}
       <Messages
+        call={
+          callsArray.some(
+            (call) =>
+              (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) ||
+              (call.author.userId === userInfo.userId && call.recipient.userId === friend?.userInfo?.userId)
+          )
+            ? true
+            : false
+        }
         friend={friend}
         searchValue={searchValue}></Messages>
       <MessageInput
@@ -59,7 +72,7 @@ const DM = ({ friend, call, answer }) => {
 
 export default DM;
 
-const Messages = ({ friend, searchValue }) => {
+const Messages = ({ friend, searchValue, call }) => {
   const { useApi, useSocket, socket } = useAuth();
   const editedMessageRef = useRef(null);
   const [editing, setEditing] = useState('');
@@ -99,7 +112,9 @@ const Messages = ({ friend, searchValue }) => {
   }, [friend, messagesArray]);
 
   return (
-    <div className="dm-messages">
+    <div
+      className="dm-messages"
+      style={{ height: call ? 'calc(100% - 28em)' : 'calc(100% - 8em)' }}>
       {filteredDmHistory
         .filter((messageObject) => messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase()))
         .map((messageObject, index) => {

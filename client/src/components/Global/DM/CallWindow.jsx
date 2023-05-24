@@ -19,22 +19,28 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
     <>
       <div className="call-container">
         <div className="call-images">
-          <div style={{ backgroundColor: isTalking ? 'green' : 'transparent' }}>
+          <div
+            className={`call-image ${callObject.author.userId === userInfo.userId && !callObject?.isConnected ? 'not-connected' : ''}`}
+            style={{ backgroundColor: isTalking ? 'green' : 'transparent' }}>
             <img
               src={friendImage}
-              alt=""></img>
+              alt=""
+            />
           </div>
-          <div style={{ backgroundColor: pushToTalk ? 'green' : 'transparent' }}>
+          <div
+            className={`call-image ${callObject.author.userId !== userInfo.userId && !callObject?.isConnected ? 'not-connected' : ''}`}
+            style={{ backgroundColor: pushToTalk ? 'green' : 'transparent' }}>
             <img
               src={userInfo.image}
-              alt=""></img>
+              alt=""
+            />
           </div>
         </div>
         <div
           className="call-buttons"
           style={{ color: 'indianRed' }}>
           {`Connected: ${callObject?.isConnected}`}
-          {callObject?.isConnected || callObject?.callerId === userInfo.userId ? (
+          {callObject?.isConnected || callObject?.author?.userId === userInfo.userId ? (
             <>
               <ToolTipIcon
                 handler={() => dispatch(toggleMute())}

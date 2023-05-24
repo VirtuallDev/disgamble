@@ -62,16 +62,14 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
 
   return (
     <>
-      <div style={{ width: '90%', marginBottom: '0.5em' }}>
+      <div className="friend-list">
         <AddFriend></AddFriend>
+        <span style={{ marginBottom: '0.5em' }}></span>
         <DropDown
           value={friendOption}
           setValue={setFriendOption}
-          name={'Filter'}
           options={options}
         />
-      </div>
-      <div className="friend-list">
         {filteredFriends.map((friend, index) => {
           return friendOption.split(' ')[0] !== 'Pending' ? (
             <div
@@ -148,13 +146,13 @@ const AddFriend = () => {
       style={{ marginBottom: '0.5em' }}>
       <input
         type="text"
-        placeholder="Username"
+        placeholder="Add a Friend"
         value={username}
         onChange={(e) => setUsername(e.target.value)}></input>
       <button
         className="friend-button"
         onClick={() => useSocket('user:addfriend', username)}>
-        Add Friend
+        Send Friend Request
       </button>
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import './dropdown.css';
 
-const DropDown = ({ value, setValue, name, options }) => {
+const DropDown = ({ value, setValue, options }) => {
   const optionsRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,7 +26,7 @@ const DropDown = ({ value, setValue, name, options }) => {
         <button
           className="dropdown-button"
           onClick={() => setIsOpen((prev) => !prev)}>
-          {name}
+          {value}
           <RiArrowDropDownLine
             className="dropdown-svg"
             style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
@@ -43,7 +43,7 @@ const DropDown = ({ value, setValue, name, options }) => {
                   setIsOpen(false);
                 }}
                 className="dropdown-option"
-                style={{ backgroundColor: value === option ? 'var(--bg-primary-3)' : '' }}>
+                style={{ backgroundColor: value === option ? 'var(--bg-primary-8)' : '' }}>
                 {option}
               </button>
             );
