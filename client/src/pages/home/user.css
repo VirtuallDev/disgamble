@@ -6,6 +6,7 @@
   height: 4em;
   padding: 8px;
   background-color: var(--dark4);
+  width: 100%;
 }
 
 .user-options {
