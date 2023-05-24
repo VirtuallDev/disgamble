@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ServerList from './ServerList';
 import FriendsList from './FriendList';
-import Header from '../../components/Global/Header/Header';
 import Ads from '../../components/Global/Dds/Dds';
 import User from './User';
 import DM from '../../components/Global/DM/DM';
 import { useSelector } from 'react-redux';
 import { HiHome } from 'react-icons/hi';
 import PeerConnection from '../../components/Global/PeerConnection';
-import './home.css';
 import CallStack from '../../components/Global/CallStack/CallStack';
+import './home.css';
 
 const Home = () => {
   const serverObject = useSelector((state) => state.server.serverObject);
@@ -44,10 +43,7 @@ const Home = () => {
             <>
               {false === true ? <Ads /> : ''}
               <div className="serverlist-container">
-                <Header
-                  fontSize={'32px'}
-                  label={'Servers'}
-                />
+                <h1>Servers</h1>
                 <ServerList />
               </div>
             </>

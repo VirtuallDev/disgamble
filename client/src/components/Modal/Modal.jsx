@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import './modal.css';
+
 function Modal({ showModal, setShowModal, children, zIndex = 10 }) {
   useEffect(() => {
     function handleClickOutside(event) {

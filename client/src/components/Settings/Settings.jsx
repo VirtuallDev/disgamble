@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import Modal from '../Modal/Modal';
 import SecondaryModal from '../Modal/SecondaryModal';
 import { RiCloseCircleLine } from 'react-icons/ri';
-import { BiRightArrow } from 'react-icons/bi';
+import { BsShieldCheck } from 'react-icons/bs';
+import { FaRegUserCircle } from 'react-icons/fa';
+import { BiUserVoice } from 'react-icons/bi';
+import { MdLogout } from 'react-icons/md';
+import { HiMenuAlt2, HiX } from 'react-icons/hi';
 import { API_URL } from '../../customhooks/useAuth';
 import Profile from './Profile/Profile';
 import Voice from './Voice/Voice';
@@ -12,6 +16,7 @@ import './settings.css';
 const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
   const [current, setCurrent] = useState('profile');
   const [showSecondaryModal, setShowSecondaryModal] = useState('');
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleLogout = async () => {
     await fetch(`${API_URL}/auth/logout`, {
@@ -52,38 +57,63 @@ const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
         showModal={showSettingsModal}
         setShowModal={setShowSettingsModal}>
         <div className="settings-modal-container">
-          <RiCloseCircleLine
-            className="settings-close"
-            onClick={() => setShowSettingsModal(false)}></RiCloseCircleLine>
-          <div className="settings-container">
+          <div className={`settings-container ${isOpen ? 'settings-open' : 'settings-closed'}`}>
             <div className="settings-sidebar-buttons">
-              <button onClick={() => setCurrent('profile')}>
-                Profile
-                {current === 'profile' && <BiRightArrow className="arrow" />}
-              </button>
-              <button onClick={() => setCurrent('voice')}>
-                Voice
-                {current === 'voice' && <BiRightArrow className="arrow" />}
-              </button>
-              <button onClick={() => setCurrent('security')}>
-                Security
-                {current === 'security' && <BiRightArrow className="arrow" />}
-              </button>
+              {[
+                { current: 'profile', label: 'Profile', icon: FaRegUserCircle },
+                { current: 'voice', label: 'Voice', icon: BiUserVoice },
+                { current: 'security', label: 'Security', icon: BsShieldCheck },
+              ].map((object) => {
+                return (
+                  <button
+                    onClick={() => setCurrent(object.current)}
+                    style={{ backgroundColor: current === object.current && 'var(--bg-primary-9)' }}>
+                    <object.icon className="sidebar-icon" />
+                    <p
+                      style={{ display: !isOpen && 'none' }}
+                      className="sidebar-p">
+                      {object.label}
+                    </p>
+                  </button>
+                );
+              })}
               <button
                 style={{ color: 'indianred', marginTop: 'auto' }}
                 onClick={() => setShowSecondaryModal('Logout')}>
-                Log Out
+                <MdLogout className="sidebar-icon" />
+                <p
+                  style={{ display: !isOpen && 'none' }}
+                  className="sidebar-p">
+                  Log Out
+                </p>
               </button>
             </div>
           </div>
+          <span data-custom={isOpen && 'margin-right'}></span>
+          <HiMenuAlt2
+            data-custom={isOpen && 'margin-left'}
+            onClick={() => setIsOpen((current) => !current)}
+            className={`menu-button ${isOpen ? 'open' : 'closed'}`}
+          />
+          <HiX
+            data-custom={isOpen && 'margin-left'}
+            onClick={() => setIsOpen((current) => !current)}
+            className={`menu-button ${isOpen ? 'closed' : 'open'}`}
+          />
           <div className="settings-main">
+            <RiCloseCircleLine
+              className="settings-close"
+              onClick={() => setShowSettingsModal(false)}></RiCloseCircleLine>
             {current === 'profile' ? (
               <Profile
                 showSecondaryModal={showSecondaryModal}
                 setShowSecondaryModal={setShowSecondaryModal}
               />
             ) : current === 'security' ? (
-              <Security />
+              <Security
+                showSecondaryModal={showSecondaryModal}
+                setShowSecondaryModal={setShowSecondaryModal}
+              />
             ) : (
               <Voice />
             )}

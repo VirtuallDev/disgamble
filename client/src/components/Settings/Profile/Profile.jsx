@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import useAuth from '../../../customhooks/useAuth';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import SecondaryModal from '../../Modal/SecondaryModal';
+import { useSelector } from 'react-redux';
+import ProfileModal from '../../Modal/ProfileModal';
 
 const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -46,7 +48,6 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
         </div>
         {[
           { title: 'Username', value: userInfo.username },
-          { title: 'Email', value: userAuth.email },
           { title: 'About', value: userInfo.about },
         ].map((object) => {
           return (
@@ -55,7 +56,8 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
                 showSecondaryModal={showSecondaryModal}
                 setShowSecondaryModal={setShowSecondaryModal}
                 title={object.title}
-                value={object.value}></SettingsField>
+                value={object.value}
+                rows={object.title === 'About' ? 6 : 1}></SettingsField>
             </React.Fragment>
           );
         })}
@@ -68,9 +70,9 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
 
 export default Profile;
 
-const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal }) => {
+const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal, rows }) => {
   const { useApi, useSocket, socket } = useAuth();
-  const inputRef = useRef(null);
+  const [inputValue, setInputValue] = useState(value);
 
   return (
     <>
@@ -83,10 +85,11 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
             className="settings-close"
             onClick={() => setShowSecondaryModal('')}></RiCloseCircleLine>
           <h1>Change your {title}</h1>
-          <p
-            ref={inputRef}
-            contentEditable={true}
-            dangerouslySetInnerHTML={{ __html: value }}></p>
+          <textarea
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            rows={rows}
+          />
           <div>
             <button
               style={{ color: 'indianred' }}
@@ -95,7 +98,7 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
             </button>
             <button
               onClick={() => {
-                useSocket(`user:change${title}`, inputRef.current.textContent);
+                useSocket(`user:change${title}`, inputValue);
                 setShowSecondaryModal('');
               }}>
               Confirm

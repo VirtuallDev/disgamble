@@ -11,6 +11,7 @@ const { User, Calls, Dm } = require('./database');
 const app = express();
 const options = {
   key: fs.readFileSync('private.key'),
+  ca: fs.readFileSync('ca_bundle.crt'),
   cert: fs.readFileSync('certificate.crt'),
 };
 const jwt = require('jsonwebtoken');

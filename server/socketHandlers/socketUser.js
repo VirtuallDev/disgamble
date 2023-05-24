@@ -66,20 +66,31 @@ function setupUserEvents(io) {
         console.log(e);
       }
     });
-    socket.on('user:changeEmail', async (email) => {
+    socket.on('user:changeAbout', async (about) => {
       try {
-        const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { 'userInfo.email': email });
+        const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { 'userInfo.about': about });
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
         nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
       } catch (e) {
         console.log(e);
       }
     });
-    socket.on('user:changeAbout', async (about) => {
+    socket.on('user:changeVoiceSettings', async (voiceObject) => {
       try {
-        const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { 'userInfo.about': about });
+        // Check if voiceObject is valid
+        const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { voiceSettings: voiceObject });
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
-        nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
+        nodeEvents.emit('user:userUpdate', user.userInfo.userId);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    socket.on('user:changePassword', async (passwordObject) => {
+      try {
+        // Check if passwordObject is valid
+        // const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { voiceSettings: voiceObject });
+        if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+        nodeEvents.emit('user:userUpdate', user.userInfo.userId);
       } catch (e) {
         console.log(e);
       }

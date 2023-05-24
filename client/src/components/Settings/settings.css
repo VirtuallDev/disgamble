@@ -3,27 +3,32 @@
   flex-wrap: wrap;
   z-index: 3;
   width: 100%;
-  height: 100%;
-  overflow: auto;
+  height: 100vh;
+  overflow: none;
+  background-color: var(--color-primary-5);
 }
 
 .settings-container {
+  position: absolute;
   display: flex;
   flex-direction: row;
   flex-grow: 0;
   flex-shrink: 0;
-  width: 20em;
   height: 100%;
   background-color: var(--color-primary-5);
+  z-index: 5;
+  transition: all 0.3s;
 }
 
 .settings-main {
+  position: relative;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-primary-9);
   flex-grow: 1;
   flex-shrink: 1;
   height: 100%;
+  overflow: auto;
 }
 
 .settings-sidebar-buttons {
@@ -33,13 +38,89 @@
   gap: 1em;
   height: 100%;
   width: 100%;
-  padding: 1em;
+  padding: 0.5em;
+}
+
+.sidebar-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  font-size: 1.5em;
+  color: var(--dark3);
+}
+
+.menu-button {
+  position: absolute;
+  top: 0.5em;
+  left: 0.5em;
+  width: 2.5em;
+  height: 2.5em;
+  z-index: 1;
+  color: var(--dark3);
+  transition: all 0.3s;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background-color: var(--color-primary-1);
+}
+
+.open {
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+.closed {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.menu-icon {
+  font-size: 1.5em;
+}
+
+[data-custom='margin-right'] {
+  margin-right: 20em;
+}
+
+[data-custom='margin-left'] {
+  margin-left: 20em;
 }
 
 @media only screen and (max-width: 700px) {
   .settings-container {
-    flex-grow: 1;
-    width: 100%;
+    width: 5em;
+  }
+  .sidebar-p {
+    display: none;
+  }
+  .sidebar-icon {
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  [data-custom='margin-right'] {
+    margin-right: 5em;
+  }
+  [data-custom='margin-left'] {
+    margin-left: 5em;
+  }
+}
+
+.settings-open {
+  width: 20em;
+}
+
+.settings-closed {
+  all: unset;
+  width: 0;
+  transition: all 0.3s;
+}
+
+@media only screen and (max-width: 700px) {
+  .settings-open {
+    width: 5em;
   }
 }
 
@@ -51,6 +132,7 @@
   font-size: 1.5em;
   color: white;
   width: 100%;
+  height: 2.5em;
   border-radius: 10px;
   font-weight: bold;
   font-variant: small-caps;
@@ -85,6 +167,7 @@
   font-size: 1.5em;
   font-weight: bold;
   font-variant: small-caps;
+  white-space: nowrap;
 }
 
 .settings-profile-field > p {
@@ -216,7 +299,7 @@
   flex-direction: column;
   align-items: center;
   width: 340px;
-  height: 250px;
+  height: auto;
   background-color: var(--dark4);
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(150, 150, 150, 0.1);
@@ -230,13 +313,22 @@
 }
 
 .settings-edit-container > p {
+  font-size: 0.8em;
+  color: var(--dark3);
+  margin-bottom: 0.3em;
+}
+
+.settings-edit-container > textarea {
   color: var(--dark3);
   background-color: var(--color-primary-5);
-  min-height: 125px;
-  max-height: 125px;
   border-radius: 5px;
-  overflow: auto;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0.25em;
+  width: 90%;
   resize: none;
+  margin-bottom: 0.8em;
 }
 
 .settings-edit-container > div {
@@ -268,13 +360,6 @@
   cursor: pointer;
   transform: translate(0, -2px);
   opacity: 0.7;
-}
-
-.arrow {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
 }
 
 .slider {
@@ -408,6 +493,7 @@
   padding-block: 0.7em;
   width: 10em;
   margin-right: 1em;
+  white-space: nowrap;
 }
 
 .mic-test-button:hover {

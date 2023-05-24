@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import './profilemodal.css';
 
-export const ProfileModal = ({ image }) => {
+const ProfileModal = ({ image }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
 
@@ -32,3 +32,5 @@ export const ProfileModal = ({ image }) => {
     </>
   );
 };
+
+export default ProfileModal;

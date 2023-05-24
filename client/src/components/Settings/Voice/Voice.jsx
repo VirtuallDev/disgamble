@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { ImRadioUnchecked, ImRadioChecked } from 'react-icons/im';
-import MicTest from './Voice/MicTest';
+import { useSelector } from 'react-redux';
+import MicTest from './MicTest';
+import useAuth from '../../../customhooks/useAuth';
 
 const Voice = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const [isListenerActive, setIsListenerActive] = useState(false);
   const [voiceObject, setVoiceObject] = useState(voiceSettings);
+  const { useApi, useSocket, socket } = useAuth();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -69,6 +72,11 @@ const Voice = () => {
         </div>
         <span style={{ marginBottom: '0.5em' }}></span>
         <MicTest></MicTest>
+        <button
+          className="mic-test-button"
+          onClick={() => useSocket(`user:changeVoiceSettings`, voiceObject)}>
+          SAVE CHANGES
+        </button>
       </div>
     </>
   );

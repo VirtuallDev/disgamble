@@ -74,8 +74,8 @@ const MicTest = () => {
       <div className="mic-test-container">
         <p className="voice-settings-label">Microphone Test</p>
         <div className="mic-level-parent">
-          <div class="mic-level-wrapper">
-            <div class="mic-level-container">
+          <div className="mic-level-wrapper">
+            <div className="mic-level-container">
               <div
                 className="mic-level"
                 style={{ width: `${(micLevel / 255) * 100}%` }}></div>

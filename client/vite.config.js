@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     https: {
       key: fs.readFileSync('../server/private.key'),
+      ca: fs.readFileSync('../server/ca_bundle.crt'),
       cert: fs.readFileSync('../server/certificate.crt'),
     },
     host: '0.0.0.0',
