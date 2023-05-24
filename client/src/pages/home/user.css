@@ -5,7 +5,7 @@
   width: inherit;
   height: 4em;
   padding: 8px;
-  background-color: var(--dark2);
+  background-color: var(--dark4);
 }
 
 .user-options {
@@ -36,7 +36,7 @@
   position: absolute;
   bottom: 4em;
   right: 0.5em;
-  background-color: var(--bg-primary-3);
+  background-color: var(--bg-primary-8);
   border-radius: 0.5em;
   z-index: 4;
   width: 10em;
@@ -113,6 +113,6 @@
 }
 
 .user-wrapper:hover {
-  background-color: var(--bg-primary-3);
+  background-color: var(--bg-primary-8);
   cursor: pointer;
 }

@@ -20,6 +20,14 @@ const path = require('path');
 const server = https.createServer(options, app).listen(5001, () => console.log(`HTTPS server running on port ${5001}`));
 // const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
 
+// Finish Security Settings backend
+// Change Add Friend
+// Change Friend List design
+// var(--color-primary-5);
+// var(--bg-primary-8);
+// var(--bg-primary-9);
+// var(--dark4);
+
 const CLIENT_URL = process.env.CLIENT_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
 

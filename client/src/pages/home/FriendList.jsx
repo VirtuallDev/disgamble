@@ -6,6 +6,7 @@ import useAuth from '../../customhooks/useAuth';
 import Options from '../../components/Global/Options/Options';
 import DropDown from '../../components/Global/DropDown/DropDown';
 import './friendlist.css';
+import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -22,11 +23,11 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   };
 
   const profileFriend = (friend) => {
-    console.log(friend.userId);
+    console.log(friend.userInfo.userId);
   };
 
   const deleteFriend = (friend) => {
-    console.log(friend.userId);
+    console.log(friend.userInfo.userId);
   };
 
   const buttonsArray = [
@@ -40,10 +41,10 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
         setFilteredFriends(friends.friends);
         break;
       case 'Online':
-        setFilteredFriends(friends.friends.filter((friend) => friend.status === 'Online'));
+        setFilteredFriends(friends.friends.filter((friend) => friend.userInfo.status === 'Online'));
         break;
       case 'Offline':
-        setFilteredFriends(friends.friends.filter((friend) => friend.status === 'Offline'));
+        setFilteredFriends(friends.friends.filter((friend) => friend.userInfo.status === 'Offline'));
         break;
       case 'Pending':
         setFilteredFriends(friends.requests);
@@ -54,8 +55,8 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   }, [friendOption]);
 
   useEffect(() => {
-    const online = friends.friends.filter((friend) => friend.status === 'Online' || friend.status === 'DND');
-    const offline = friends.friends.filter((friend) => friend.status === 'Offline');
+    const online = friends.friends.filter((friend) => friend.userInfo.status === 'Online' || friend.userInfo.status === 'DND');
+    const offline = friends.friends.filter((friend) => friend.userInfo.status === 'Offline');
     setOptions([`All (${friends.friends.length})`, `Online (${online.length})`, `Offline (${offline.length})`, `Pending (${friends.requests.length})`]);
   }, [friends]);
 
@@ -72,29 +73,25 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
       </div>
       <div className="friend-list">
         {filteredFriends.map((friend, index) => {
-          return friend.status ? (
+          return friendOption.split(' ')[0] !== 'Pending' ? (
             <div
               key={index}
               className="friends-container"
-              style={{ backgroundColor: selectedFriend?.userId === friend?.userId && 'var(--bg-primary-2)' }}
+              style={{ backgroundColor: selectedFriend?.userInfo?.userId === friend?.userInfo?.userId && 'var(--bg-primary-9)' }}
               onClick={() => friendClick(friend)}>
-              <div className="unread-messages">
-                <p>12</p>
-                <BiEnvelope size={'3em'}></BiEnvelope>
-              </div>
               <div className="image-container">
                 <img
-                  src={friend?.image}
+                  src={friend?.userInfo?.image}
                   className="user-image"
                   alt=""
                 />
                 <div
                   className="status"
-                  style={{ backgroundColor: friend?.status === 'Online' ? 'green' : friend?.status === 'DND' ? 'red' : 'gray' }}></div>
+                  style={{ backgroundColor: friend?.userInfo?.status === 'Online' ? 'green' : friend?.userInfo?.status === 'DND' ? 'red' : 'gray' }}></div>
               </div>
-              <p className="friend-name">{friend?.username}</p>
+              <p className="friend-name">{friend?.userInfo?.username}</p>
               <Options
-                currentValue={friend?.userId}
+                currentValue={friend?.userInfo?.userId}
                 buttons={buttonsArray}
                 object={friend}
               />
@@ -105,29 +102,31 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
               className="friends-container">
               <div className="image-container">
                 <img
-                  src={friend.image}
+                  src={friend?.userInfo?.image}
                   className="user-image"
                   alt=""
                 />
               </div>
-              <p className="friend-name">{friend.username}</p>
+              <p className="friend-name-pending">{friend?.userInfo?.username}</p>
               <div className="pending-buttons">
-                <div
-                  className="accept"
-                  onClick={() => useSocket('user:accept', friend.userId)}>
-                  <FaCheck
-                    color={'inherit'}
-                    size={'1.6em'}
-                  />
-                </div>
-                <div
-                  className="decline"
-                  onClick={() => useSocket('user:decline', friend.userId)}>
-                  <FaTimes
-                    color={'inherit'}
-                    size={'1.6em'}
-                  />
-                </div>
+                <ToolTipIcon
+                  handler={() => useSocket('user:accept', friend?.userInfo?.userId)}
+                  tooltip={'Accept'}
+                  direction="left"
+                  icon={
+                    <FaCheck
+                      size={'1.8em'}
+                      color={'green'}></FaCheck>
+                  }></ToolTipIcon>
+                <ToolTipIcon
+                  handler={() => useSocket('user:decline', friend?.userInfo?.userId)}
+                  tooltip={'Decline'}
+                  direction="left"
+                  icon={
+                    <FaTimes
+                      size={'1.8em'}
+                      color={'red'}></FaTimes>
+                  }></ToolTipIcon>
               </div>
             </div>
           );

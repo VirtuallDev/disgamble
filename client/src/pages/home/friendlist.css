@@ -1,9 +1,9 @@
 .friends-container {
   display: flex;
   position: relative;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  padding: 0.4em;
+  padding: 0.3em;
   border-radius: 8px;
   margin-block: 0.25em;
   color: rgb(160, 160, 160);
@@ -13,11 +13,12 @@
   width: 100%;
   flex-wrap: wrap;
   background-color: transparent;
+  background-color: var(--bg-primary-8);
 }
 
 .friends-container:hover {
   cursor: pointer;
-  background-color: var(--bg-primary-6);
+  background-color: var(--bg-primary-9);
 }
 
 .image-container {
@@ -41,9 +42,21 @@
 }
 
 .friend-name {
-  margin-top: 0.3em;
+  margin-left: 0.5em;
   font-weight: 700;
   color: inherit;
+  max-width: 18ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.friend-name-pending {
+  margin-left: 0.5em;
+  font-weight: 700;
+  color: inherit;
+  max-width: 14ch;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .add-friend {
@@ -92,53 +105,6 @@
 .pending-buttons {
   display: flex;
   flex-direction: row;
-  margin-top: 0.5em;
-  gap: 1em;
-}
-
-.pending-buttons > div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 100%;
-  padding: 0.4em;
-  transition: all 0.1s;
-  -moz-transition: all 0.1s;
-}
-
-.accept:hover {
-  color: green;
-}
-
-.decline:hover {
-  color: red;
-}
-
-.unread-messages {
-  position: absolute;
-  left: 0.3em;
-  top: 0em;
-}
-
-.unread-messages > p {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
-  bottom: 0.5em;
-  background-color: indianred;
-  border-radius: 100%;
-  font-size: 0.7em;
-  min-width: 1.7em;
-  min-height: 1.7em;
-  padding-inline: 0.3em;
-  width: fit-content;
-  color: white;
-}
-
-.unread-messages > svg {
-  color: var(--gray-6);
+  gap: 0.5em;
+  margin-left: auto;
 }

@@ -7,10 +7,7 @@ function setupUserEvents(io) {
       try {
         const user = await User.findOne({ 'userInfo.userId': socket.userId });
         if (!user) return;
-        const updatedUser = await User.findOneAndUpdate(
-          { username: usernameToAdd },
-          { $push: { 'friends.requests': { userId: user.userInfo.userId, username: user.userInfo.username, image: user.userInfo.image } } }
-        );
+        const updatedUser = await User.findOneAndUpdate({ 'userInfo.username': usernameToAdd }, { $push: { 'friends.requests': user.userInfo.userId } });
         if (!updatedUser) return;
         // Error if already added
         nodeEvents.emit('user:friendUpdate', updatedUser.userInfo.userId);
@@ -24,7 +21,7 @@ function setupUserEvents(io) {
           { 'userInfo.userId': socket.userId },
           {
             $push: { 'friends.friends': userIdToAccept },
-            $pull: { 'friends.requests': { userId: userIdToAccept } },
+            $pull: { 'friends.requests': userIdToAccept },
           }
         );
         if (!user) return;
@@ -38,7 +35,7 @@ function setupUserEvents(io) {
         const user = await User.findOneAndUpdate(
           { 'userInfo.userId': socket.userId },
           {
-            $pull: { 'friends.requests': { userId: userIdToDecline } },
+            $pull: { 'friends.requests': userIdToDecline },
           }
         );
         if (!user) return;

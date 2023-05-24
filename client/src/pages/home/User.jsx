@@ -65,7 +65,7 @@ const User = () => {
       <div
         className="user-wrapper"
         ref={buttonRef}
-        style={{ backgroundColor: statusOptions && 'var(--bg-primary-3)' }}
+        style={{ backgroundColor: statusOptions && 'var(--bg-primary-8)' }}
         onClick={() => {
           setStatusOptions((status) => !status);
         }}>

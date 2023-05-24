@@ -17,7 +17,9 @@ router.get('/getuserinfo', async (req, res) => {
   try {
     const user = await User.findOne({ 'userInfo.userId': req.userID }).lean();
     const friends = await User.find({ 'userInfo.userId': { $in: user.friends.friends } }).lean();
+    const requests = await User.find({ 'userInfo.userId': { $in: user.friends.requests } }).lean();
     user.friends.friends = friends || [];
+    user.friends.requests = requests || [];
     const servers = await Server.find({}).lean();
     for (const server of servers) {
       const usersOnline = await User.find({ 'userInfo.userId': { $in: server.usersOnline } }).lean();

@@ -13,11 +13,11 @@ export const messagesSlice = createSlice({
       state.messagesArray = [...state.messagesArray, action.payload];
     },
     messageUpdated: (state, action) => {
-      const index = state.messagesArray.findIndex((state) => state.message.id === action.payload.messageId);
+      const index = state.messagesArray.findIndex((state) => state.message.id === action.payload.message.id);
       if (index !== -1) state.messagesArray[index] = action.payload;
     },
     messageDeleted: (state, action) => {
-      const index = state.messagesArray.findIndex((state) => state.message.id === action.payload.messageId);
+      const index = state.messagesArray.findIndex((state) => state.message.id === action.payload.message.id);
       if (index !== -1) state.messagesArray.splice(index, 1);
     },
   },

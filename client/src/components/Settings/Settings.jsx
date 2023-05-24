@@ -63,9 +63,10 @@ const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
                 { current: 'profile', label: 'Profile', icon: FaRegUserCircle },
                 { current: 'voice', label: 'Voice', icon: BiUserVoice },
                 { current: 'security', label: 'Security', icon: BsShieldCheck },
-              ].map((object) => {
+              ].map((object, index) => {
                 return (
                   <button
+                    key={index}
                     onClick={() => setCurrent(object.current)}
                     style={{ backgroundColor: current === object.current && 'var(--bg-primary-9)' }}>
                     <object.icon className="sidebar-icon" />

@@ -20,12 +20,12 @@ const DM = ({ friend, call, answer }) => {
       <div className="dm-header">
         <img
           className="dm-image"
-          src={friend?.image}
+          src={friend?.userInfo?.image}
           alt=""></img>
-        <p className="dm-name">{friend?.username}</p>
+        <p className="dm-name">{friend?.userInfo?.username}</p>
         <div style={{ marginLeft: 'auto', marginRight: '0.5em' }}>
           <ToolTipIcon
-            handler={() => call(friend?.userId)}
+            handler={() => call(friend?.userInfo?.userId)}
             tooltip={'Call'}
             direction="bottom"
             icon={
@@ -40,19 +40,19 @@ const DM = ({ friend, call, answer }) => {
           width={'25%'}
           placeholder={'Search'}></SearchInput>
       </div>
-      {callsArray.some((call) => (call.author.userId === friend?.userId && call.recipient.userId === userInfo.userId) || call.author.userId === userInfo.userId) && (
+      {callsArray.some((call) => (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) || call.author.userId === userInfo.userId) && (
         <CallWindow
-          answer={() => answer(callsArray.find((call) => call.author.userId === friend.userId && call.recipient.userId === userInfo.userId).callId)}
-          friendImage={friend?.image}
-          callObject={callsArray.find((call) => call.author.userId === friend.userId || call.author.userId === userInfo.userId)}></CallWindow>
+          answer={() => answer(callsArray.find((call) => call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId).callId)}
+          friendImage={friend?.userInfo?.image}
+          callObject={callsArray.find((call) => call.author.userId === friend?.userInfo?.userId || call.author.userId === userInfo.userId)}></CallWindow>
       )}
       <Messages
         friend={friend}
         searchValue={searchValue}></Messages>
       <MessageInput
         width={'100%'}
-        placeholder={`Message @${friend?.username}`}
-        userId={friend?.userId}></MessageInput>
+        placeholder={`Message @${friend?.userInfo?.username}`}
+        userId={friend?.userInfo?.userId}></MessageInput>
     </div>
   );
 };
@@ -68,16 +68,16 @@ const Messages = ({ friend, searchValue }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
 
-  const copyMessage = (message) => {
-    navigator.clipboard.writeText(message.message);
+  const copyMessage = (messageObject) => {
+    navigator.clipboard.writeText(messageObject.message.message);
   };
 
-  const deleteMessage = (message) => {
-    useSocket('dm:delete', message.id);
+  const deleteMessage = (messageObject) => {
+    useSocket('dm:delete', messageObject.message.id);
   };
 
-  const editMessage = (message) => {
-    setEditing(message.id);
+  const editMessage = (messageObject) => {
+    setEditing(messageObject.message.id);
   };
 
   const handleEdit = () => {
@@ -95,7 +95,7 @@ const Messages = ({ friend, searchValue }) => {
   ];
 
   useEffect(() => {
-    setFilteredDmHistory(messagesArray.filter((message) => message.recipients.includes(friend?.userId)));
+    setFilteredDmHistory(messagesArray.filter((message) => message.recipients.includes(friend?.userInfo?.userId)));
   }, [friend, messagesArray]);
 
   return (
@@ -109,13 +109,13 @@ const Messages = ({ friend, searchValue }) => {
               key={index}>
               {messageObject.author.userId === userInfo.userId ? (
                 <Options
-                  currentValue={friend?.userId}
+                  currentValue={friend?.userInfo?.userId}
                   buttons={buttonsArray}
                   object={messageObject}
                 />
               ) : (
                 <Options
-                  currentValue={friend?.userId}
+                  currentValue={friend?.userInfo?.userId}
                   buttons={[{ name: 'COPY', color: 'white', handler: copyMessage }]}
                   object={messageObject}
                 />

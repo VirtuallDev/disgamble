@@ -3,22 +3,22 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background-color: var(--bg-primary-7);
+  background-color: var(--bg-primary-8);
 }
 
 .dm-header {
   display: flex;
   align-items: center;
   flex-direction: row;
-  background-color: var(--bg-primary-8);
+  background-color: var(--color-primary-5);
   width: 100%;
   height: 4em;
 }
 
 .dm-image {
   border-radius: 100%;
-  min-width: 3em;
-  min-height: 3em;
+  width: 3em;
+  height: 3em;
   background-color: aliceblue;
   margin-inline: 0.5em;
 }
@@ -31,7 +31,7 @@
 }
 
 .dm-messages {
-  height: calc(100% - 7.45em);
+  height: calc(100% - 8em);
   width: 100%;
   overflow: auto;
 }
@@ -59,7 +59,7 @@
 
 .msg-container-time {
   margin-left: 0.7em;
-  color: var(--dark2);
+  color: rgb(160, 160, 160);
 }
 
 .msg-container-img {
@@ -75,7 +75,7 @@
 }
 
 .msg-container-msg {
-  color: var(--dark3);
+  color: rgb(180, 180, 180);
   margin-left: 0.7em;
   word-break: break-word;
   width: calc(100% - 3.5em);
@@ -112,13 +112,14 @@
   display: flex;
   min-width: 340px;
   flex-direction: row;
-  background-color: var(--bg-primary-8);
+  background-color: var(--dark4);
+  height: 4em;
 }
 
 .msg-input {
   all: unset;
   color: white;
-  font-size: 1.3em;
+  font-size: 1.7em;
   padding-block: 0.7em;
   padding-right: 0.6em;
   text-indent: 14px;
@@ -139,8 +140,8 @@
   justify-content: center;
   align-items: center;
   color: rgb(139, 139, 139);
-  width: 3.5em;
-  height: 3.5em;
+  width: 5em;
+  height: 4em;
 }
 
 .msg-send-button:hover {
@@ -150,9 +151,9 @@
 
 .isedited {
   position: absolute;
-  right: 1em;
+  right: 0.5em;
   bottom: 0.1em;
-  color: var(--bg-primary-4);
+  color: black;
   font-weight: 600;
   font-size: 0.7em;
 }
@@ -160,11 +161,10 @@
 p[contentEditable='true'] {
   outline: none;
   border: none;
-
   color: var(--dark3);
   margin-left: 0.7em;
   word-break: break-word;
-  background-color: var(--dark);
+  background-color: var(--color-primary-5);
   border-radius: 0.5em;
   padding: 0.5em;
   padding-bottom: 1.4em;
