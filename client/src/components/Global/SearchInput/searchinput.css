@@ -9,7 +9,7 @@
 
 .search {
   all: unset;
-  background-color: var(--gray-5);
+  background-color: var(--dark4);
   border-radius: 5px;
   color: white;
   font-size: 1.3em;

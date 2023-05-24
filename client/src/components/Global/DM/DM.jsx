@@ -15,6 +15,24 @@ const DM = ({ friend, call, answer }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
 
+  const [isCallAvailable, setIsCallAvailable] = useState(
+    callsArray.some(
+      (call) =>
+        (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) ||
+        (call.author.userId === userInfo.userId && call.recipient.userId === friend?.userInfo?.userId)
+    )
+  );
+
+  useEffect(() => {
+    setIsCallAvailable(
+      callsArray.some(
+        (call) =>
+          (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) ||
+          (call.author.userId === userInfo.userId && call.recipient.userId === friend?.userInfo?.userId)
+      )
+    );
+  }, [callsArray]);
+
   return (
     <div className="dm-container">
       <div className="dm-header">
@@ -24,15 +42,17 @@ const DM = ({ friend, call, answer }) => {
           alt=""></img>
         <p className="dm-name">{friend?.userInfo?.username}</p>
         <div style={{ marginLeft: 'auto', marginRight: '0.5em' }}>
-          <ToolTipIcon
-            handler={() => call(friend?.userInfo?.userId)}
-            tooltip={'Call'}
-            direction="bottom"
-            icon={
-              <CgPhone
-                size={'2em'}
-                color={'white'}></CgPhone>
-            }></ToolTipIcon>
+          {!isCallAvailable && (
+            <ToolTipIcon
+              handler={() => call(friend?.userInfo?.userId)}
+              tooltip={'Call'}
+              direction="bottom"
+              icon={
+                <CgPhone
+                  size={'2em'}
+                  color={'white'}></CgPhone>
+              }></ToolTipIcon>
+          )}
         </div>
         <SearchInput
           searchValue={searchValue}
@@ -40,26 +60,14 @@ const DM = ({ friend, call, answer }) => {
           width={'25%'}
           placeholder={'Search'}></SearchInput>
       </div>
-      {callsArray.some(
-        (call) =>
-          (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) ||
-          (call.author.userId === userInfo.userId && call.recipient.userId === friend?.userInfo?.userId)
-      ) && (
+      {isCallAvailable && (
         <CallWindow
           answer={() => answer(callsArray.find((call) => call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId).callId)}
           friendImage={friend?.userInfo?.image}
-          callObject={callsArray.find((call) => call.author.userId === friend?.userInfo?.userId || call.author.userId === userInfo.userId)}></CallWindow>
+          callObject={callsArray.find((call) => call?.author?.userId === friend?.userInfo?.userId || call?.author?.userId === userInfo.userId)}></CallWindow>
       )}
       <Messages
-        call={
-          callsArray.some(
-            (call) =>
-              (call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId) ||
-              (call.author.userId === userInfo.userId && call.recipient.userId === friend?.userInfo?.userId)
-          )
-            ? true
-            : false
-        }
+        isCallAvailable={isCallAvailable}
         friend={friend}
         searchValue={searchValue}></Messages>
       <MessageInput
@@ -72,7 +80,7 @@ const DM = ({ friend, call, answer }) => {
 
 export default DM;
 
-const Messages = ({ friend, searchValue, call }) => {
+const Messages = ({ friend, searchValue, isCallAvailable }) => {
   const { useApi, useSocket, socket } = useAuth();
   const editedMessageRef = useRef(null);
   const [editing, setEditing] = useState('');
@@ -114,7 +122,7 @@ const Messages = ({ friend, searchValue, call }) => {
   return (
     <div
       className="dm-messages"
-      style={{ height: call ? 'calc(100% - 28em)' : 'calc(100% - 8em)' }}>
+      style={{ height: isCallAvailable ? 'calc(100% - 28em)' : 'calc(100% - 8em)' }}>
       {filteredDmHistory
         .filter((messageObject) => messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase()))
         .map((messageObject, index) => {

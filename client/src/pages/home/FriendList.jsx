@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaCheck, FaTimes } from 'react-icons/fa';
-import { BiEnvelope } from 'react-icons/bi';
 import useAuth from '../../customhooks/useAuth';
 import Options from '../../components/Global/Options/Options';
 import DropDown from '../../components/Global/DropDown/DropDown';

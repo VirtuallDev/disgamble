@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ServerList from './ServerList';
 import FriendsList from './FriendList';
 import Ads from '../../components/Global/Dds/Dds';
@@ -20,9 +20,9 @@ const Home = () => {
   return (
     <>
       <PeerConnection ref={peerRef}></PeerConnection>
-      <CallStack answer={(callId) => peerRef.current.acceptOffer(callId)}></CallStack>
       <div className="home-container">
         <div className="right-side">
+          <CallStack answer={(callId) => peerRef.current.acceptOffer(callId)}></CallStack>
           <div className="change-container">
             <HiHome
               style={{ transform: current ? 'rotate3d(1, 0, 1, 360deg)' : 'rotate3d(1, 0, 1, 0deg)' }}

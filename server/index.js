@@ -69,9 +69,9 @@ setupDmEvents(io);
 setupUserEvents(io);
 setupWebRTCEvents(io);
 
-(async function test() {
-  const test = await Calls.deleteMany({});
-  console.log(test);
+(async function cleanup() {
+  const count = await Calls.deleteMany({});
+  console.log(count);
 })();
 
 io.use(async (socket, next) => {

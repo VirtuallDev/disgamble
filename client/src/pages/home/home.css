@@ -16,6 +16,7 @@
   flex-shrink: 0;
   background-color: var(--color-primary-5);
   height: 100%;
+  position: relative;
 }
 
 .left-side {
@@ -37,6 +38,7 @@
 }
 
 .friend-list {
+  position: relative;
   width: 100%;
   height: 100%;
   background-color: var(--color-primary-5);
