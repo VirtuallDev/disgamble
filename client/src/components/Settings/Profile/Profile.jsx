@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import useAuth from '../../../customhooks/useAuth';
+import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ProfileModalPreview from '../../Modal/ProfileModalPreview';
 import SettingsField from '../SettingsField';
+import { AuthContext } from '../../../App';
 
 const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const [image, setImage] = useState(null);
   const [fileToSend, setFileToSend] = useState(null);
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];

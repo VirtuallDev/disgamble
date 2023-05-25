@@ -2,7 +2,7 @@ import React from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import './profilemodal.css';
 
-const ProfileModalPreview = ({ userInfo, setShowModal, closeButton = true }) => {
+const ProfileModalPreview = ({ userInfo, setShowModal, closeButton = true, setFriend }) => {
   return (
     <>
       <div className="user-modal-container">
@@ -14,6 +14,17 @@ const ProfileModalPreview = ({ userInfo, setShowModal, closeButton = true }) => 
         <div className="user-modal-image">
           <img src={userInfo.image}></img>
           <div style={{ backgroundColor: userInfo.status === 'Online' ? 'green' : userInfo.status === 'DND' ? 'red' : 'gray' }}></div>
+        </div>
+        <div style={{ width: '90%', marginBottom: '0.5em' }}>
+          <button
+            onClick={() => {
+              setFriend();
+              setShowModal(false);
+            }}
+            style={{ borderRadius: '5px' }}
+            className="friend-button">
+            Send Message
+          </button>
         </div>
         <div className="user-modal-container2">
           <p className="user-modal-name">{userInfo.username}</p>

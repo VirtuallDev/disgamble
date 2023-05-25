@@ -102,3 +102,169 @@ p[contentEditable='true'] {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-primary-1);
 }
+
+/* Auth / Modals */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-primary-5);
+  border-radius: 2%;
+  width: 100%;
+  max-width: 600px;
+  min-width: 350px;
+  padding: 2em;
+  border: 0.15em rgba(255, 255, 255, 0.463) solid;
+}
+
+.header {
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: center;
+  color: rgb(200, 200, 200);
+}
+
+.join-btn {
+  all: unset;
+  display: flex;
+  background-color: rgb(79, 74, 148);
+  padding: 10px 50px;
+  margin-block: 15px;
+  border-radius: 7px;
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.join-btn:hover {
+  cursor: pointer;
+  background-color: rgb(62, 58, 108);
+}
+.join-btn:active {
+  cursor: pointer;
+  background-color: rgb(86, 82, 154);
+  transition: all 0.17s;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin-inline: 1em;
+}
+
+.need-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.need-text {
+  color: white;
+  font-weight: bold;
+  text-indent: 2px;
+  margin-right: 0.3em;
+}
+
+.auth-link {
+  color: rgb(0, 60, 130);
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.auth-link:hover {
+  cursor: pointer;
+  color: rgba(0, 61, 130, 0.514);
+}
+
+.status-msg {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 0.5em;
+}
+
+.credentials {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+}
+
+.credentials > h1 {
+  color: var(--dark3);
+  font-size: 1.5em;
+  white-space: nowrap;
+  border-bottom: solid 1px white;
+  margin-top: 1em;
+  margin-bottom: 0.2em;
+  font-variant: small-caps;
+  text-align: center;
+}
+
+.input-container {
+  position: relative;
+  margin-top: 1.5em;
+}
+
+.input-container input {
+  all: unset;
+  font-size: 16px;
+  transition: all 0.2s ease-out;
+  border: 1px solid #ccc;
+  background-color: var(--bg-primary-8);
+  width: 100%;
+  padding-block: 8px;
+  border-radius: 5px;
+  font-size: 20px;
+  color: white;
+  text-indent: 10px;
+}
+
+.input-container label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translate(0, -50%);
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+  font-size: 16px;
+  color: grey;
+}
+
+.input-container input:focus {
+  border-color: var(--dark3);
+}
+
+.input-container input:not(:placeholder-shown) {
+  border-color: white;
+}
+
+.input-container:not(:focus-within) input:not(:placeholder-shown) + label {
+  color: white;
+}
+
+.input-container:focus-within label,
+.input-container input:not(:placeholder-shown) + label {
+  top: -13px;
+  font-size: 13px;
+  color: var(--dark3);
+}
+
+.input-container input::placeholder {
+  color: transparent;
+}
+
+.input-container input:focus:not(:placeholder-shown) {
+  border-color: var(--dark3);
+}
+/* Auth / Modals */

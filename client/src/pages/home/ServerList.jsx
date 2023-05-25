@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ServerModal } from '../../components/Modal/ServerModal';
 import { IoMdExpand } from 'react-icons/io';
 import SearchInput from '../../components/Global/SearchInput/SearchInput';
-import useAuth from '../../customhooks/useAuth';
+import { AuthContext } from '../../App';
 import './serverlist.css';
 
 const ServerList = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   const [currentServer, setCurrentServer] = useState('');
   const [showServerModal, setShowServerModal] = useState(false);

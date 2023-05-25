@@ -11,17 +11,13 @@ mongoose
     console.error('Error connecting to the database:', error);
   });
 
-const refreshTokenSchema = new mongoose.Schema({
-  refreshToken: String,
-  issued: Date,
-});
-
 const userSchema = new mongoose.Schema({
   userInfo: {
     username: String,
     userId: String,
     image: String,
     status: String,
+    userStatus: String,
     about: String,
     dateOfBirth: Date,
     creationDate: Date,
@@ -30,7 +26,7 @@ const userSchema = new mongoose.Schema({
     email: String,
     salt: String,
     password: String,
-    refreshToken: refreshTokenSchema,
+    refreshToken: { refreshToken: String, issued: Date },
   },
   voiceSettings: {
     inputMode: String,

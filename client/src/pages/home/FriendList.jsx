@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaCheck, FaTimes } from 'react-icons/fa';
-import useAuth from '../../customhooks/useAuth';
 import Options from '../../components/Global/Options/Options';
 import DropDown from '../../components/Global/DropDown/DropDown';
-import './friendlist.css';
 import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
 import ProfileModal from '../../components/Modal/ProfileModal';
+import { AuthContext } from '../../App';
+import './friendlist.css';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -14,7 +14,9 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
 
   const [friendOption, setFriendOption] = useState('All (0)');
   const [filteredFriends, setFilteredFriends] = useState(friends.friends);
-  const { useApi, useSocket, socket } = useAuth();
+
+  const { useApi, useSocket, socket } = useContext(AuthContext);
+
   const [options, setOptions] = useState(['All (0)', 'Online (0)', 'Offline (0)', 'Pending (0)']);
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [currentProfile, setCurrentProfile] = useState(null);
@@ -26,7 +28,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
 
   const profileFriend = (friend) => {
     setShowUserProfile(true);
-    setCurrentProfile(friend.userInfo);
+    setCurrentProfile(friend);
   };
 
   const deleteFriend = (friend) => {
@@ -47,7 +49,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
         setFilteredFriends(friends.friends.filter((friend) => friend.userInfo.status === 'Online'));
         break;
       case 'Offline':
-        setFilteredFriends(friends.friends.filter((friend) => friend.userInfo.status === 'Offline'));
+        setFilteredFriends(friends.friends.filter((friend) => friend.userInfo.status === 'Offline' || friend.userInfo.status === 'Invisible'));
         break;
       case 'Pending':
         setFilteredFriends(friends.requests);
@@ -68,7 +70,8 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
       <ProfileModal
         showUserProfile={showUserProfile}
         setShowUserProfile={setShowUserProfile}
-        userInfo={currentProfile}></ProfileModal>
+        user={currentProfile}
+        setFriend={setFriend}></ProfileModal>
       <div className="friend-list">
         <AddFriend></AddFriend>
         <span style={{ marginBottom: '0.5em' }}></span>
@@ -145,7 +148,7 @@ export default FriendsList;
 
 const AddFriend = () => {
   const [username, setUsername] = useState('');
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   return (
     <div

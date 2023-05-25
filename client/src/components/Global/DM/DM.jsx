@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { BiSend } from 'react-icons/bi';
 import SearchInput from '../SearchInput/SearchInput';
 import { useSelector } from 'react-redux';
-import useAuth from '../../../customhooks/useAuth';
 import Options from '../Options/Options';
 import { CgPhone } from 'react-icons/cg';
 import ToolTipIcon from '../ToolTip/ToolTipIcon';
 import CallWindow from './CallWindow';
+import { AuthContext } from '../../../App';
 import './dm.css';
 
 const DM = ({ friend, call, answer }) => {
@@ -81,7 +81,7 @@ const DM = ({ friend, call, answer }) => {
 export default DM;
 
 const Messages = ({ friend, searchValue, isCallAvailable }) => {
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
   const editedMessageRef = useRef(null);
   const [editing, setEditing] = useState('');
   const messagesArray = useSelector((state) => state.messages.messagesArray);
@@ -193,7 +193,7 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
 
 const MessageInput = ({ width, placeholder, userId }) => {
   const [msgValue, setMsgValue] = useState('');
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   return (
     <div

@@ -2,17 +2,18 @@ import React from 'react';
 import ProfileModalPreview from './ProfileModalPreview';
 import Modal from './Modal';
 
-const ProfileModal = ({ showUserProfile, setShowUserProfile, userInfo }) => {
+const ProfileModal = ({ showUserProfile, setShowUserProfile, user, setFriend }) => {
   return (
     <>
-      {userInfo && (
+      {user && (
         <Modal
           showModal={showUserProfile}
           setShowModal={setShowUserProfile}>
           <div className="profile-modal-container">
             <ProfileModalPreview
-              userInfo={userInfo}
-              setShowModal={setShowUserProfile}></ProfileModalPreview>
+              userInfo={user.userInfo}
+              setShowModal={setShowUserProfile}
+              setFriend={() => setFriend(user)}></ProfileModalPreview>
           </div>
         </Modal>
       )}

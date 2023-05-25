@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useAuth from '../../customhooks/useAuth';
 import { toggleIsTalking } from '../../redux/sounds';
+import { AuthContext } from '../../App';
 
 const configuration = {
   iceServers: [
@@ -20,7 +20,7 @@ const PeerConnection = forwardRef((props, ref) => {
   const [remoteStream, setRemoteStream] = useState(null);
   const peerUserId = useRef(null);
   const icesRef = useRef([]);
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   const init = async () => {

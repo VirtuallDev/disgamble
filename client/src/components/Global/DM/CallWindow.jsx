@@ -5,7 +5,6 @@ import { BsTelephoneXFill, BsTelephonePlusFill } from 'react-icons/bs';
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import ToolTipIcon from '../ToolTip/ToolTipIcon';
-import useAuth from '../../../customhooks/useAuth';
 
 const CallWindow = ({ answer, friendImage, callObject }) => {
   const dispatch = useDispatch();
@@ -13,7 +12,7 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
   const { isMuted, isDeafened, pushToTalk, isTalking } = userSounds;
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   return (
     <>

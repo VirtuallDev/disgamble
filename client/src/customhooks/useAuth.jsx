@@ -29,13 +29,14 @@ function useAuth() {
       }
     };
 
+    if (!accessToken) return;
     socketRef.current = io(API_URL, {
       withCredentials: true,
       cors: true,
       extraHeaders: { authorization: accessToken },
     });
     return () => {
-      if (!socketRef.current) socketRef.current.disconnect();
+      if (socketRef.current) socketRef.current.disconnect();
     };
   }, [accessToken]);
 

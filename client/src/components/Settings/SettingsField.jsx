@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import useAuth from '../../customhooks/useAuth';
+import React, { useContext, useState } from 'react';
 import SecondaryModal from '../Modal/SecondaryModal';
 import { RiCloseCircleLine } from 'react-icons/ri';
+import { AuthContext } from '../../App';
 
 const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal, placeholder, type = 'text' }) => {
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
   const [inputValue, setInputValue] = useState(value);
 
   return (

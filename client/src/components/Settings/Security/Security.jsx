@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import useAuth from '../../../customhooks/useAuth';
+import React, { useContext, useState } from 'react';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import SecondaryModal from '../../Modal/SecondaryModal';
 import { useSelector } from 'react-redux';
 import SettingsField from '../SettingsField';
+import { AuthContext } from '../../../App';
 
 const Security = ({ showSecondaryModal, setShowSecondaryModal }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const [passwordObject, setPasswordObject] = useState({ currentPassword: '', newPassword: '', confirmNewPassword: '' });
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   return (
     <>

@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDeafen, toggleMute } from '../../redux/sounds';
-import useAuth from '../../customhooks/useAuth';
 import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
 import Settings from '../../components/Settings/Settings';
+import { AuthContext } from '../../App';
 import './user.css';
 
 const User = () => {
@@ -95,7 +95,7 @@ export default User;
 
 const StatusOptions = ({ statusOptions, setStatusOptions, buttonRef }) => {
   const statusOptionsRef = useRef(null);
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   const handleStatusChange = async (statusString) => {
     useSocket('user:changestatus', statusString);

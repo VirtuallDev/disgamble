@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BsTelephonePlusFill, BsTelephoneXFill } from 'react-icons/bs';
 import ToolTipIcon from '../ToolTip/ToolTipIcon';
 import { useSelector } from 'react-redux';
-import useAuth from '../../../customhooks/useAuth';
+import { AuthContext } from '../../../App';
 import './callstack.css';
 
 const CallStack = ({ answer }) => {
   const callsArray = useSelector((state) => state.calls.callsArray);
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   return (
     <>

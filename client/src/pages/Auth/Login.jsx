@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './auth.css';
 
 const API_URL = 'https://doriman.yachts:5001';
 

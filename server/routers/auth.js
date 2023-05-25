@@ -63,6 +63,7 @@ router.post('/register', async (req, res) => {
         userId: userId,
         image: 'https://doriman.yachts:5001/images/default.webp',
         status: 'Offline',
+        userStatus: 'Offline',
         about: '',
         dateOfBirth: dateOfBirth,
         creationDate: Date.now(),

@@ -59,7 +59,7 @@ const io = require('socket.io')(server, {
 const { setupDmEvents } = require('./socketHandlers/socketDm');
 const { setupUserEvents } = require('./socketHandlers/socketUser');
 const { setupWebRTCEvents } = require('./socketHandlers/socketWebRTC');
-const { onDisconnect } = require('./utils');
+const { onDisconnect, onConnection } = require('./utils');
 
 setupDmEvents(io);
 setupUserEvents(io);
@@ -82,6 +82,7 @@ io.use(async (socket, next) => {
 });
 
 io.on('connection', (socket) => {
+  onConnection(socket.userId);
   socket.on('disconnect', () => {
     onDisconnect(io, socket.userId);
   });

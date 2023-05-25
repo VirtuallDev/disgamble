@@ -1,23 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Home from './pages/Home/Home';
 import ProtectedRoutes from './components/Global/ProtectedRoutes';
 import { useDispatch, useSelector } from 'react-redux';
-import { friendChange } from './redux/user';
+import { friendChange, setUserObject } from './redux/user';
 import { initialMessages, messageAdded, messageDeleted, messageUpdated } from './redux/messages';
-import useUpdateUser from './customhooks/useUpdateUser';
 import useAuth from './customhooks/useAuth';
 import { triggerPushToTalk } from './redux/sounds';
 import { addCall, deleteCall, updateCall } from './redux/calls';
 
+export const AuthContext = createContext();
+
 const App = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
-  const { loading, fetchUser } = useUpdateUser();
   const dispatch = useDispatch();
   const { useApi, useSocket, socket } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  const fetchUser = async () => {
+    try {
+      const jsonResponse = await useApi('getuserinfo');
+      if (jsonResponse && jsonResponse.success) dispatch(setUserObject(jsonResponse.success));
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
     fetchUser();
@@ -76,7 +88,7 @@ const App = () => {
       dispatch(messageDeleted(messageObject));
     });
     socket.on('server:connected', (server) => {
-      dispatch(setServerObject(server));
+      dispatch(setUserObject(server));
     });
     socket.on('user:call', (callObject) => {
       dispatch(addCall(callObject));
@@ -102,45 +114,47 @@ const App = () => {
   }, [socket]);
 
   return (
-    <div>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            element={
-              <ProtectedRoutes
-                condition={userInfo.userId}
-                redirect={'/'}
-              />
-            }>
-            <Route
-              exact
-              path="/login"
-              element={<Login />}
-            />
-            <Route
-              exact
-              path="/register"
-              element={<Register />}
-            />
-          </Route>
-          {!loading && (
+    <AuthContext.Provider value={{ useApi, useSocket, socket }}>
+      <div>
+        <BrowserRouter>
+          <Routes>
             <Route
               element={
                 <ProtectedRoutes
-                  condition={!userInfo.userId}
-                  redirect={'/login'}
+                  condition={userInfo.userId}
+                  redirect={'/'}
                 />
               }>
               <Route
                 exact
-                path="/"
-                element={<Home />}
+                path="/login"
+                element={<Login />}
+              />
+              <Route
+                exact
+                path="/register"
+                element={<Register />}
               />
             </Route>
-          )}
-        </Routes>
-      </BrowserRouter>
-    </div>
+            {!loading && (
+              <Route
+                element={
+                  <ProtectedRoutes
+                    condition={!userInfo.userId}
+                    redirect={'/login'}
+                  />
+                }>
+                <Route
+                  exact
+                  path="/"
+                  element={<Home />}
+                />
+              </Route>
+            )}
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </AuthContext.Provider>
   );
 };
 

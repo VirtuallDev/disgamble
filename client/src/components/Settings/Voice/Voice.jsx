@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { ImRadioUnchecked, ImRadioChecked } from 'react-icons/im';
 import { useSelector } from 'react-redux';
 import MicTest from './MicTest';
-import useAuth from '../../../customhooks/useAuth';
 
 const Voice = () => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const [isListenerActive, setIsListenerActive] = useState(false);
   const [voiceObject, setVoiceObject] = useState(voiceSettings);
-  const { useApi, useSocket, socket } = useAuth();
+  const { useApi, useSocket, socket } = useContext(AuthContext);
 
   useEffect(() => {
     const handleKeyDown = (event) => {

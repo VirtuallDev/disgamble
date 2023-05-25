@@ -1,5 +1,6 @@
 const { User, Calls } = require('./database');
 const jwt = require('jsonwebtoken');
+const nodeEvents = require('./nodeEvents');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -31,9 +32,28 @@ async function getUserByAccessToken(accessToken) {
   }
 }
 
-async function onDisconnect(io, userId) {
+async function onConnection(userId) {
   try {
     if (!userId) return;
+    const user = await User.findOne({ 'userInfo.userId': userId });
+    if (!user) return;
+    await User.findOneAndUpdate({ 'userInfo.userId': userId }, { 'userInfo.status': user.userInfo.userStatus });
+    nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function onDisconnect(io, userId) {
+  if (!userId) return;
+  try {
+    const user = await User.findOneAndUpdate({ 'userInfo.userId': userId }, { 'userInfo.status': 'Offline' });
+    if (!user) return;
+    nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
+  } catch (e) {
+    console.log(e);
+  }
+  try {
     const call = await Calls.findOne({ $or: [{ 'author.userId': userId }, { 'recipient.userId': userId }] });
     if (call) {
       io.to(`${call.author.userId}`).emit('webrtc:disconnect');
@@ -68,3 +88,4 @@ exports.getUserInfoByAuthHeader = getUserInfoByAuthHeader;
 exports.getUserByAccessToken = getUserByAccessToken;
 exports.onDisconnect = onDisconnect;
 exports.onCallEnd = onCallEnd;
+exports.onConnection = onConnection;
