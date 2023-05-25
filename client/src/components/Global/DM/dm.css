@@ -228,3 +228,10 @@ p[contentEditable='true'] {
     transform: scale(1.1);
   }
 }
+
+.scroll-to-bottom {
+  position: absolute;
+  bottom: 5em;
+  right: 50%;
+  transform: translate(50%, 0);
+}

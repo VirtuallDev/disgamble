@@ -46,38 +46,46 @@ const Security = ({ showSecondaryModal, setShowSecondaryModal }) => {
               onClick={() => setShowSecondaryModal('')}></RiCloseCircleLine>
             <div className="credentials">
               <h1>Change your password</h1>
-              <div className="input-container">
-                <input
-                  name="password"
-                  type="password"
-                  required
-                  placeholder="Password"
-                  value={passwordObject.currentPassword}
-                  onChange={(e) => setPasswordObject({ ...passwordObject, currentPassword: e.target.value })}></input>
-                <label htmlFor="password">Current Password</label>
-              </div>
-
-              <div className="input-container">
-                <input
-                  name="password"
-                  type="password"
-                  required
-                  placeholder="Password"
-                  value={passwordObject.newPassword}
-                  onChange={(e) => setPasswordObject({ ...passwordObject, newPassword: e.target.value })}></input>
-                <label htmlFor="password">New Password</label>
-              </div>
-
-              <div className="input-container">
-                <input
-                  name="password"
-                  type="password"
-                  required
-                  placeholder="Password"
-                  value={passwordObject.confirmNewPassword}
-                  onChange={(e) => setPasswordObject({ ...passwordObject, confirmNewPassword: e.target.value })}></input>
-                <label htmlFor="password">Confirm New Password</label>
-              </div>
+              {[
+                {
+                  name: 'password',
+                  type: 'password',
+                  placeholder: 'Password',
+                  label: 'Current Password',
+                  handler: (e) => setPasswordObject({ ...passwordObject, currentPassword: e.target.value }),
+                  value: passwordObject.currentPassword,
+                },
+                {
+                  name: 'password2',
+                  type: 'password',
+                  placeholder: 'New Password',
+                  label: 'New Password',
+                  handler: (e) => setPasswordObject({ ...passwordObject, newPassword: e.target.value }),
+                  value: passwordObject.newPassword,
+                },
+                {
+                  name: 'password3',
+                  type: 'password',
+                  placeholder: 'Confirm New Password',
+                  label: 'Confirm New Password',
+                  handler: (e) => setPasswordObject({ ...passwordObject, confirmNewPassword: e.target.value }),
+                  value: passwordObject.confirmNewPassword,
+                },
+              ].map((item, index) => (
+                <div
+                  className="input-container"
+                  key={index}>
+                  <input
+                    autoComplete={item.type === 'password' ? 'new-password' : 'off'}
+                    name={item.name}
+                    type={item.type}
+                    required
+                    placeholder={item.placeholder}
+                    value={item.value}
+                    onChange={(e) => item.handler(e)}></input>
+                  <label htmlFor={item.name}>{item.label}</label>
+                </div>
+              ))}
               <div className="modal-buttons">
                 <button
                   className="join-btn"

@@ -54,63 +54,63 @@ const Register = () => {
     <div className="container">
       <div className="header">Welcome</div>
       <div className="credentials">
-        <div className="input-container">
-          <input
-            name="username"
-            type="text"
-            required
-            placeholder="Username"
-            onChange={(e) => handleUsernameChange(e)}></input>
-          <label htmlFor="username">Username</label>
-        </div>
-        <p
-          className="status-msg"
-          style={{ color: 'darkred', display: msg.username !== '' ? 'initial' : 'none' }}>
-          {msg.username}
-        </p>
-
-        <div className="input-container">
-          <input
-            name="email"
-            type="text"
-            required
-            placeholder="Email"
-            onChange={(e) => handleEmailChange(e)}></input>
-          <label htmlFor="email">Email</label>
-        </div>
-        <p
-          className="status-msg"
-          style={{ color: 'darkred', display: msg.email !== '' ? 'initial' : 'none' }}>
-          {msg.email}
-        </p>
-        <div className="input-container">
-          <input
-            name="password"
-            type="password"
-            required
-            placeholder="Password"
-            onChange={(e) => handlePasswordChange(e)}></input>
-          <label htmlFor="password">Password</label>
-        </div>
-        <p
-          className="status-msg"
-          style={{ color: 'darkred', display: msg.password !== '' ? 'initial' : 'none' }}>
-          {msg.password}
-        </p>
-        <div className="input-container">
-          <input
-            name="confirm-password"
-            type="password"
-            required
-            placeholder="Confirm Password"
-            onChange={(e) => handleConfirmPasswordChange(e)}></input>
-          <label htmlFor="confirm-password">Confirm Password</label>
-        </div>
-        <p
-          className="status-msg"
-          style={{ color: 'darkred', display: msg.confirmPassword !== '' ? 'initial' : 'none' }}>
-          {msg.confirmPassword}
-        </p>
+        {[
+          {
+            name: 'username',
+            type: 'text',
+            placeholder: 'Username',
+            label: 'Username',
+            handler: (e) => handleUsernameChange(e),
+            error: msg.username,
+            value: data.username,
+          },
+          {
+            name: 'email',
+            type: 'email',
+            placeholder: 'Email',
+            label: 'Email',
+            handler: (e) => handleEmailChange(e),
+            error: msg.email,
+            value: data.email,
+          },
+          {
+            name: 'password',
+            type: 'password',
+            placeholder: 'Password',
+            label: 'Password',
+            handler: (e) => handlePasswordChange(e),
+            error: msg.password,
+            value: data.password,
+          },
+          {
+            name: 'confirm-password',
+            type: 'password',
+            placeholder: 'Confirm Password',
+            label: 'Confirm Password',
+            handler: (e) => handleConfirmPasswordChange(e),
+            error: msg.confirmPassword,
+            value: data.confirmPassword,
+          },
+        ].map((item, index) => (
+          <React.Fragment key={index}>
+            <div className="input-container">
+              <input
+                autoComplete={item.type === 'password' ? 'new-password' : 'off'}
+                name={item.name}
+                type={item.type}
+                required
+                placeholder={item.placeholder}
+                value={item.value}
+                onChange={(e) => item.handler(e)}></input>
+              <label htmlFor={item.name}>{item.label}</label>
+            </div>
+            <p
+              className="status-msg"
+              style={{ color: 'darkred', display: item.error !== '' ? 'initial' : 'none' }}>
+              {item.error}
+            </p>
+          </React.Fragment>
+        ))}
         <button
           className="join-btn"
           onClick={(e) => handleRegister()}>

@@ -8,6 +8,7 @@ const SearchInput = ({ searchValue, setSearchValue, width, placeholder }) => {
       className="search-container"
       style={{ width: width }}>
       <input
+        autoComplete="off"
         className="search"
         placeholder={placeholder}
         type="text"

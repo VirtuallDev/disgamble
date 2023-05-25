@@ -21,6 +21,7 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
             <h1>Change your {title}</h1>
             <div className="input-container">
               <input
+                autoComplete={type === 'password' ? 'new-password' : 'off'}
                 name="input"
                 type={type}
                 required
