@@ -81,10 +81,6 @@
   font-size: 1.5em;
 }
 
-[data-custom='margin-right'] {
-  margin-right: 20em;
-}
-
 [data-custom='margin-left'] {
   margin-left: 20em;
 }
@@ -99,9 +95,6 @@
   .sidebar-icon {
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-  [data-custom='margin-right'] {
-    margin-right: 5em;
   }
   [data-custom='margin-left'] {
     margin-left: 5em;
@@ -150,6 +143,7 @@
   align-items: center;
   margin-top: 5em;
   gap: 1em;
+  width: 100%;
 }
 
 .settings-profile-field {
@@ -180,6 +174,7 @@
   width: 100%;
   padding: 0.3em;
   font-weight: bold;
+  word-break: break-all;
 }
 
 .settings-profile-field > button {
@@ -385,8 +380,8 @@
   font-weight: bold;
   margin-bottom: 0.5em;
   font-variant: small-caps;
-  letter-spacing: 4px; /* Add some letter spacing for better readability */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Apply a subtle text shadow */
+  letter-spacing: 4px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .mic-test-container {

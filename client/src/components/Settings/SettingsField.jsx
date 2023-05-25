@@ -1,11 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import SecondaryModal from '../Modal/SecondaryModal';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { AuthContext } from '../../App';
 
-const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal, placeholder, type = 'text' }) => {
+const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal, placeholder, type = 'text', handler, error, label }) => {
   const { useApi, useSocket, socket } = useContext(AuthContext);
-  const [inputValue, setInputValue] = useState(value);
 
   return (
     <>
@@ -26,10 +25,15 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
                 type={type}
                 required
                 placeholder={placeholder}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}></input>
+                value={value}
+                onChange={(e) => handler(e)}></input>
               <label htmlFor="input">{placeholder}</label>
             </div>
+            <p
+              className="status-msg"
+              style={{ maxWidth: '350px', color: 'darkred', display: error !== '' ? 'initial' : 'none' }}>
+              {error}
+            </p>
             <div className="modal-buttons">
               <button
                 className="join-btn"
@@ -39,7 +43,8 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
               <button
                 className="join-btn"
                 onClick={() => {
-                  useSocket(`user:change${title}`, inputValue);
+                  if (error === '') return;
+                  useSocket(`user:change${title}`, value);
                   setShowSecondaryModal('');
                 }}>
                 Confirm
@@ -50,7 +55,7 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
       </SecondaryModal>
       <div className="settings-profile-field">
         <h1>{title}:</h1>
-        <p style={{ color: !value && 'indianred' }}>{value || 'Unavailable'}</p>
+        <p style={{ color: !label && 'indianred' }}>{label || 'Unavailable'}</p>
         <button onClick={() => setShowSecondaryModal(title)}>EDIT</button>
       </div>
     </>

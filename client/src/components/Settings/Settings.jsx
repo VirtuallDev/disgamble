@@ -90,7 +90,6 @@ const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
               </button>
             </div>
           </div>
-          <span data-custom={isOpen && 'margin-right'}></span>
           <HiMenuAlt2
             data-custom={isOpen && 'margin-left'}
             onClick={() => setIsOpen((current) => !current)}
@@ -101,7 +100,9 @@ const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
             onClick={() => setIsOpen((current) => !current)}
             className={`menu-button ${isOpen ? 'closed' : 'open'}`}
           />
-          <div className="settings-main">
+          <div
+            className="settings-main"
+            data-custom={isOpen && 'margin-left'}>
             <RiCloseCircleLine
               className="settings-close"
               onClick={() => setShowSettingsModal(false)}></RiCloseCircleLine>

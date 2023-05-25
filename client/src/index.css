@@ -190,6 +190,7 @@ p[contentEditable='true'] {
   font-size: 13px;
   font-weight: 500;
   margin-top: 0.5em;
+  word-wrap: break-word;
 }
 
 .credentials {
