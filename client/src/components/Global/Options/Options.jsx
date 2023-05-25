@@ -45,9 +45,10 @@ const Options = ({ currentValue, buttons, object }) => {
               return (
                 <button
                   key={index}
-                  onClick={() => {
+                  onClick={(e) => {
                     button.handler(object);
                     setCurrentOption('');
+                    e.stopPropagation();
                   }}
                   style={{ color: button.color }}>
                   {button.name}

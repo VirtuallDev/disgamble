@@ -6,6 +6,7 @@ import Options from '../../components/Global/Options/Options';
 import DropDown from '../../components/Global/DropDown/DropDown';
 import './friendlist.css';
 import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
+import ProfileModal from '../../components/Modal/ProfileModal';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -15,6 +16,8 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const [filteredFriends, setFilteredFriends] = useState(friends.friends);
   const { useApi, useSocket, socket } = useAuth();
   const [options, setOptions] = useState(['All (0)', 'Online (0)', 'Offline (0)', 'Pending (0)']);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [currentProfile, setCurrentProfile] = useState(null);
 
   const friendClick = (friend) => {
     setCurrent(false);
@@ -22,7 +25,8 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   };
 
   const profileFriend = (friend) => {
-    console.log(friend.userInfo.userId);
+    setShowUserProfile(true);
+    setCurrentProfile(friend.userInfo);
   };
 
   const deleteFriend = (friend) => {
@@ -61,6 +65,10 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
 
   return (
     <>
+      <ProfileModal
+        showUserProfile={showUserProfile}
+        setShowUserProfile={setShowUserProfile}
+        userInfo={currentProfile}></ProfileModal>
       <div className="friend-list">
         <AddFriend></AddFriend>
         <span style={{ marginBottom: '0.5em' }}></span>

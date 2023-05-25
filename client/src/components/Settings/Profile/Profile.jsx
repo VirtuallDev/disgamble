@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import useAuth from '../../../customhooks/useAuth';
-import { RiCloseCircleLine } from 'react-icons/ri';
-import SecondaryModal from '../../Modal/SecondaryModal';
 import { useSelector } from 'react-redux';
-import ProfileModal from '../../Modal/ProfileModal';
+import ProfileModalPreview from '../../Modal/ProfileModalPreview';
+import SettingsField from '../SettingsField';
 
 const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
   const userObject = useSelector((state) => state.user.userObject);
@@ -57,60 +56,18 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
                 setShowSecondaryModal={setShowSecondaryModal}
                 title={object.title}
                 value={object.value}
-                rows={object.title === 'About' ? 6 : 1}></SettingsField>
+                placeholder={object.title}
+                type={'text'}></SettingsField>
             </React.Fragment>
           );
         })}
         <h1 className="preview">Profile Preview</h1>
-        <ProfileModal image={image ? URL.createObjectURL(image) : userInfo.image}></ProfileModal>
+        <ProfileModalPreview
+          userInfo={{ ...userInfo, image: image ? URL.createObjectURL(image) : userInfo.image }}
+          closeButton={false}></ProfileModalPreview>
       </div>
     </>
   );
 };
 
 export default Profile;
-
-const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal, rows }) => {
-  const { useApi, useSocket, socket } = useAuth();
-  const [inputValue, setInputValue] = useState(value);
-
-  return (
-    <>
-      <SecondaryModal
-        showModal={showSecondaryModal === title}
-        setShowModal={setShowSecondaryModal}>
-        <div className="settings-edit-container">
-          <RiCloseCircleLine
-            style={{ width: '1.8em', height: '1.8em' }}
-            className="settings-close"
-            onClick={() => setShowSecondaryModal('')}></RiCloseCircleLine>
-          <h1>Change your {title}</h1>
-          <textarea
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            rows={rows}
-          />
-          <div>
-            <button
-              style={{ color: 'indianred' }}
-              onClick={() => setShowSecondaryModal('')}>
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                useSocket(`user:change${title}`, inputValue);
-                setShowSecondaryModal('');
-              }}>
-              Confirm
-            </button>
-          </div>
-        </div>
-      </SecondaryModal>
-      <div className="settings-profile-field">
-        <h1>{title}:</h1>
-        <p style={{ color: !value && 'indianred' }}>{value || 'Unavailable'}</p>
-        <button onClick={() => setShowSecondaryModal(title)}>EDIT</button>
-      </div>
-    </>
-  );
-};

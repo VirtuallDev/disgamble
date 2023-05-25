@@ -6,7 +6,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: var(--dark2);
+  background-color: var(--color-primary-5);
   border-radius: 2%;
   width: 100%;
   max-width: 600px;
@@ -22,7 +22,7 @@
   color: rgb(200, 200, 200);
 }
 
-.credentials > .join-btn {
+.join-btn {
   all: unset;
   display: flex;
   background-color: rgb(79, 74, 148);
@@ -38,14 +38,22 @@
   transition: all 0.3s;
 }
 
-.credentials > .join-btn:hover {
+.join-btn:hover {
   cursor: pointer;
   background-color: rgb(62, 58, 108);
 }
-.credentials > .join-btn:active {
+.join-btn:active {
   cursor: pointer;
   background-color: rgb(86, 82, 154);
   transition: all 0.17s;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin-inline: 1em;
 }
 
 .need-container {
@@ -80,11 +88,21 @@
 
 .credentials {
   position: relative;
-  margin-bottom: 20px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   width: 80%;
+}
+
+.credentials > h1 {
+  color: var(--dark3);
+  font-size: 1.5em;
+  white-space: nowrap;
+  border-bottom: solid 1px white;
+  margin-top: 1em;
+  margin-bottom: 0.2em;
+  font-variant: small-caps;
+  text-align: center;
 }
 
 .input-container {
@@ -97,7 +115,7 @@
   font-size: 16px;
   transition: all 0.2s ease-out;
   border: 1px solid #ccc;
-  background-color: rgb(70, 70, 70);
+  background-color: var(--bg-primary-8);
   width: 100%;
   padding-block: 8px;
   border-radius: 5px;
@@ -118,7 +136,7 @@
 }
 
 .input-container input:focus {
-  border-color: #007bff;
+  border-color: var(--dark3);
 }
 
 .input-container input:not(:placeholder-shown) {
@@ -133,7 +151,7 @@
 .input-container input:not(:placeholder-shown) + label {
   top: -13px;
   font-size: 13px;
-  color: #007bff;
+  color: var(--dark3);
 }
 
 .input-container input::placeholder {
@@ -141,5 +159,5 @@
 }
 
 .input-container input:focus:not(:placeholder-shown) {
-  border-color: #007bff;
+  border-color: var(--dark3);
 }
