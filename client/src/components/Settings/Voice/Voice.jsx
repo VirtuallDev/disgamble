@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ImRadioUnchecked, ImRadioChecked } from 'react-icons/im';
 import { useSelector } from 'react-redux';
 import MicTest from './MicTest';
+import { AuthContext } from '../../../App';
 
 const Voice = () => {
   const userObject = useSelector((state) => state.user.userObject);

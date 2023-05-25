@@ -82,10 +82,12 @@ io.use(async (socket, next) => {
 });
 
 io.on('connection', (socket) => {
-  onConnection(socket.userId);
   socket.on('disconnect', () => {
     onDisconnect(io, socket.userId);
   });
+  setTimeout(() => {
+    onConnection(socket.userId);
+  }, 1000);
 });
 
 nodeEvents.on('dm:messageAdded', (messageObject) => {
@@ -110,7 +112,7 @@ nodeEvents.on('user:friendUpdate', async (userId) => {
   try {
     const user = await User.findOne({ 'userInfo.userId': userId }).lean();
     if (!user) return;
-    nodeEvents.emit('user:updateUser', user.userInfo.userId);
+    io.to(`${userId}`).emit('user:updateUser');
     for (const friend of user.friends.friends) {
       io.to(`${friend}`).emit('user:friendUpdate', user);
     }

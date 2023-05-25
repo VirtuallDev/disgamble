@@ -38,6 +38,7 @@ async function onConnection(userId) {
     const user = await User.findOne({ 'userInfo.userId': userId });
     if (!user) return;
     await User.findOneAndUpdate({ 'userInfo.userId': userId }, { 'userInfo.status': user.userInfo.userStatus });
+    console.log('updated', user.userInfo.userStatus);
     nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
   } catch (e) {
     console.log(e);
@@ -49,6 +50,7 @@ async function onDisconnect(io, userId) {
   try {
     const user = await User.findOneAndUpdate({ 'userInfo.userId': userId }, { 'userInfo.status': 'Offline' });
     if (!user) return;
+    console.log('updated offline');
     nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
   } catch (e) {
     console.log(e);

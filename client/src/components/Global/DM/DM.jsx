@@ -88,6 +88,7 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
   const [filteredDmHistory, setFilteredDmHistory] = useState([]);
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
+  const scrollRef = useRef(null);
 
   const copyMessage = (messageObject) => {
     navigator.clipboard.writeText(messageObject.message.message);
@@ -105,9 +106,6 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
     useSocket('dm:edit', editedMessageRef.current.id, editedMessageRef.current.textContent);
     setEditing('');
   };
-  const handleCancel = () => {
-    setEditing('');
-  };
 
   const buttonsArray = [
     { name: 'COPY', color: 'white', handler: copyMessage },
@@ -119,6 +117,10 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
     setFilteredDmHistory(messagesArray.filter((message) => message.recipients.includes(friend?.userInfo?.userId)));
   }, [friend, messagesArray]);
 
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [filteredDmHistory]);
+
   return (
     <div
       className="dm-messages"
@@ -128,6 +130,7 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
         .map((messageObject, index) => {
           return (
             <div
+              ref={index === filteredDmHistory.length - 1 ? scrollRef : null}
               className="msg-container"
               key={index}>
               {messageObject.author.userId === userInfo.userId ? (
@@ -176,7 +179,7 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
                           id={messageObject.message.id}></p>
                         <div className="edit-buttons">
                           <button onClick={handleEdit}>Save</button>
-                          <button onClick={handleCancel}>Cancel</button>
+                          <button onClick={() => setEditing('')}>Cancel</button>
                         </div>
                       </div>
                     </>
