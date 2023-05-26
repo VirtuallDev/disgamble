@@ -92,6 +92,10 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
   const scrollPositionRef = useRef(null);
   const scrollRef = useRef(null);
 
+  const filteredMessages = messagesArray.filter(
+    (messageObject) => messageObject.recipients.includes(friend?.userInfo?.userId) && messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
   const copyMessage = (messageObject) => {
     navigator.clipboard.writeText(messageObject.message.message);
   };
@@ -116,8 +120,7 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
   ];
 
   useEffect(() => {
-    console.log('friend');
-    scrollRef.current && scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    scrollRef.current && scrollRef.current.scrollIntoView({ behavior: 'auto' });
   }, [friend]);
 
   useEffect(() => {
@@ -128,7 +131,7 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
       const isAboveSpecificPosition = scrollContainer.scrollTop >= maxScrollPosition - specificPosition;
       if (isAboveSpecificPosition) scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [friend]);
+  }, [filteredMessages]);
 
   useEffect(() => {
     if (scrollPositionRef.current) {
@@ -151,71 +154,69 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
       ref={scrollPositionRef}
       className="dm-messages"
       style={{ height: isCallAvailable ? 'calc(100% - 28em)' : 'calc(100% - 8em)' }}>
-      {messagesArray
-        .filter((messageObject) => messageObject.recipients.includes(friend?.userInfo?.userId) && messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase()))
-        .map((messageObject, index, array) => {
-          return (
-            <div
-              ref={index === array.length - 1 ? scrollRef : null}
-              className="msg-container"
-              key={index}>
-              {messageObject.author.userId === userInfo.userId ? (
-                <Options
-                  currentValue={friend?.userInfo?.userId}
-                  buttons={buttonsArray}
-                  object={messageObject}
-                />
-              ) : (
-                <Options
-                  currentValue={friend?.userInfo?.userId}
-                  buttons={[{ name: 'COPY', color: 'white', handler: copyMessage }]}
-                  object={messageObject}
-                />
-              )}
-              <div style={{ display: 'flex', flexDirection: 'row' }}>
-                <div className="msg-container-img">
-                  <img
-                    src={messageObject.author.image}
-                    alt=""></img>
-                </div>
-                <div style={{ width: 'calc(100% - 5em)' }}>
-                  <div className="msg-container-user-time">
-                    <p className="msg-container-username">{messageObject.author.username}</p>
-                    <p className="msg-container-time">
-                      {new Date(messageObject.message.sentAt).toLocaleString('en-US', {
-                        year: 'numeric',
-                        hour: 'numeric',
-                        minute: 'numeric',
-                        hour12: true,
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </p>
-                  </div>
-                  {editing !== messageObject.message.id ? (
-                    <p className="msg-container-msg">{messageObject.message.message}</p>
-                  ) : (
-                    <>
-                      <div className="edit-container">
-                        <p
-                          ref={editedMessageRef}
-                          className="msg-container-msg"
-                          contentEditable={true}
-                          dangerouslySetInnerHTML={{ __html: messageObject.message.message }}
-                          id={messageObject.message.id}></p>
-                        <div className="edit-buttons">
-                          <button onClick={handleEdit}>Save</button>
-                          <button onClick={() => setEditing('')}>Cancel</button>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
+      {filteredMessages.map((messageObject, index, array) => {
+        return (
+          <div
+            ref={index === array.length - 1 ? scrollRef : null}
+            className="msg-container"
+            key={index}>
+            {messageObject.author.userId === userInfo.userId ? (
+              <Options
+                currentValue={friend?.userInfo?.userId}
+                buttons={buttonsArray}
+                object={messageObject}
+              />
+            ) : (
+              <Options
+                currentValue={friend?.userInfo?.userId}
+                buttons={[{ name: 'COPY', color: 'white', handler: copyMessage }]}
+                object={messageObject}
+              />
+            )}
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+              <div className="msg-container-img">
+                <img
+                  src={messageObject.author.image}
+                  alt=""></img>
               </div>
-              {messageObject.message.isEdited && <p className="isedited">Edited</p>}
+              <div style={{ width: 'calc(100% - 5em)' }}>
+                <div className="msg-container-user-time">
+                  <p className="msg-container-username">{messageObject.author.username}</p>
+                  <p className="msg-container-time">
+                    {new Date(messageObject.message.sentAt).toLocaleString('en-US', {
+                      year: 'numeric',
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      hour12: true,
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </p>
+                </div>
+                {editing !== messageObject.message.id ? (
+                  <p className="msg-container-msg">{messageObject.message.message}</p>
+                ) : (
+                  <>
+                    <div className="edit-container">
+                      <p
+                        ref={editedMessageRef}
+                        className="msg-container-msg"
+                        contentEditable={true}
+                        dangerouslySetInnerHTML={{ __html: messageObject.message.message }}
+                        id={messageObject.message.id}></p>
+                      <div className="edit-buttons">
+                        <button onClick={handleEdit}>Save</button>
+                        <button onClick={() => setEditing('')}>Cancel</button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          );
-        })}
+            {messageObject.message.isEdited && <p className="isedited">Edited</p>}
+          </div>
+        );
+      })}
       {scrollButton && (
         <div className="scroll-to-bottom">
           <ToolTipIcon
@@ -237,9 +238,14 @@ const MessageInput = ({ width, placeholder, userId }) => {
   const [msgValue, setMsgValue] = useState('');
   const { useApi, useSocket, socket } = useContext(AuthContext);
 
+  const handleSend = () => {
+    useSocket('dm:message', msgValue, userId);
+    setMsgValue('');
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.keyCode === 13) useSocket('dm:message', msgValue, userId);
+      if (e.keyCode === 13) handleSend();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -260,7 +266,7 @@ const MessageInput = ({ width, placeholder, userId }) => {
         onChange={(e) => setMsgValue(e.target.value)}></input>
       <div
         className="msg-send-button"
-        onClick={() => useSocket('dm:message', msgValue, userId)}>
+        onClick={handleSend}>
         <BiSend
           size={'3em'}
           color={'inherit'}></BiSend>
