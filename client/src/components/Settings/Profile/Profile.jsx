@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
-import ProfileModalPreview from '../../Modal/ProfileModalPreview';
+import ProfileModalPreview from '../../../pages/Home/Friends/ProfileModalPreview';
 import SettingsField from '../SettingsField';
 import { AuthContext } from '../../../App';
 
@@ -78,10 +78,12 @@ const Profile = ({ showSecondaryModal, setShowSecondaryModal }) => {
             </React.Fragment>
           );
         })}
-        <h1 className="preview">Profile Preview</h1>
-        <ProfileModalPreview
-          userInfo={{ ...userInfo, image: image ? URL.createObjectURL(image) : userInfo.image }}
-          closeButton={false}></ProfileModalPreview>
+        <div className="preview">
+          <h1>Profile Preview</h1>
+          <ProfileModalPreview
+            userInfo={{ ...userInfo, image: image ? URL.createObjectURL(image) : userInfo.image }}
+            closeButton={false}></ProfileModalPreview>
+        </div>
       </div>
     </>
   );

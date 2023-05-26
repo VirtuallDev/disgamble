@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleDeafen, toggleMute } from '../../../redux/sounds';
 import { BsTelephoneXFill, BsTelephonePlusFill } from 'react-icons/bs';
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
-import ToolTipIcon from '../ToolTip/ToolTipIcon';
-import { AuthContext } from '../../../App';
+import { AuthContext } from '../../../../App';
+import { toggleDeafen, toggleMute } from '../../../../redux/sounds';
+import ToolTipIcon from '../../../../components/Global/ToolTip/ToolTipIcon';
 
 const CallWindow = ({ answer, friendImage, callObject }) => {
   const dispatch = useDispatch();

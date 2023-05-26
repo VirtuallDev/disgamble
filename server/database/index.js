@@ -84,13 +84,19 @@ const CallSchema = new mongoose.Schema({
 exports.Calls = mongoose.model('Calls', CallSchema, 'calls');
 
 const ServerSchema = new mongoose.Schema({
-  servername: String,
-  serverId: String,
-  serverImage: String,
-  serverAddress: String,
-  usersOnline: Array,
-  description: String,
-  dateCreated: Date,
+  author: {
+    userId: String,
+    username: String,
+    image: String,
+  },
+  server: {
+    name: String,
+    image: String,
+    description: String,
+    dateCreated: Date,
+    usersOnline: Array,
+    id: Number,
+  },
 });
 
 exports.Server = mongoose.model('Server', ServerSchema, 'servers');

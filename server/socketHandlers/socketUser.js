@@ -1,4 +1,4 @@
-const { User } = require('../database');
+const { User, Server } = require('../database');
 const nodeEvents = require('../nodeEvents');
 
 function setupUserEvents(io) {
@@ -88,6 +88,31 @@ function setupUserEvents(io) {
         // const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { voiceSettings: voiceObject });
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
         nodeEvents.emit('user:userUpdate', user.userInfo.userId);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+    socket.on('user:createServer', async (serverObject) => {
+      try {
+        // Check if serverObject is valid
+        const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId });
+        if (!user) return res.status(500).json({ error: 'Something went wrong!' });
+        const serverCount = await Server.find({});
+        await Server.create({
+          author: {
+            userId: user.userInfo.userId,
+            username: user.userInfo.username,
+            image: user.userInfo.image,
+          },
+          server: {
+            name: serverObject.name,
+            image: '',
+            description: serverObject.description,
+            dateCreated: Date.now(),
+            usersOnline: [],
+            id: serverCount.length,
+          },
+        });
       } catch (e) {
         console.log(e);
       }

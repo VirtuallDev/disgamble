@@ -9,6 +9,7 @@ const Ads = () => {
   const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
+    if (!ads) return;
     const startInterval = () => {
       const newIntervalId = setInterval(() => {
         setCurrentAd((current) => {
@@ -39,24 +40,28 @@ const Ads = () => {
   };
 
   return (
-    <div className="dds">
-      <div className="dd-container">
-        <img
-          src={ads[currentAd]}
-          alt=""
-          className="dd-image"
-        />
-        <div className="dd-buttons">
-          {ads.map((ad, index) => (
-            <button
-              key={index}
-              style={{ backgroundColor: currentAd === index && 'var(--color-primary-1)' }}
-              onClick={() => handleButtonClick(index)}
+    <>
+      {ads && (
+        <div className="dds">
+          <div className="dd-container">
+            <img
+              src={ads[currentAd]}
+              alt=""
+              className="dd-image"
             />
-          ))}
+            <div className="dd-buttons">
+              {ads.map((ad, index) => (
+                <button
+                  key={index}
+                  style={{ backgroundColor: currentAd === index && 'var(--color-primary-1)' }}
+                  onClick={() => handleButtonClick(index)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

@@ -1,43 +1,40 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaCheck, FaTimes } from 'react-icons/fa';
-import Options from '../../components/Global/Options/Options';
-import DropDown from '../../components/Global/DropDown/DropDown';
-import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
-import ProfileModal from '../../components/Modal/ProfileModal';
-import { AuthContext } from '../../App';
+import Options from '../../../components/Global/Options/Options';
+import DropDown from '../../../components/Global/DropDown/DropDown';
+import ToolTipIcon from '../../../components/Global/ToolTip/ToolTipIcon';
+import ProfileModal from './ProfileModal';
+import { AuthContext } from '../../../App';
 import './friendlist.css';
 
 const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const userObject = useSelector((state) => state.user.userObject);
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
-
-  const [friendOption, setFriendOption] = useState('All (0)');
-  const [filteredFriends, setFilteredFriends] = useState(friends.friends);
-
   const { useApi, useSocket, socket } = useContext(AuthContext);
-
+  const [filteredFriends, setFilteredFriends] = useState(friends.friends);
+  const [friendOption, setFriendOption] = useState('All (0)');
   const [options, setOptions] = useState(['All (0)', 'Online (0)', 'Offline (0)', 'Pending (0)']);
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [currentProfile, setCurrentProfile] = useState(null);
 
-  const friendClick = (friend) => {
+  const handleFriendClick = (friend) => {
     setCurrent(false);
     setFriend(friend);
   };
 
-  const profileFriend = (friend) => {
+  const handleProfileClick = (friend) => {
     setShowUserProfile(true);
     setCurrentProfile(friend);
   };
 
-  const deleteFriend = (friend) => {
+  const handleRemoveClick = (friend) => {
     console.log(friend.userInfo.userId);
   };
 
   const buttonsArray = [
-    { name: 'PROFILE', color: 'white', handler: profileFriend },
-    { name: 'DELETE', color: 'red', handler: deleteFriend },
+    { name: 'PROFILE', color: 'white', handler: handleProfileClick },
+    { name: 'REMOVE', color: 'red', handler: handleRemoveClick },
   ];
 
   useEffect(() => {
@@ -71,7 +68,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
         showUserProfile={showUserProfile}
         setShowUserProfile={setShowUserProfile}
         user={currentProfile}
-        setFriend={setFriend}></ProfileModal>
+        handler={handleFriendClick}></ProfileModal>
       <div className="friend-list">
         <AddFriend></AddFriend>
         <span style={{ marginBottom: '0.5em' }}></span>
@@ -86,7 +83,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
               key={index}
               className="friends-container"
               style={{ backgroundColor: selectedFriend?.userInfo?.userId === friend?.userInfo?.userId && 'var(--bg-primary-9)' }}
-              onClick={() => friendClick(friend)}>
+              onClick={() => handleFriendClick(friend)}>
               <div className="image-container">
                 <img
                   src={friend?.userInfo?.image}

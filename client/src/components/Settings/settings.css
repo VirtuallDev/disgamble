@@ -232,7 +232,7 @@
   opacity: 0.7;
 }
 
-.preview {
+.preview > h1 {
   color: var(--gray-2);
   font-variant: small-caps;
   border-top: 1px solid white;

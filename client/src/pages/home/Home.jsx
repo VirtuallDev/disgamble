@@ -1,18 +1,18 @@
 import React, { useRef, useState } from 'react';
-import ServerList from './ServerList';
-import FriendsList from './FriendList';
-import Ads from '../../components/Global/Dds/Dds';
-import User from './User';
-import DM from '../../components/Global/DM/DM';
+import ServerList from './Server/ServerList';
+import FriendsList from './Friends/FriendList';
 import { useSelector } from 'react-redux';
 import { HiHome } from 'react-icons/hi';
 import PeerConnection from '../../components/Global/PeerConnection';
 import CallStack from '../../components/Global/CallStack/CallStack';
+import User from './Friends/User';
+import Ads from './Dds/Dds';
+import DM from './Friends/DM/DM';
 import './home.css';
 
 const Home = () => {
   const serverObject = useSelector((state) => state.server.serverObject);
-  const { servername, serverId, serverImage, serverAddress, usersOnline, description, dateCreated, channels } = serverObject;
+  const { channels } = serverObject;
   const [current, setCurrent] = useState(true);
   const [friend, setFriend] = useState({});
   const peerRef = useRef(null);
@@ -41,11 +41,8 @@ const Home = () => {
         <div className="left-side">
           {current ? (
             <>
-              {false === true ? <Ads /> : ''}
-              <div className="serverlist-container">
-                <h1>Servers</h1>
-                <ServerList />
-              </div>
+              <Ads />
+              <ServerList />
             </>
           ) : (
             <DM

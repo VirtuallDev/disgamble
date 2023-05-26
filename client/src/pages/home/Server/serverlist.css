@@ -3,44 +3,23 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0.5em 1.5em;
+  padding: 0.5em;
 }
 
 .server-container {
-  color: rgb(160, 160, 160);
-  border-color: rgb(160, 160, 160);
-  padding: 0.65em;
-  border-radius: 10px;
-}
-
-.server-container:hover {
-  border-color: white;
-  color: white;
-  background-color: var(--bg-primary-2);
-  cursor: pointer;
-}
-
-.server {
   display: flex;
   flex-direction: row;
   align-items: center;
-  border-radius: 10px;
-  /* border-bottom: 2px dashed rgb(160, 160, 160); */
-  /* border: 1px solid none; */
-  border-color: inherit;
-  margin-bottom: -1px;
-  color: inherit;
+  background-color: var(--color-primary-5);
+  padding: 0.5em;
   font-size: 1em;
   transition: all 0.2s;
   -moz-transition: all 0.2s;
 }
 
-.breakline {
-  margin-top: 0.3em;
-  border: 2px solid;
-  border-color: inherit;
-  transition: all 0.2s;
-  -moz-transition: all 0.2s;
+.server-container:hover {
+  cursor: pointer;
+  background-color: var(--bg-primary-9);
 }
 
 .server-image {
@@ -54,20 +33,8 @@
 .server-name {
   font-size: 1.3em;
   font-weight: bolder;
-  color: inherit;
   text-indent: 0.5em;
-}
-
-.server-expand {
-  font-size: 1.1em;
-  margin-left: auto;
-  font-weight: bold;
-  color: var(--gray-2);
-}
-
-.server-expand:hover {
-  color: var(--color-primary-1);
-  cursor: pointer;
+  color: var(--dark3);
 }
 
 .server-button-container {

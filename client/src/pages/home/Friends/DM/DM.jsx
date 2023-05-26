@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { BiSend } from 'react-icons/bi';
-import SearchInput from '../SearchInput/SearchInput';
 import { useSelector } from 'react-redux';
-import Options from '../Options/Options';
 import { CgPhone } from 'react-icons/cg';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
-import ToolTipIcon from '../ToolTip/ToolTipIcon';
 import CallWindow from './CallWindow';
-import { AuthContext } from '../../../App';
+import { AuthContext } from '../../../../App';
+import SearchInput from '../../../../components/Global/SearchInput/SearchInput';
+import Options from '../../../../components/Global/Options/Options';
+import ToolTipIcon from '../../../../components/Global/ToolTip/ToolTipIcon';
 import './dm.css';
 
 const DM = ({ friend, call, answer }) => {
@@ -87,7 +87,6 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
   const { userInfo, userAuth, voiceSettings, friends } = userObject;
   const messagesArray = useSelector((state) => state.messages.messagesArray);
   const [editing, setEditing] = useState('');
-  const [filteredDmHistory, setFilteredDmHistory] = useState([]);
   const [scrollButton, setScrollButton] = useState(false);
   const editedMessageRef = useRef(null);
   const scrollPositionRef = useRef(null);
@@ -117,8 +116,9 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
   ];
 
   useEffect(() => {
-    setFilteredDmHistory(messagesArray.filter((message) => message.recipients.includes(friend?.userInfo?.userId)));
-  }, [friend, messagesArray]);
+    console.log('friend');
+    scrollRef.current && scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [friend]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -128,7 +128,7 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
       const isAboveSpecificPosition = scrollContainer.scrollTop >= maxScrollPosition - specificPosition;
       if (isAboveSpecificPosition) scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [filteredDmHistory.length]);
+  }, [friend]);
 
   useEffect(() => {
     if (scrollPositionRef.current) {
@@ -151,12 +151,12 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
       ref={scrollPositionRef}
       className="dm-messages"
       style={{ height: isCallAvailable ? 'calc(100% - 28em)' : 'calc(100% - 8em)' }}>
-      {filteredDmHistory
-        .filter((messageObject) => messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase()))
-        .map((messageObject, index) => {
+      {messagesArray
+        .filter((messageObject) => messageObject.recipients.includes(friend?.userInfo?.userId) && messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase()))
+        .map((messageObject, index, array) => {
           return (
             <div
-              ref={index === filteredDmHistory.length - 1 ? scrollRef : null}
+              ref={index === array.length - 1 ? scrollRef : null}
               className="msg-container"
               key={index}>
               {messageObject.author.userId === userInfo.userId ? (
@@ -236,6 +236,16 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
 const MessageInput = ({ width, placeholder, userId }) => {
   const [msgValue, setMsgValue] = useState('');
   const { useApi, useSocket, socket } = useContext(AuthContext);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.keyCode === 13) useSocket('dm:message', msgValue, userId);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [userId, msgValue]);
 
   return (
     <div

@@ -160,7 +160,7 @@ const PeerConnection = forwardRef((props, ref) => {
     };
     setInterval(() => {
       const audioVolume = getAudioVolume();
-      dispatch(toggleIsTalking(audioVolume < 1 ? false : true));
+      dispatch(toggleIsTalking(audioVolume > 0 ? true : false));
     }, 16);
   }, [remoteStream]);
 

@@ -3,10 +3,10 @@ import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 import { MdHeadsetMic, MdHeadsetOff } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleDeafen, toggleMute } from '../../redux/sounds';
-import ToolTipIcon from '../../components/Global/ToolTip/ToolTipIcon';
-import Settings from '../../components/Settings/Settings';
-import { AuthContext } from '../../App';
+import { toggleDeafen, toggleMute } from '../../../redux/sounds';
+import ToolTipIcon from '../../../components/Global/ToolTip/ToolTipIcon';
+import Settings from '../../../components/Settings/Settings';
+import { AuthContext } from '../../../App';
 import './user.css';
 
 const User = () => {

@@ -51,11 +51,6 @@
   flex-direction: column;
 }
 
-.serverlist-container {
-  display: flex;
-  flex-direction: column;
-}
-
 .change-container {
   display: flex;
   justify-content: center;

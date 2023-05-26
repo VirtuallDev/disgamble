@@ -4,14 +4,19 @@ export const serverSlice = createSlice({
   name: 'serverObject',
   initialState: {
     serverObject: {
-      servername: '',
-      serverId: '',
-      serverImage: '',
-      serverAddress: '',
-      usersOnline: [],
-      description: '',
-      dateCreated: '',
-      channels: [],
+      author: {
+        userId: '',
+        username: '',
+        image: '',
+      },
+      server: {
+        name: '',
+        image: '',
+        description: '',
+        dateCreated: Date.now(),
+        usersOnline: [],
+        id: 0,
+      },
     },
   },
   reducers: {

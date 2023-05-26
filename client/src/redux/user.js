@@ -26,6 +26,7 @@ const userSlice = createSlice({
         friends: [],
         blocked: [],
       },
+      serverList: [],
     },
   },
   reducers: {

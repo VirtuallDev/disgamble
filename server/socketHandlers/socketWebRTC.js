@@ -50,7 +50,6 @@ function setupWebRTCEvents(io) {
 
     socket.on('webrtc:answer', async (answer, userId) => {
       try {
-        console.log('i wanna answer to this guy', userId);
         const call = await Calls.findOneAndUpdate({ 'author.userId': userId, 'recipient.userId': socket.userId }, { answer: answer, isConnected: true }, { new: true });
         if (!call) return;
         io.to(`${call.recipient.userId}`).emit('user:updateCall', call);
