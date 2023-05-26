@@ -32,6 +32,10 @@ const App = () => {
   };
 
   useEffect(() => {
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error('Client-side error:', message, source, lineno, colno, error);
+    };
+
     fetchUser();
     const fetchHistory = async () => {
       const jsonResponse = await useApi(`/dmhistory`);

@@ -29,6 +29,7 @@
   height: 2.25em;
   background-clip: padding-box;
   border-radius: 50%;
+  outline: 1px solid var(--bg-primary-8);
 }
 
 .status-options {

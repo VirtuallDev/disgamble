@@ -75,7 +75,7 @@ const Security = ({ showSecondaryModal, setShowSecondaryModal }) => {
         <SecondaryModal
           showModal={showSecondaryModal === 'Password'}
           setShowModal={setShowSecondaryModal}>
-          <div className="settings-edit-container">
+          <div className="modal-container">
             <RiCloseCircleLine
               style={{ width: '1.8em', height: '1.8em' }}
               className="settings-close"

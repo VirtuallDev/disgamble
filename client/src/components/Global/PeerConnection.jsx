@@ -164,10 +164,6 @@ const PeerConnection = forwardRef((props, ref) => {
     }, 16);
   }, [remoteStream]);
 
-  useEffect(() => {
-    console.log(peerConnection.current?.signalingState);
-  }, [peerConnection.current]);
-
   return (
     <audio
       ref={remoteAudioRef}

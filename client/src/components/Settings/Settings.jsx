@@ -31,28 +31,33 @@ const Settings = ({ showSettingsModal, setShowSettingsModal }) => {
       <SecondaryModal
         showModal={showSecondaryModal === 'Logout'}
         setShowModal={setShowSecondaryModal}>
-        <div
-          className="settings-edit-container"
-          style={{ height: '135px' }}>
+        <div className="modal-container">
           <RiCloseCircleLine
             style={{ width: '1.8em', height: '1.8em' }}
             className="settings-close"
             onClick={() => setShowSecondaryModal('')}></RiCloseCircleLine>
-          <h1>
-            Are you sure you want to
-            <br />
-            proceed with the logout?
-          </h1>
-          <div>
+          <div className="credentials">
+            <h1>Log Out</h1>
+            <p className="credentials-para">
+              Are you sure you want to proceed
+              <br /> with the logout?
+            </p>
+          </div>
+          <div className="modal-buttons">
             <button
-              style={{ color: 'indianred' }}
+              className="join-btn"
               onClick={() => setShowSecondaryModal('')}>
               Cancel
             </button>
-            <button onClick={() => handleLogout()}>Confirm</button>
+            <button
+              className="join-btn"
+              onClick={handleLogout}>
+              Confirm
+            </button>
           </div>
         </div>
       </SecondaryModal>
+
       <Modal
         showModal={showSettingsModal}
         setShowModal={setShowSettingsModal}>

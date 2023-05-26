@@ -24,7 +24,7 @@ const CreateServerModal = ({ showCreateServer, setShowCreateServer }) => {
       <SecondaryModal
         showModal={showCreateServer}
         setShowModal={setShowCreateServer}>
-        <div className="settings-edit-container">
+        <div className="modal-container">
           <RiCloseCircleLine
             style={{ width: '1.8em', height: '1.8em' }}
             className="settings-close"

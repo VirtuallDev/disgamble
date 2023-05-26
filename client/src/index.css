@@ -9,7 +9,6 @@
 
 body {
   background-color: var(--dark4);
-  overflow: hidden;
 }
 
 :root {
@@ -129,10 +128,9 @@ p[contentEditable='true'] {
 }
 
 .join-btn {
-  all: unset;
   display: flex;
   background-color: rgb(79, 74, 148);
-  padding: 10px 50px;
+  padding: 8px 45px;
   margin-block: 15px;
   border-radius: 7px;
   font-size: 20px;
@@ -142,6 +140,9 @@ p[contentEditable='true'] {
   justify-content: center;
   align-items: center;
   transition: all 0.3s;
+  white-space: nowrap;
+  border: none;
+  font-variant: small-caps;
 }
 
 .join-btn:hover {
@@ -158,8 +159,7 @@ p[contentEditable='true'] {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1em;
-  margin-inline: 1em;
+  gap: 0.8em;
 }
 
 .need-container {
@@ -191,6 +191,7 @@ p[contentEditable='true'] {
   font-weight: 500;
   margin-top: 0.5em;
   word-wrap: break-word;
+  font-weight: bold;
 }
 
 .credentials {
@@ -210,6 +211,12 @@ p[contentEditable='true'] {
   margin-bottom: 0.2em;
   font-variant: small-caps;
   text-align: center;
+}
+
+.credentials-para {
+  font-size: 1em;
+  color: var(--dark3);
+  font-weight: bold;
 }
 
 .input-container {

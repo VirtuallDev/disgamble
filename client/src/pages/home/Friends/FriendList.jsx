@@ -18,6 +18,10 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [currentProfile, setCurrentProfile] = useState(null);
 
+  const online = friends.friends.filter((friend) => friend?.userInfo?.status === 'Online' || friend?.userInfo?.status === 'DND');
+  const offline = friends.friends.filter((friend) => friend?.userInfo?.status === 'Offline');
+  const pending = friends.requests;
+
   const handleFriendClick = (friend) => {
     setCurrent(false);
     setFriend(friend);
@@ -38,29 +42,22 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   ];
 
   useEffect(() => {
-    switch (friendOption.split(' ')[0]) {
-      case 'All':
-        setFilteredFriends(friends.friends);
-        break;
-      case 'Online':
-        setFilteredFriends(friends.friends.filter((friend) => friend.userInfo.status === 'Online'));
-        break;
-      case 'Offline':
-        setFilteredFriends(friends.friends.filter((friend) => friend.userInfo.status === 'Offline' || friend.userInfo.status === 'Invisible'));
-        break;
-      case 'Pending':
-        setFilteredFriends(friends.requests);
-        break;
-      default:
-        setFilteredFriends(friends.friends);
-    }
-  }, [friendOption]);
+    setOptions([`All (${friends.friends.length})`, `Online (${online.length})`, `Offline (${offline.length})`, `Pending (${pending.length})`]);
 
-  useEffect(() => {
-    const online = friends.friends.filter((friend) => friend.userInfo.status === 'Online' || friend.userInfo.status === 'DND');
-    const offline = friends.friends.filter((friend) => friend.userInfo.status === 'Offline');
-    setOptions([`All (${friends.friends.length})`, `Online (${online.length})`, `Offline (${offline.length})`, `Pending (${friends.requests.length})`]);
-  }, [friends]);
+    setFriendOption((current) => {
+      const currentOption = current.split(' ')[0];
+      if (currentOption === 'All') return `All (${friends.friends.length})`;
+      if (currentOption === 'Online') return `Online (${online.length})`;
+      if (currentOption === 'Offline') return `Offline (${offline.length})`;
+      if (currentOption === 'Pending') return `Pending (${pending.length})`;
+    });
+
+    const option = friendOption.split(' ')[0];
+    if (option === 'All') return setFilteredFriends(friends.friends);
+    if (option === 'Online') return setFilteredFriends(online);
+    if (option === 'Offline') return setFilteredFriends(offline);
+    if (option === 'Pending') return setFilteredFriends(pending);
+  }, [friendOption, friends]);
 
   return (
     <>

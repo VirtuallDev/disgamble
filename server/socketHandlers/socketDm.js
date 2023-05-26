@@ -4,8 +4,10 @@ const nodeEvents = require('../nodeEvents');
 
 function setupDmEvents(io) {
   io.on('connection', (socket) => {
+    //Finished
     socket.on('dm:message', async (content, sendTo) => {
       try {
+        if (typeof content !== 'string' || content.length > 150) return;
         const user = await User.findOne({ 'userInfo.userId': socket.userId });
         if (!user) return;
         const recipient = await User.findOne({ 'userInfo.userId': sendTo });
@@ -34,32 +36,30 @@ function setupDmEvents(io) {
         console.log(e);
       }
     });
-    socket.on('dm:edit', async (messageId, newMessage) => {
+    socket.on('dm:edit', async (id, content) => {
       try {
+        if (typeof content !== 'string' || content.length > 150) return;
         const user = await User.findOne({ 'userInfo.userId': socket.userId });
         if (!user) return;
-        const edited = await Dm.findOneAndUpdate(
-          { 'author.userId': socket.userId, 'message.id': messageId },
-          { 'message.message': newMessage, 'message.isEdited': true },
-          { new: true }
-        );
+        const edited = await Dm.findOneAndUpdate({ 'author.userId': socket.userId, 'message.id': id }, { 'message.message': content, 'message.isEdited': true }, { new: true });
         if (!edited) return;
         nodeEvents.emit('dm:messageUpdated', edited);
       } catch (e) {
         console.log(e);
       }
     });
-    socket.on('dm:delete', async (messageId) => {
+    socket.on('dm:delete', async (id) => {
       try {
         const user = await User.findOne({ 'userInfo.userId': socket.userId });
         if (!user) return;
-        const deleted = await Dm.findOneAndDelete({ 'author.userId': socket.userId, 'message.id': messageId });
+        const deleted = await Dm.findOneAndDelete({ 'author.userId': socket.userId, 'message.id': id });
         if (!deleted) return;
         nodeEvents.emit('dm:messageDeleted', deleted);
       } catch (e) {
         console.log(e);
       }
     });
+    //Finished
   });
 }
 

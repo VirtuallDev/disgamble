@@ -23,20 +23,13 @@
   position: relative;
 }
 
-.friend-image {
-  width: 2.5em;
-  height: 2.5em;
-  background-clip: padding-box;
-  border-radius: 50%;
-}
-
 .status {
   position: absolute;
   width: 1em;
   height: 1em;
   border-radius: 100%;
   top: 1.5em;
-  border: 2.5px solid var(--bg-primary-0);
+  border: 2.5px solid var(--bg-primary-8);
 }
 
 .friend-name {
@@ -79,18 +72,17 @@
 }
 
 .friend-button {
-  all: unset;
   text-align: center;
   background-color: var(--button-color);
-  font-size: 0.8em;
+  font-size: 1em;
   font-weight: bold;
   color: white;
-  border-bottom-left-radius: 0.5em;
-  border-bottom-right-radius: 0.5em;
   transition: all 0.2s;
   -moz-transition: all 0.2s;
-  padding-block: 0.7em;
+  padding-block: 0.5em;
   width: 100%;
+  font-variant: small-caps;
+  border: none;
 }
 
 .friend-button:hover {

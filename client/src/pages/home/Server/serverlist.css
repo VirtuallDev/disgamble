@@ -35,6 +35,8 @@
   font-weight: bolder;
   text-indent: 0.5em;
   color: var(--dark3);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .server-button-container {

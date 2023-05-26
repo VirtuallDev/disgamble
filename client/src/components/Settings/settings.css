@@ -288,17 +288,6 @@
   opacity: 0;
 }
 
-.settings-edit-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 350px;
-  height: auto;
-  background-color: var(--color-primary-5);
-  border-radius: 10px;
-}
-
 .slider {
   -webkit-appearance: none;
   appearance: none;

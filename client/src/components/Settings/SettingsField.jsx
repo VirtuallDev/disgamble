@@ -11,7 +11,7 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
       <SecondaryModal
         showModal={showSecondaryModal === title}
         setShowModal={setShowSecondaryModal}>
-        <div className="settings-edit-container">
+        <div className="modal-container">
           <RiCloseCircleLine
             style={{ width: '1.8em', height: '1.8em' }}
             className="settings-close"
