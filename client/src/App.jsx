@@ -32,10 +32,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    window.onerror = function (message, source, lineno, colno, error) {
-      console.error('Client-side error:', message, source, lineno, colno, error);
-    };
-
     fetchUser();
     const fetchHistory = async () => {
       const jsonResponse = await useApi(`/dmhistory`);
@@ -45,38 +41,42 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('keydown', (e) => {
-      if (e.repeat) return;
-      if (e.key !== voiceSettings.key) return;
+    const handleKeyDown = (e) => {
+      if (!e.repeat && e.key === voiceSettings.key) {
+        dispatch(triggerPushToTalk(true));
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      if (e.key === voiceSettings.key) {
+        dispatch(triggerPushToTalk(false));
+      }
+    };
+
+    const handleBlur = () => {
+      dispatch(triggerPushToTalk(false));
+    };
+
+    if (voiceSettings.inputMode === 'continuous') {
       dispatch(triggerPushToTalk(true));
-    });
-    window.addEventListener('keyup', (e) => {
-      if (e.key !== voiceSettings.key) return;
-      dispatch(triggerPushToTalk(false));
-    });
-    window.addEventListener('blur', () => {
-      dispatch(triggerPushToTalk(false));
-    });
+    } else {
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keyup', handleKeyUp);
+      window.addEventListener('blur', handleBlur);
+    }
 
     return () => {
-      window.removeEventListener('keydown', (e) => {
-        if (e.repeat) return;
-        if (e.key !== voiceSettings.key) return;
-        dispatch(triggerPushToTalk(true));
-      });
-      window.removeEventListener('keyup', (e) => {
-        if (e.key !== voiceSettings.key) return;
-        dispatch(triggerPushToTalk(false));
-      });
-      window.removeEventListener('blur', () => {
-        dispatch(triggerPushToTalk(false));
-      });
+      dispatch(triggerPushToTalk(false));
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur);
     };
   }, [voiceSettings]);
 
   useEffect(() => {
     if (!socket) return;
     socket.on('user:updateUser', () => {
+      console.log('hello');
       fetchUser();
     });
     socket.on('user:friendUpdate', (friendObject) => {

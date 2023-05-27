@@ -37,8 +37,8 @@ const PeerConnection = forwardRef((props, ref) => {
       const newStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       if (!newStream) return;
       newStream.getAudioTracks().forEach((track) => {
-        if (pushToTalk && !isMuted) track.enabled = true;
-        if (!pushToTalk || isMuted) track.enabled = false;
+        if (pushToTalk && !isMuted && !isDeafened) track.enabled = true;
+        if (!pushToTalk || isMuted || isDeafened) track.enabled = false;
         newpeerConnection.addTrack(track, newStream);
       });
       setStream(newStream);
@@ -82,8 +82,8 @@ const PeerConnection = forwardRef((props, ref) => {
     if (!stream) return;
     setStream((stream) => {
       const audioTrack = stream.getAudioTracks()[0];
-      if (pushToTalk && !isMuted) audioTrack.enabled = true;
-      if (!pushToTalk || isMuted) audioTrack.enabled = false;
+      if (pushToTalk && !isMuted && !isDeafened) audioTrack.enabled = true;
+      if (!pushToTalk || isMuted || isDeafened) audioTrack.enabled = false;
       const newStream = new MediaStream();
       newStream.addTrack(audioTrack);
       return newStream;

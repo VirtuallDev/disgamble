@@ -50,7 +50,7 @@ function setupUserEvents(io) {
           }
         );
         if (!user) return;
-        nodeEvents.emit('user:userUpdate', user.userInfo.userId);
+        nodeEvents.emit('user:updateUser', user.userInfo.userId);
       } catch (e) {
         console.log(e);
       }
@@ -89,7 +89,7 @@ function setupUserEvents(io) {
         // Check if voiceObject is valid
         const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { voiceSettings: voiceObject });
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
-        nodeEvents.emit('user:userUpdate', user.userInfo.userId);
+        nodeEvents.emit('user:updateUser', user.userInfo.userId);
       } catch (e) {
         console.log(e);
       }
@@ -99,7 +99,7 @@ function setupUserEvents(io) {
         // Check if passwordObject is valid
         // const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { voiceSettings: voiceObject });
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
-        nodeEvents.emit('user:userUpdate', user.userInfo.userId);
+        nodeEvents.emit('user:updateUser', user.userInfo.userId);
       } catch (e) {
         console.log(e);
       }

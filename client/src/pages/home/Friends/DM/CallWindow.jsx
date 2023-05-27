@@ -22,7 +22,7 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
           <div className="call-images">
             <div
               className={`call-image ${callObject.author.userId === userInfo.userId && !callObject.isConnected ? 'not-connected' : ''}`}
-              style={{ backgroundColor: isTalking ? 'green' : 'transparent' }}>
+              style={{ backgroundColor: isTalking && !isDeafened ? 'green' : 'transparent' }}>
               <img
                 src={friendImage}
                 alt=""
@@ -30,7 +30,7 @@ const CallWindow = ({ answer, friendImage, callObject }) => {
             </div>
             <div
               className={`call-image ${callObject.author.userId !== userInfo.userId && !callObject.isConnected ? 'not-connected' : ''}`}
-              style={{ backgroundColor: pushToTalk ? 'green' : 'transparent' }}>
+              style={{ backgroundColor: pushToTalk && !isMuted && !isDeafened ? 'green' : 'transparent' }}>
               <img
                 src={userInfo.image}
                 alt=""

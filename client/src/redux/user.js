@@ -34,8 +34,8 @@ const userSlice = createSlice({
       state.userObject = action.payload;
     },
     friendChange: (state, action) => {
-      const friendIndex = state.userObject.friends.friends.findIndex((friend) => friend === action.payload.userObject.userInfo.userId);
-      if (friendIndex !== -1) state.userObject.friends.friends[friendIndex] = action.payload.userObject;
+      const friendIndex = state.userObject.friends.friends.findIndex((friend) => friend === action.payload.userInfo.userId);
+      if (friendIndex !== -1) state.userObject.friends.friends[friendIndex] = action.payload;
     },
   },
 });
