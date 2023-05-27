@@ -139,7 +139,7 @@ const Security = ({ showSecondaryModal, setShowSecondaryModal }) => {
                   className="join-btn"
                   onClick={() => {
                     if (msg.newPassword !== '' || msg.confirmNewPassword !== '') return;
-                    useSocket(`user:changePassword`, data);
+                    useSocket(`user:changePassword`, { password: data.password, newPassword: data.newPassword, confirmNewPassword: data.confirmNewPassword });
                     setShowSecondaryModal('');
                   }}>
                   Confirm

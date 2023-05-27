@@ -98,7 +98,7 @@ const StatusOptions = ({ statusOptions, setStatusOptions, buttonRef }) => {
   const { useApi, useSocket, socket } = useContext(AuthContext);
 
   const handleStatusChange = async (statusString) => {
-    useSocket('user:changestatus', statusString);
+    useSocket('user:changeStatus', statusString);
     setStatusOptions(false);
   };
 

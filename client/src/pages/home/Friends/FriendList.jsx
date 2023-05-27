@@ -28,6 +28,7 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
   };
 
   const handleRemoveClick = (friend) => {
+    useSocket('user:removeFriend', friend?.userInfo?.userId);
     console.log(friend.userInfo.userId);
   };
 
