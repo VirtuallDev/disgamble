@@ -27,3 +27,8 @@
 .search::placeholder {
   color: rgb(139, 139, 139);
 }
+
+.fasearch {
+  position: absolute;
+  right: 0.5em;
+}

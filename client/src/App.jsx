@@ -76,11 +76,7 @@ const App = () => {
   useEffect(() => {
     if (!socket) return;
     socket.on('user:updateUser', () => {
-      console.log('hello');
       fetchUser();
-    });
-    socket.on('user:friendUpdate', (friendObject) => {
-      dispatch(friendChange(friendObject));
     });
     socket.on('dm:messageAdded', (messageObject) => {
       dispatch(messageAdded(messageObject));
@@ -106,7 +102,6 @@ const App = () => {
 
     return () => {
       socket.off('user:updateUser');
-      socket.off('user:friendUpdate');
       socket.off('dm:messageAdded');
       socket.off('dm:messageUpdated');
       socket.off('dm:messageDeleted');

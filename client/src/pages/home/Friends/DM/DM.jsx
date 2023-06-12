@@ -63,9 +63,17 @@ const DM = ({ friend, call, answer }) => {
       </div>
       {isCallAvailable && (
         <CallWindow
-          answer={() => answer(callsArray.find((call) => call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId).callId)}
+          answer={() =>
+            answer(
+              callsArray.find(
+                (call) => call.author.userId === friend?.userInfo?.userId && call.recipient.userId === userInfo.userId
+              ).callId
+            )
+          }
           friendImage={friend?.userInfo?.image}
-          callObject={callsArray.find((call) => call?.author?.userId === friend?.userInfo?.userId || call?.author?.userId === userInfo.userId)}></CallWindow>
+          callObject={callsArray.find(
+            (call) => call?.author?.userId === friend?.userInfo?.userId || call?.author?.userId === userInfo.userId
+          )}></CallWindow>
       )}
       <Messages
         isCallAvailable={isCallAvailable}
@@ -93,7 +101,9 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
   const scrollRef = useRef(null);
 
   const filteredMessages = messagesArray.filter(
-    (messageObject) => messageObject.recipients.includes(friend?.userInfo?.userId) && messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase())
+    (messageObject) =>
+      messageObject.recipients.includes(friend?.userInfo?.userId) &&
+      messageObject.message.message.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   const copyMessage = (messageObject) => {
@@ -176,7 +186,9 @@ const Messages = ({ friend, searchValue, isCallAvailable }) => {
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               <div className="msg-container-img">
                 <img
-                  src={messageObject.author.image}
+                  src={
+                    messageObject.author.userId === friend?.userInfo?.userId ? friend?.userInfo?.image : userInfo.image
+                  }
                   alt=""></img>
               </div>
               <div style={{ width: 'calc(100% - 5em)' }}>

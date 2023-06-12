@@ -31,9 +31,10 @@ function setupUserEvents(io) {
           }
         );
         if (!user) return;
-        const userToAccept = await User.findOneAndUpdate({ 'userInfo.userId': user.userInfo.userId }, { $push: { 'friends.friends': userIdToAccept } });
+        nodeEvents.emit('user:updateUser', user.userInfo.userId);
+        const userToAccept = await User.findOneAndUpdate({ 'userInfo.userId': userIdToAccept }, { $push: { 'friends.friends': user.userInfo.userId } });
         if (!userToAccept) return;
-        nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
+        nodeEvents.emit('user:updateUser', userIdToAccept);
       } catch (e) {
         console.log(e);
       }

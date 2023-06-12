@@ -15,8 +15,8 @@ const SearchInput = ({ searchValue, setSearchValue, width, placeholder }) => {
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}></input>
       <FaSearch
-        style={{ position: 'absolute', right: '1em' }}
-        size={'1.8em'}
+        className="fasearch"
+        size={'2em'}
         color={'rgb(139, 139, 139)'}></FaSearch>
     </div>
   );

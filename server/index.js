@@ -20,9 +20,6 @@ const path = require('path');
 const server = https.createServer(options, app).listen(5001, () => console.log(`HTTPS server running on port ${5001}`));
 // const server = app.listen(3000, () => console.log(`HTTP server running on port ${3000}`));
 
-// Finish Settings backend
-// Auto Scroll
-
 const CLIENT_URL = process.env.CLIENT_URL;
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -70,13 +67,11 @@ setupWebRTCEvents(io);
 })();
 
 io.use(async (socket, next) => {
-  try {
-    const token = socket.handshake.headers.authorization;
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.userId;
-    socket.join(userId);
-    socket.userId = userId;
-  } catch (e) {}
+  const token = socket.handshake.headers.authorization;
+  const decoded = jwt.verify(token, JWT_SECRET);
+  const userId = decoded.userId;
+  socket.join(userId);
+  socket.userId = userId;
   next();
 });
 
@@ -113,7 +108,7 @@ nodeEvents.on('user:friendUpdate', async (userId) => {
     if (!user) return;
     io.to(`${userId}`).emit('user:updateUser');
     for (const friend of user.friends.friends) {
-      io.to(`${friend}`).emit('user:friendUpdate', user);
+      io.to(`${friend}`).emit('user:updateUser', user);
     }
   } catch (e) {
     console.log(e);
