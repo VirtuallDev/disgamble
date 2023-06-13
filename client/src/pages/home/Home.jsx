@@ -1,20 +1,23 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import ServerList from './Server/ServerList';
 import FriendsList from './Friends/FriendList';
 import { useSelector } from 'react-redux';
 import { HiMenuAlt2, HiX } from 'react-icons/hi';
-import { TbExchange } from 'react-icons/tb';
+import { BiMessageDetail } from 'react-icons/bi';
+import { FaServer } from 'react-icons/fa';
+import { IoIosHome } from 'react-icons/io';
 import PeerConnection from '../../components/Global/PeerConnection';
 import CallStack from '../../components/Global/CallStack/CallStack';
 import User from './Friends/User';
 import Ads from './Dds/Dds';
 import DM from './Friends/DM/DM';
+import { AuthContext } from '../../App';
 import './home.css';
 
 const Home = () => {
   const serverObject = useSelector((state) => state.server.serverObject);
   const { channels } = serverObject;
-  const [current, setCurrent] = useState(true);
+  const [current, setCurrent] = useState('home');
   const [isOpen, setIsOpen] = useState(true);
   const [friend, setFriend] = useState({});
   const peerRef = useRef(null);
@@ -28,7 +31,7 @@ const Home = () => {
         className={`menu-button2 ${isOpen ? 'open' : 'closed'}`}
       />
       <HiX
-        style={{ marginRight: '300px' }}
+        style={{ marginRight: '303px' }}
         onClick={() => setIsOpen((current) => !current)}
         className={`menu-button2 ${isOpen ? 'closed' : 'open'}`}
       />
@@ -36,13 +39,29 @@ const Home = () => {
         <div className={`right-side ${!isOpen ? 'right-closed' : 'right-opened'}`}>
           <CallStack answer={(callId) => peerRef.current.acceptOffer(callId)}></CallStack>
           <div className="change-container">
-            <TbExchange
-              style={{ transform: current ? 'rotate3d(1, 0, 1, 360deg)' : 'rotate3d(1, 0, 1, 0deg)' }}
-              onClick={() => setCurrent((current) => !current)}
-              className="change"
-              size={'4.5em'}
-              color={'inherit'}></TbExchange>
+            <div className="change">
+              <IoIosHome
+                onClick={() => setCurrent('home')}
+                size={'3.3em'}
+                color={current === 'home' ? 'rgb(100, 100, 100)' : 'inherit'}
+              />
+            </div>
+            <div className="change">
+              <BiMessageDetail
+                onClick={() => setCurrent('dm')}
+                size={'3.2em'}
+                color={current === 'dm' ? 'rgb(100, 100, 100)' : 'inherit'}
+              />
+            </div>
+            <div className="change">
+              <FaServer
+                onClick={() => setCurrent('servers')}
+                size={'2.7em'}
+                color={current === 'servers' ? 'rgb(100, 100, 100)' : 'inherit'}
+              />
+            </div>
           </div>
+          <AddFriend />
           <FriendsList
             setFriend={setFriend}
             setCurrent={setCurrent}
@@ -51,19 +70,22 @@ const Home = () => {
           <User />
         </div>
         <div className="left-side">
-          {current ? (
+          {current === 'home' && (
             <>
               <Ads />
               <ServerList />
             </>
-          ) : (
+          )}
+          {current === 'dm' && (
             <DM
+              isOpen={isOpen}
               friend={friend}
               call={(userId) => peerRef.current.sendOffer(userId)}
               answer={(callId) => peerRef.current.acceptOffer(callId)}
               disconnect={() => peerRef.current.disconnect()}
             />
           )}
+          {current === 'servers' && <></>}
         </div>
       </div>
     </>
@@ -71,3 +93,25 @@ const Home = () => {
 };
 
 export default Home;
+
+const AddFriend = () => {
+  const [username, setUsername] = useState('');
+  const { useApi, useSocket, socket } = useContext(AuthContext);
+
+  return (
+    <div
+      className="add-friend"
+      style={{ marginBottom: '0.5em' }}>
+      <input
+        type="text"
+        placeholder="Add a Friend"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}></input>
+      <button
+        className="friend-button"
+        onClick={() => useSocket('user:addfriend', username)}>
+        Send Friend Request
+      </button>
+    </div>
+  );
+};

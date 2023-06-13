@@ -10,7 +10,7 @@ import Options from '../../../../components/Global/Options/Options';
 import ToolTipIcon from '../../../../components/Global/ToolTip/ToolTipIcon';
 import './dm.css';
 
-const DM = ({ friend, call, answer }) => {
+const DM = ({ isOpen, friend, call, answer }) => {
   const [searchValue, setSearchValue] = useState('');
   const callsArray = useSelector((state) => state.calls.callsArray);
   const userObject = useSelector((state) => state.user.userObject);
@@ -60,6 +60,7 @@ const DM = ({ friend, call, answer }) => {
           setSearchValue={setSearchValue}
           width={'25%'}
           placeholder={'Search'}></SearchInput>
+        <span style={{ marginRight: isOpen ? '0em' : '3em' }}></span>
       </div>
       {isCallAvailable && (
         <CallWindow

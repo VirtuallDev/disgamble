@@ -9,6 +9,7 @@
   transition: all 0.2s;
   -moz-transition: all 0.2s;
   width: 100%;
+  min-width: 100%;
   flex-wrap: wrap;
   background-color: transparent;
   background-color: var(--bg-primary-8);
@@ -53,9 +54,9 @@
 .add-friend {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 95%;
   position: relative;
-  margin-bottom: 1em;
+  margin-top: 1em;
 }
 
 .add-friend > input {

@@ -79,7 +79,7 @@ const ServerList = () => {
                     <ToolTipIcon
                       handler={() => handleExpandClick(serverObject)}
                       tooltip={'Expand'}
-                      direction="top"
+                      direction="left"
                       icon={
                         <IoMdExpand
                           size={'1.8em'}

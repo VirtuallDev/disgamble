@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./routers/auth');
 const usersRouter = require('./routers/users');
 const nodeEvents = require('./nodeEvents');
-const { User, Calls, Dm } = require('./database');
+const { User, Calls } = require('./database');
 const app = express();
 const options = {
   key: fs.readFileSync('private.key'),

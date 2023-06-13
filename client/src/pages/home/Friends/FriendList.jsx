@@ -73,7 +73,6 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
         handler={handleFriendClick}
       />
       <div className="friend-list">
-        <AddFriend />
         <span style={{ marginBottom: '0.5em' }}></span>
         <DropDown
           value={friendOption}
@@ -227,25 +226,3 @@ const FriendsList = ({ setFriend, setCurrent, selectedFriend }) => {
 };
 
 export default FriendsList;
-
-const AddFriend = () => {
-  const [username, setUsername] = useState('');
-  const { useApi, useSocket, socket } = useContext(AuthContext);
-
-  return (
-    <div
-      className="add-friend"
-      style={{ marginBottom: '0.5em' }}>
-      <input
-        type="text"
-        placeholder="Add a Friend"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}></input>
-      <button
-        className="friend-button"
-        onClick={() => useSocket('user:addfriend', username)}>
-        Send Friend Request
-      </button>
-    </div>
-  );
-};

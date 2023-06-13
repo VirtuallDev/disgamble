@@ -33,9 +33,9 @@
   background-color: var(--color-primary-5);
   height: 100%;
   position: relative;
+  max-width: 350px;
   min-width: 350px;
   z-index: 9;
-  transition: all 0.3s;
   overflow: hidden;
 }
 
@@ -46,7 +46,6 @@
 .right-closed {
   min-width: 0;
   width: 0;
-  transition: all 0.3s;
 }
 
 .left-side {
@@ -87,12 +86,26 @@
   border-radius: 1.5em;
   color: var(--gray-2);
   margin-top: 0.5em;
+  gap: 1em;
+  margin-left: 2em;
+}
+
+.change {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4.5em;
+  height: 4.5em;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: all 0.3s;
 }
 
 .change:hover {
   cursor: pointer;
+  border-radius: 20%;
 }
 
-.change {
-  transition: all 2s;
+.change > svg {
+  transition: all 0.3s;
 }
