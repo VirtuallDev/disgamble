@@ -57,35 +57,39 @@ const ServerList = () => {
           width={'100%'}
           placeholder={'Search a server!'}></SearchInput>
         <div style={{ marginBottom: '0.5em' }}></div>
-        {serverList
-          .filter((serverObject) => serverObject?.server?.name.toLowerCase().includes(searchValue.toLowerCase()))
-          .map((serverObject, index) => {
-            return (
-              <div
-                key={index}
-                className="server-container"
-                style={{ backgroundColor: selectedServer?.server?.id === serverObject.server.id && 'var(--bg-primary-9)' }}
-                onClick={() => handleServerClick(serverObject)}>
-                <img
-                  src={serverObject.server.image}
-                  className="server-image"
-                  alt=""
-                />
-                <p className="server-name">{serverObject.server.name}</p>
-                <div style={{ marginLeft: 'auto' }}>
-                  <ToolTipIcon
-                    handler={() => handleExpandClick(serverObject)}
-                    tooltip={'Expand'}
-                    direction="top"
-                    icon={
-                      <IoMdExpand
-                        size={'1.8em'}
-                        color={'var(--dark3)'}></IoMdExpand>
-                    }></ToolTipIcon>
+        <div style={{ overflow: 'auto', overflowX: 'hidden' }}>
+          {serverList
+            .filter((serverObject) => serverObject?.server?.name.toLowerCase().includes(searchValue.toLowerCase()))
+            .map((serverObject, index) => {
+              return (
+                <div
+                  key={index}
+                  className="server-container"
+                  style={{
+                    backgroundColor: selectedServer?.server?.id === serverObject.server.id && 'var(--bg-primary-9)',
+                  }}
+                  onClick={() => handleServerClick(serverObject)}>
+                  <img
+                    src={serverObject.server.image}
+                    className="server-image"
+                    alt=""
+                  />
+                  <p className="server-name">{serverObject.server.name}</p>
+                  <div style={{ marginLeft: 'auto' }}>
+                    <ToolTipIcon
+                      handler={() => handleExpandClick(serverObject)}
+                      tooltip={'Expand'}
+                      direction="top"
+                      icon={
+                        <IoMdExpand
+                          size={'1.8em'}
+                          color={'var(--dark3)'}></IoMdExpand>
+                      }></ToolTipIcon>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+        </div>
       </div>
     </>
   );

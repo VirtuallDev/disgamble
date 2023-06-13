@@ -3,7 +3,17 @@ import SecondaryModal from '../Modal/SecondaryModal';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { AuthContext } from '../../App';
 
-const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal, placeholder, type = 'text', handler, error, label }) => {
+const SettingsField = ({
+  title,
+  value,
+  showSecondaryModal,
+  setShowSecondaryModal,
+  placeholder,
+  type = 'text',
+  handler,
+  error = '',
+  label,
+}) => {
   const { useApi, useSocket, socket } = useContext(AuthContext);
 
   return (
@@ -43,7 +53,7 @@ const SettingsField = ({ title, value, showSecondaryModal, setShowSecondaryModal
               <button
                 className="join-btn"
                 onClick={() => {
-                  if (error === '') return;
+                  if (error !== '') return;
                   useSocket(`user:change${title}`, value);
                   setShowSecondaryModal('');
                 }}>

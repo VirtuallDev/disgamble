@@ -83,6 +83,8 @@
   width: 100%;
   font-variant: small-caps;
   border: none;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
 }
 
 .friend-button:hover {

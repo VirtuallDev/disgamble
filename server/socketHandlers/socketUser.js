@@ -9,7 +9,10 @@ function setupUserEvents(io) {
         const user = await User.findOne({ 'userInfo.userId': socket.userId });
         if (!user) return;
         const updatedUser = await User.findOneAndUpdate(
-          { 'userInfo.username': usernameToAdd, $nor: [{ 'friends.requests': user.userInfo.userId }, { 'friends.friends': user.userInfo.userId }] },
+          {
+            'userInfo.username': usernameToAdd,
+            $nor: [{ 'friends.requests': user.userInfo.userId }, { 'friends.friends': user.userInfo.userId }],
+          },
           { $push: { 'friends.requests': user.userInfo.userId } }
         );
         if (!updatedUser) return;
@@ -32,7 +35,10 @@ function setupUserEvents(io) {
         );
         if (!user) return;
         nodeEvents.emit('user:updateUser', user.userInfo.userId);
-        const userToAccept = await User.findOneAndUpdate({ 'userInfo.userId': userIdToAccept }, { $push: { 'friends.friends': user.userInfo.userId } });
+        const userToAccept = await User.findOneAndUpdate(
+          { 'userInfo.userId': userIdToAccept },
+          { $push: { 'friends.friends': user.userInfo.userId } }
+        );
         if (!userToAccept) return;
         nodeEvents.emit('user:updateUser', userIdToAccept);
       } catch (e) {
@@ -86,8 +92,12 @@ function setupUserEvents(io) {
     });
     socket.on('user:changeStatus', async (statusString) => {
       try {
-        if (!statusString || (statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND')) return res.status(500).json({ error: 'Something went wrong!' });
-        const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { 'userInfo.status': statusString, 'userInfo.userStatus': statusString });
+        if (!statusString || (statusString !== 'Online' && statusString !== 'Invisible' && statusString !== 'DND'))
+          return res.status(500).json({ error: 'Something went wrong!' });
+        const user = await User.findOneAndUpdate(
+          { 'userInfo.userId': socket.userId },
+          { 'userInfo.status': statusString, 'userInfo.userStatus': statusString }
+        );
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
         nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
       } catch (e) {
@@ -96,8 +106,12 @@ function setupUserEvents(io) {
     });
     socket.on('user:changeUsername', async (username) => {
       try {
+        console.log(username);
         if (await User.findOne({ 'userInfo.username': username })) return;
-        const user = await User.findOneAndUpdate({ 'userInfo.userId': socket.userId }, { 'userInfo.username': username });
+        const user = await User.findOneAndUpdate(
+          { 'userInfo.userId': socket.userId },
+          { 'userInfo.username': username }
+        );
         if (!user) return res.status(500).json({ error: 'Something went wrong!' });
         nodeEvents.emit('user:friendUpdate', user.userInfo.userId);
       } catch (e) {
@@ -134,7 +148,10 @@ function setupUserEvents(io) {
         const user = await User.findOne({ 'userInfo.userId': socket.userId });
         if (!user) return;
         const passwordHash = crypto.createHmac('sha256', user.userAuth.salt).update(password).digest('hex');
-        const updatedUser = await User.findOneAndUpdate({ 'userAuth.password': passwordHash }, { 'userAuth.password': newPassword });
+        const updatedUser = await User.findOneAndUpdate(
+          { 'userAuth.password': passwordHash },
+          { 'userAuth.password': newPassword }
+        );
         if (!updatedUser) return;
         nodeEvents.emit('user:updateUser', updatedUser.userInfo.userId);
       } catch (e) {
