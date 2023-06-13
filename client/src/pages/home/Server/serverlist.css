@@ -1,6 +1,6 @@
 .server-list {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 20em);
   display: flex;
   flex-direction: column;
   padding: 0.5em;
