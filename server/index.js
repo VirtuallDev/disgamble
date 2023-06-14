@@ -32,7 +32,7 @@ app.use(
 );
 
 app.use(express.json());
-
+// d
 app.get('/images/:image', (req, res) => {
   const imageName = req.params.image;
   const imagePath = path.resolve(__dirname, 'images', imageName);
