@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const authRouter = require('./routers/auth');
 const usersRouter = require('./routers/users');
 const nodeEvents = require('./nodeEvents');
-const { User, Calls } = require('./database');
 const app = express();
 const options = {
   key: fs.readFileSync('private.key'),
@@ -52,17 +51,11 @@ const io = require('socket.io')(server, {
   },
 });
 
-const { setupDmEvents } = require('./socketHandlers/socketDm');
 const { setupUserEvents } = require('./socketHandlers/socketUser');
-const { setupWebRTCEvents } = require('./socketHandlers/socketWebRTC');
-const { onDisconnect, onConnection } = require('./utils');
 
-setupDmEvents(io);
 setupUserEvents(io);
-setupWebRTCEvents(io);
 
 (async function cleanup() {
-  const count = await Calls.deleteMany({});
   console.log(count);
 })();
 
@@ -75,45 +68,7 @@ io.use(async (socket, next) => {
   next();
 });
 
-io.on('connection', (socket) => {
-  socket.on('disconnect', () => {
-    onDisconnect(io, socket.userId);
-  });
-  setTimeout(() => {
-    onConnection(socket.userId);
-  }, 1000);
-});
-
-nodeEvents.on('dm:messageAdded', (messageObject) => {
-  for (const user of messageObject?.recipients) {
-    io.to(`${user}`).emit('dm:messageAdded', messageObject);
-  }
-});
-
-nodeEvents.on('dm:messageUpdated', (messageObject) => {
-  for (const user of messageObject?.recipients) {
-    io.to(`${user}`).emit('dm:messageUpdated', messageObject);
-  }
-});
-
-nodeEvents.on('dm:messageDeleted', (messageObject) => {
-  for (const user of messageObject?.recipients) {
-    io.to(`${user}`).emit('dm:messageDeleted', messageObject);
-  }
-});
-
-nodeEvents.on('user:friendUpdate', async (userId) => {
-  try {
-    const user = await User.findOne({ 'userInfo.userId': userId }).lean();
-    if (!user) return;
-    io.to(`${userId}`).emit('user:updateUser');
-    for (const friend of user.friends.friends) {
-      io.to(`${friend}`).emit('user:updateUser', user);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-});
+io.on('connection', (socket) => {});
 
 nodeEvents.on('user:updateUser', (userId) => {
   io.to(`${userId}`).emit('user:updateUser');
