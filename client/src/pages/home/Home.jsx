@@ -13,6 +13,7 @@ import Ads from './Dds/Dds';
 import DM from './Friends/DM/DM';
 import { AuthContext } from '../../App';
 import './home.css';
+import Server from './Server/Server';
 
 const Home = () => {
   const serverObject = useSelector((state) => state.server.serverObject);
@@ -85,7 +86,11 @@ const Home = () => {
               disconnect={() => peerRef.current.disconnect()}
             />
           )}
-          {current === 'servers' && <></>}
+          {current === 'servers' && (
+            <>
+              <Server />
+            </>
+          )}
         </div>
       </div>
     </>

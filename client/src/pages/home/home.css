@@ -10,7 +10,7 @@
 .menu-button2 {
   position: absolute;
   top: 0.5em;
-  right: 0px;
+  right: -0.25em;
   width: 2.5em;
   height: 2.5em;
   z-index: 10;
