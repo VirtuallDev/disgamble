@@ -96,6 +96,7 @@ const ServerSchema = new mongoose.Schema({
     dateCreated: Date,
     usersOnline: Array,
     id: Number,
+    channels: [Object],
   },
 });
 
